@@ -264,8 +264,8 @@ func unsealREC(c *gin.Context) {
 		}
 
 		shares := [][]byte{}
-		for idx, owner := range owners {
-			shares[idx] = owner.Answer
+		for _, owner := range owners {
+			shares = append(shares, owner.Answer)
 		}
 		sessionKey, err := shamir.Combine(shares)
 		if err != nil {

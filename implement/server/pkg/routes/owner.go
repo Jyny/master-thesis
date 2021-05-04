@@ -196,7 +196,7 @@ func endOfRegister(c *gin.Context) {
 		}
 
 		for idx, owner := range owners {
-			encShare, err := rsa.Encrypt(shares[idx], owners[0].PublicKey)
+			encShare, err := rsa.Encrypt(shares[idx], owner.PublicKey)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{
 					"error": err.Error(),
