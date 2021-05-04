@@ -18,7 +18,7 @@ func createMeeting(c *gin.Context) {
 	err := orm.Create(&meeting).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}

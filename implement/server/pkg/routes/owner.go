@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/hashicorp/vault/shamir"
 )
 
 func registerOwner(c *gin.Context) {
@@ -17,7 +18,7 @@ func registerOwner(c *gin.Context) {
 	var binding urlBinding
 	if err := c.ShouldBindUri(&binding); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -25,7 +26,7 @@ func registerOwner(c *gin.Context) {
 	pk, sk, err := rsa.GenerateKey()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -33,7 +34,7 @@ func registerOwner(c *gin.Context) {
 	meetingID, err := uuid.Parse(binding.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -46,7 +47,7 @@ func registerOwner(c *gin.Context) {
 	err = orm.Model(&meeting).Take(&meeting).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -64,7 +65,7 @@ func registerOwner(c *gin.Context) {
 	err = orm.Create(&owner).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -84,7 +85,7 @@ func endOfRegister(c *gin.Context) {
 	var binding urlBinding
 	if err := c.ShouldBindUri(&binding); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -92,7 +93,7 @@ func endOfRegister(c *gin.Context) {
 	meetingID, err := uuid.Parse(binding.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -105,7 +106,7 @@ func endOfRegister(c *gin.Context) {
 	err = orm.Model(&meeting).Take(&meeting).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -120,7 +121,7 @@ func endOfRegister(c *gin.Context) {
 	}).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -129,7 +130,7 @@ func endOfRegister(c *gin.Context) {
 	err = orm.Where("meeting_id = ?", meetingID).Find(&owners).Error
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
+			"error": err.Error(),
 		})
 		return
 	}
@@ -140,18 +141,17 @@ func endOfRegister(c *gin.Context) {
 		encSessionKey, err := rsa.Encrypt([]byte(meeting.SessionKey), owners[0].PublicKey)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err,
+				"error": err.Error(),
 			})
 			return
 		}
 
 		err = orm.Model(&meeting).Updates(map[string]interface{}{
-			"session_key":     "",
-			"enc_session_key": encSessionKey,
+			"session_key": "",
 		}).Error
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err,
+				"error": err.Error(),
 			})
 			return
 		}
@@ -162,11 +162,12 @@ func endOfRegister(c *gin.Context) {
 			},
 		}
 		err = orm.Model(&owner).Updates(map[string]interface{}{
-			"PublicKey": "",
+			"public_key": "",
+			"challenge":  encSessionKey,
 		}).Error
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err,
+				"error": err.Error(),
 			})
 			return
 		}
@@ -177,7 +178,46 @@ func endOfRegister(c *gin.Context) {
 
 	// multi owner
 	case len(owners) > 1:
-		c.JSON(http.StatusNotImplemented, gin.H{
+		shares, err := shamir.Split([]byte(meeting.SessionKey), len(owners), len(owners))
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		err = orm.Model(&meeting).Updates(map[string]interface{}{
+			"session_key": "",
+		}).Error
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		for idx, owner := range owners {
+			encShare, err := rsa.Encrypt(shares[idx], owners[0].PublicKey)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+
+			err = orm.Model(&owner).Updates(map[string]interface{}{
+				"public_key": "",
+				"challenge":  encShare,
+			}).Error
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+		}
+
+		c.JSON(http.StatusOK, gin.H{
 			"session_id": meetingID,
 		})
 
