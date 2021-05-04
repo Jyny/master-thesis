@@ -71,7 +71,7 @@ func registerOwner(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"session_id": binding.ID,
+		"session_id": meetingID,
 		"owner_id":   owner.ID,
 		"owner_key":  sk,
 	})
