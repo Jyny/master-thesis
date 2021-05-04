@@ -162,8 +162,7 @@ func endOfRegister(c *gin.Context) {
 			},
 		}
 		err = orm.Model(&owner).Updates(map[string]interface{}{
-			"public_key": "",
-			"challenge":  encSessionKey,
+			"challenge": encSessionKey,
 		}).Error
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -206,8 +205,7 @@ func endOfRegister(c *gin.Context) {
 			}
 
 			err = orm.Model(&owner).Updates(map[string]interface{}{
-				"public_key": "",
-				"challenge":  encShare,
+				"challenge": encShare,
 			}).Error
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{

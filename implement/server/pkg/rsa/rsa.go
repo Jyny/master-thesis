@@ -1,6 +1,7 @@
 package rsa
 
 import (
+	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
@@ -27,7 +28,7 @@ func GenerateKey() (pk, sk string, err error) {
 func Decrypt(ciphertext []byte, privateKey string) ([]byte, error) {
 	rsaPrivB, err := base64.StdEncoding.DecodeString(privateKey)
 	if err != nil {
-		return nil, fmt.Errorf("rsa.DecryptStr: %w", err)
+		return nil, fmt.Errorf("rsa.Decrypt: %w", err)
 	}
 
 	rsaPriv, err := x509.ParsePKCS1PrivateKey(rsaPrivB)
@@ -41,7 +42,7 @@ func Decrypt(ciphertext []byte, privateKey string) ([]byte, error) {
 func Encrypt(plainText []byte, publicKey string) ([]byte, error) {
 	rsaPubB, err := base64.StdEncoding.DecodeString(publicKey)
 	if err != nil {
-		return nil, fmt.Errorf("rsa.EncryptStr: %w", err)
+		return nil, fmt.Errorf("rsa.Encrypt: %w", err)
 	}
 
 	rsaPub, err := x509.ParsePKCS1PublicKey(rsaPubB)
@@ -50,4 +51,23 @@ func Encrypt(plainText []byte, publicKey string) ([]byte, error) {
 	}
 
 	return rsa.EncryptPKCS1v15(rand.Reader, rsaPub, plainText)
+}
+
+func Verify(publicKey string, hash, signature []byte) (bool, error) {
+	rsaPubB, err := base64.StdEncoding.DecodeString(publicKey)
+	if err != nil {
+		return false, fmt.Errorf("rsa.Verify: %w", err)
+	}
+
+	rsaPub, err := x509.ParsePKCS1PublicKey(rsaPubB)
+	if err != nil {
+		return false, fmt.Errorf("rsa.Verify: %w", err)
+	}
+
+	err = rsa.VerifyPKCS1v15(rsaPub, crypto.SHA256, hash, signature)
+	if err != nil {
+		return false, fmt.Errorf("rsa.Verify: %w", err)
+	}
+
+	return true, nil
 }
