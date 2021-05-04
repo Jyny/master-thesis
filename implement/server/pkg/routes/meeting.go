@@ -11,7 +11,8 @@ import (
 func createMeeting(c *gin.Context) {
 	sessionKey := string(aes.CreateKey())
 	meeting := model.Meeting{
-		SessionKey: sessionKey,
+		SessionKey:    sessionKey,
+		AllowRegister: true,
 	}
 
 	err := orm.Create(&meeting).Error
