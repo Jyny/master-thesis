@@ -36,9 +36,9 @@ func routes() {
 	meeting.POST("/:id/rec/:kind", uploadRec)
 
 	unseal := v1.Group("/unseal")
-	challenge := v1.Group("/challenge")
-	challenge.GET("/:meetingid/:ownderid/", getChallenge)
-	challenge.PUT("/:meetingid/:ownderid/", solveChallenge)
+	challenge := unseal.Group("/challenge")
+	challenge.GET("/:meetingid/:ownerid", getChallenge)
+	challenge.PUT("/:meetingid/:ownerid", solveChallenge)
 
 	unseal.GET("/:id", unsealREC)
 }
