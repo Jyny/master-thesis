@@ -200,8 +200,7 @@ func solveChallenge(c *gin.Context) {
 
 func unsealREC(c *gin.Context) {
 	type urlBinding struct {
-		MeetingID string `uri:"meetingid" binding:"required,uuid"`
-		OwnerID   string `uri:"ownerid" binding:"required,uuid"`
+		ID string `uri:"id" binding:"required,uuid"`
 	}
 
 	var binding urlBinding
@@ -212,7 +211,7 @@ func unsealREC(c *gin.Context) {
 		return
 	}
 
-	meetingID, err := uuid.Parse(binding.MeetingID)
+	meetingID, err := uuid.Parse(binding.ID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
