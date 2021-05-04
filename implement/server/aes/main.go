@@ -12,5 +12,4 @@ func main() {
 	} else {
 		aes.EncryptFile([]byte(os.Args[1]), os.Args[2], os.Args[1])
 	}
-
 }
