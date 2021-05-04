@@ -4,12 +4,19 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"net/http"
+	"path/filepath"
 
+	"server/pkg/aes"
 	"server/pkg/model"
 	"server/pkg/rsa"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/hashicorp/vault/shamir"
+)
+
+var (
+	fileNameDecRecN = "recndec"
 )
 
 func getChallenge(c *gin.Context) {
@@ -225,10 +232,61 @@ func unsealREC(c *gin.Context) {
 	switch {
 	// single owner
 	case len(owners) == 1:
+		if owners[0].Answer == nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "challenge unsolved",
+			})
+			return
+		}
+
+		sessionKey := owners[0].Answer
+		err := aes.DecryptFile(sessionKey,
+			filepath.Join(uploadPath, meetingID.String(), fileNameRecN),
+			filepath.Join(uploadPath, meetingID.String(), fileNameDecRecN),
+		)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{})
 
 	// multi owner
 	case len(owners) > 1:
-		c.JSON(http.StatusNotImplemented, gin.H{})
+		for _, owner := range owners {
+			if owner.Answer == nil {
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": "challenge unsolved",
+				})
+				return
+			}
+		}
+
+		shares := [][]byte{}
+		for idx, owner := range owners {
+			shares[idx] = owner.Answer
+		}
+		sessionKey, err := shamir.Combine(shares)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		err = aes.DecryptFile(sessionKey,
+			filepath.Join(uploadPath, meetingID.String(), fileNameRecN),
+			filepath.Join(uploadPath, meetingID.String(), fileNameDecRecN),
+		)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{})
 
 	// exception
 	default:

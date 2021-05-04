@@ -70,7 +70,7 @@ func uploadRec(c *gin.Context) {
 		return
 	}
 
-	err = os.MkdirAll(filepath.Join(uploadPath, binding.ID), os.ModePerm)
+	err = os.MkdirAll(filepath.Join(uploadPath, meetingID.String()), os.ModePerm)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -78,7 +78,7 @@ func uploadRec(c *gin.Context) {
 		return
 	}
 
-	err = c.SaveUploadedFile(file, filepath.Join(uploadPath, binding.ID, filename))
+	err = c.SaveUploadedFile(file, filepath.Join(uploadPath, meetingID.String(), filename))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),

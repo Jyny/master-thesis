@@ -71,3 +71,22 @@ func Verify(publicKey string, hash, signature []byte) (bool, error) {
 
 	return true, nil
 }
+
+func Sign(publicKey string, hash []byte) ([]byte, error) {
+	rsaPrivB, err := base64.StdEncoding.DecodeString(publicKey)
+	if err != nil {
+		return nil, fmt.Errorf("rsa.Sign: %w", err)
+	}
+
+	rsaPriv, err := x509.ParsePKCS1PrivateKey(rsaPrivB)
+	if err != nil {
+		return nil, fmt.Errorf("rsa.Sign: %w", err)
+	}
+
+	signature, err := rsa.SignPKCS1v15(rand.Reader, rsaPriv, crypto.SHA256, hash)
+	if err != nil {
+		return nil, fmt.Errorf("rsa.Sign: %w", err)
+	}
+
+	return signature, nil
+}
