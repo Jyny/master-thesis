@@ -5,6 +5,6 @@ import "github.com/google/uuid"
 type Owner struct {
 	Base
 	PublicKey string
-	SessionID uuid.UUID
-	Session   Meeting
+	MeetingID uuid.UUID
+	Meeting   Meeting
 }
