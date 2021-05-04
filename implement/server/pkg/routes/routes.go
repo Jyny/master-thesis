@@ -33,8 +33,7 @@ func routes() {
 	meeting.POST("/", createMeeting)
 	meeting.POST("/:id/owner", registerOwner)
 	meeting.POST("/:id/end", endOfRegister)
-	meeting.POST("/:id/rec_j", uploadRecJ)
-	meeting.POST("/:id/rec_n", uploadRecN)
+	meeting.POST("/:id/rec/:kind", uploadRec)
 
 	unseal := v1.Group("/unseal")
 	challenge := v1.Group("/challenge")

@@ -9,3 +9,4 @@ db:
 .PHONY: clean
 clean:
 	docker stop pg-thesis
+	git clean -Xf .
