@@ -4,19 +4,18 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"net/http"
+	"os/exec"
 	"path/filepath"
 
 	"server/pkg/aes"
+	"server/pkg/config"
 	"server/pkg/model"
 	"server/pkg/rsa"
+	"server/pkg/worker"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/hashicorp/vault/shamir"
-)
-
-var (
-	fileNameDecRecN = "recndec"
 )
 
 func getChallenge(c *gin.Context) {
@@ -240,8 +239,8 @@ func unsealREC(c *gin.Context) {
 
 		sessionKey := owners[0].Answer
 		err := aes.DecryptFile(sessionKey,
-			filepath.Join(uploadPath, meetingID.String(), fileNameRecN),
-			filepath.Join(uploadPath, meetingID.String(), fileNameDecRecN),
+			filepath.Join(config.UploadPath, meetingID.String(), config.FileNameRecN),
+			filepath.Join(config.UploadPath, meetingID.String(), config.FileNameDecRecN),
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -250,6 +249,13 @@ func unsealREC(c *gin.Context) {
 			return
 		}
 
+		workerPool.Waiting <- worker.Task{
+			MeetingID: meetingID,
+			Class:     model.ALIGN,
+			CMD: exec.Command("./estimat-shift",
+				filepath.Join(config.UploadPath, meetingID.String(), config.FileNameRecJ),
+				filepath.Join(config.UploadPath, meetingID.String(), config.FileNameDecRecN)),
+		}
 		c.JSON(http.StatusOK, gin.H{})
 
 	// multi owner
@@ -275,8 +281,8 @@ func unsealREC(c *gin.Context) {
 			return
 		}
 		err = aes.DecryptFile(sessionKey,
-			filepath.Join(uploadPath, meetingID.String(), fileNameRecN),
-			filepath.Join(uploadPath, meetingID.String(), fileNameDecRecN),
+			filepath.Join(config.UploadPath, meetingID.String(), config.FileNameRecN),
+			filepath.Join(config.UploadPath, meetingID.String(), config.FileNameDecRecN),
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -285,6 +291,13 @@ func unsealREC(c *gin.Context) {
 			return
 		}
 
+		workerPool.Waiting <- worker.Task{
+			MeetingID: meetingID,
+			Class:     model.ALIGN,
+			CMD: exec.Command("./estimat-shift",
+				filepath.Join(config.UploadPath, meetingID.String(), config.FileNameRecJ),
+				filepath.Join(config.UploadPath, meetingID.String(), config.FileNameDecRecN)),
+		}
 		c.JSON(http.StatusOK, gin.H{})
 
 	// exception

@@ -2,18 +2,21 @@ package routes
 
 import (
 	"net/http"
+	"server/pkg/worker"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 var (
-	orm    *gorm.DB
-	router = gin.Default()
+	orm        *gorm.DB
+	workerPool *worker.Worker
+	router     = gin.Default()
 )
 
-func Run(db *gorm.DB, addr string) {
+func Run(addr string, db *gorm.DB, worker *worker.Worker) {
 	orm = db
+	workerPool = worker
 	routes()
 
 	if err := router.Run(addr); err != nil {
