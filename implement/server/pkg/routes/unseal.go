@@ -227,6 +227,14 @@ func unsealREC(c *gin.Context) {
 		return
 	}
 
+	task := worker.Task{
+		MeetingID: meetingID,
+		Class:     model.ALIGN,
+		CMD: exec.Command("./estimat-shift/main",
+			filepath.Join(config.UploadPath, meetingID.String(), config.FileNameRecJ),
+			filepath.Join(config.UploadPath, meetingID.String(), config.FileNameDecRecN)),
+	}
+
 	switch {
 	// single owner
 	case len(owners) == 1:
@@ -249,13 +257,7 @@ func unsealREC(c *gin.Context) {
 			return
 		}
 
-		workerPool.Waiting <- worker.Task{
-			MeetingID: meetingID,
-			Class:     model.ALIGN,
-			CMD: exec.Command("./estimat-shift",
-				filepath.Join(config.UploadPath, meetingID.String(), config.FileNameRecJ),
-				filepath.Join(config.UploadPath, meetingID.String(), config.FileNameDecRecN)),
-		}
+		workerPool.Waiting <- task
 		c.JSON(http.StatusOK, gin.H{})
 
 	// multi owner
@@ -291,13 +293,7 @@ func unsealREC(c *gin.Context) {
 			return
 		}
 
-		workerPool.Waiting <- worker.Task{
-			MeetingID: meetingID,
-			Class:     model.ALIGN,
-			CMD: exec.Command("./estimat-shift",
-				filepath.Join(config.UploadPath, meetingID.String(), config.FileNameRecJ),
-				filepath.Join(config.UploadPath, meetingID.String(), config.FileNameDecRecN)),
-		}
+		workerPool.Waiting <- task
 		c.JSON(http.StatusOK, gin.H{})
 
 	// exception

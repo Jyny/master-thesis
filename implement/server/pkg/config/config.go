@@ -5,4 +5,5 @@ var (
 	FileNameRecJ    = "recj"
 	FileNameRecN    = "recn"
 	FileNameDecRecN = "recndec"
+	FileNameRec     = "rec.wav"
 )
