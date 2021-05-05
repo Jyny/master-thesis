@@ -3,6 +3,7 @@ package sql
 import (
 	"fmt"
 	"server/pkg/model"
+	"strings"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -25,6 +26,19 @@ func Migration(db *gorm.DB) {
 	// create extension
 	createExtension(db, "uuid-ossp")
 
+	// create enmu type
+	createEnum(db, model.StatusType, []string{
+		string(model.PENDING),
+		string(model.RUNNING),
+		string(model.COMPLETE),
+	})
+
+	// create enmu type
+	createEnum(db, model.WorkerClassType, []string{
+		string(model.ALIGN),
+		string(model.ANC),
+	})
+
 	// auto migration
 	err = db.AutoMigrate(&model.Meeting{})
 	if err != nil {
@@ -39,4 +53,12 @@ func Migration(db *gorm.DB) {
 
 func createExtension(db *gorm.DB, ext string) {
 	db.Exec(fmt.Sprintf("CREATE EXTENSION IF NOT EXISTS \"%s\";", ext))
+}
+
+func createEnum(db *gorm.DB, enumname string, enumvalues []string) {
+	db.Exec(fmt.Sprintf(
+		"CREATE TYPE %s AS ENUM (%s);",
+		enumname,
+		"'"+strings.Join(enumvalues, "', '")+"'",
+	))
 }

@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	fileNameDecRecN = "recndec"
+	FileNameDecRecN = "recndec"
 )
 
 func getChallenge(c *gin.Context) {
@@ -240,8 +240,8 @@ func unsealREC(c *gin.Context) {
 
 		sessionKey := owners[0].Answer
 		err := aes.DecryptFile(sessionKey,
-			filepath.Join(uploadPath, meetingID.String(), fileNameRecN),
-			filepath.Join(uploadPath, meetingID.String(), fileNameDecRecN),
+			filepath.Join(UploadPath, meetingID.String(), FileNameRecN),
+			filepath.Join(UploadPath, meetingID.String(), FileNameDecRecN),
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -275,8 +275,8 @@ func unsealREC(c *gin.Context) {
 			return
 		}
 		err = aes.DecryptFile(sessionKey,
-			filepath.Join(uploadPath, meetingID.String(), fileNameRecN),
-			filepath.Join(uploadPath, meetingID.String(), fileNameDecRecN),
+			filepath.Join(UploadPath, meetingID.String(), FileNameRecN),
+			filepath.Join(UploadPath, meetingID.String(), FileNameDecRecN),
 		)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{

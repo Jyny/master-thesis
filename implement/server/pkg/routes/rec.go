@@ -11,9 +11,9 @@ import (
 )
 
 var (
-	uploadPath   = "upload"
-	fileNameRecJ = "recj"
-	fileNameRecN = "recn"
+	UploadPath   = "upload"
+	FileNameRecJ = "recj"
+	FileNameRecN = "recn"
 )
 
 func uploadRec(c *gin.Context) {
@@ -61,16 +61,16 @@ func uploadRec(c *gin.Context) {
 
 	filename := ""
 	switch {
-	case binding.Kind == fileNameRecJ:
-		filename = fileNameRecJ
-	case binding.Kind == fileNameRecN:
-		filename = fileNameRecN
+	case binding.Kind == FileNameRecJ:
+		filename = FileNameRecJ
+	case binding.Kind == FileNameRecN:
+		filename = FileNameRecN
 	default:
 		c.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
 
-	err = os.MkdirAll(filepath.Join(uploadPath, meetingID.String()), os.ModePerm)
+	err = os.MkdirAll(filepath.Join(UploadPath, meetingID.String()), os.ModePerm)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -78,7 +78,7 @@ func uploadRec(c *gin.Context) {
 		return
 	}
 
-	err = c.SaveUploadedFile(file, filepath.Join(uploadPath, meetingID.String(), filename))
+	err = c.SaveUploadedFile(file, filepath.Join(UploadPath, meetingID.String(), filename))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
