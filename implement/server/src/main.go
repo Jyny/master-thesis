@@ -11,5 +11,5 @@ func main() {
 	gorm := sql.GromInit(os.Getenv("DB"))
 	worker := worker.New(gorm)
 	worker.Start()
-	routes.Run("localhost:8080", gorm, worker)
+	routes.Run("0.0.0.0:8080", gorm, worker)
 }

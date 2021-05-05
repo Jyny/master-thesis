@@ -3,6 +3,7 @@ package worker
 import (
 	"io"
 	"log"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"server/pkg/config"
@@ -117,12 +118,20 @@ func (w *Worker) runner(workerID uuid.UUID) {
 			log.Println(err)
 		}
 
+		pwd, err := os.Getwd()
+		if err != nil {
+			log.Println(err)
+		}
+
 		w.Waiting <- Task{
 			MeetingID: task.MeetingID,
 			Class:     model.ANC,
-			CMD: exec.Command("python3", "anc.py", strconv.Itoa(shift),
+			CMD: exec.Command("docker",
+				"run", "--rm", "-v", pwd+":/home/jovyan", "anc", "python3", "anc/anc.py",
 				filepath.Join(config.UploadPath, worker.MeetingID.String(), config.FileNameRecJ),
 				filepath.Join(config.UploadPath, worker.MeetingID.String(), config.FileNameDecRecN),
+				filepath.Join(config.UploadPath, worker.MeetingID.String(), config.FileNameRec),
+				strconv.Itoa(shift),
 			),
 		}
 	}

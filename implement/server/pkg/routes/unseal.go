@@ -192,9 +192,8 @@ func solveChallenge(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"error": "challenge succeeded",
+		"status": "challenge succeeded",
 	})
-
 }
 
 func unsealREC(c *gin.Context) {
@@ -227,6 +226,22 @@ func unsealREC(c *gin.Context) {
 		return
 	}
 
+	workers := []model.Worker{}
+	err = orm.Where("meeting_id = ?", meetingID).Find(&workers).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if len(workers) != 0 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "start unsealing",
+		})
+		return
+	}
+
 	switch {
 	// single owner
 	case len(owners) == 1:
@@ -248,15 +263,6 @@ func unsealREC(c *gin.Context) {
 			})
 			return
 		}
-
-		workerPool.Waiting <- worker.Task{
-			MeetingID: meetingID,
-			Class:     model.ALIGN,
-			CMD: exec.Command("./estimat-shift",
-				filepath.Join(config.UploadPath, meetingID.String(), config.FileNameRecJ),
-				filepath.Join(config.UploadPath, meetingID.String(), config.FileNameDecRecN)),
-		}
-		c.JSON(http.StatusOK, gin.H{})
 
 	// multi owner
 	case len(owners) > 1:
@@ -291,19 +297,22 @@ func unsealREC(c *gin.Context) {
 			return
 		}
 
-		workerPool.Waiting <- worker.Task{
-			MeetingID: meetingID,
-			Class:     model.ALIGN,
-			CMD: exec.Command("./estimat-shift",
-				filepath.Join(config.UploadPath, meetingID.String(), config.FileNameRecJ),
-				filepath.Join(config.UploadPath, meetingID.String(), config.FileNameDecRecN)),
-		}
-		c.JSON(http.StatusOK, gin.H{})
-
 	// exception
 	default:
 		c.JSON(http.StatusBadRequest, gin.H{
 			"session_id": meetingID,
 		})
+		return
 	}
+
+	workerPool.Waiting <- worker.Task{
+		MeetingID: meetingID,
+		Class:     model.ALIGN,
+		CMD: exec.Command("./estimat-shift/main",
+			filepath.Join(config.UploadPath, meetingID.String(), config.FileNameRecJ),
+			filepath.Join(config.UploadPath, meetingID.String(), config.FileNameDecRecN)),
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status": "start unsealing",
+	})
 }

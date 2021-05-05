@@ -1,1 +1,15 @@
+# General
+.DS_Store
+
+.jupyter
+.ipython
+.ipynb_checkpoints/
+__pycache__/
+
+main
+.cache
+.config
+.local
+
 upload/
+db/
