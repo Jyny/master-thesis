@@ -10,6 +10,9 @@ func main() {
 	if len(os.Args) < 2 {
 		fmt.Println(string(aes.CreateKey()))
 	} else {
-		aes.EncryptFile([]byte(os.Args[1]), os.Args[2], os.Args[1])
+		err := aes.EncryptFile([]byte(os.Args[1]), os.Args[2], os.Args[1])
+		if err != nil {
+			panic(err)
+		}
 	}
 }
