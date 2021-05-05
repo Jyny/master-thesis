@@ -4,8 +4,11 @@ import (
 	"io"
 	"log"
 	"os/exec"
+	"path/filepath"
+	"server/pkg/config"
 	"server/pkg/model"
 	"strconv"
+	"strings"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -25,13 +28,14 @@ type Task struct {
 type Worker struct {
 	orm     *gorm.DB
 	Waiting chan Task
-	Running chan Task
+	running chan Task
 }
 
-func New() Worker {
-	return Worker{
+func New(orm *gorm.DB) *Worker {
+	return &Worker{
+		orm:     orm,
 		Waiting: make(chan Task, maxWaiting),
-		Running: make(chan Task, maxRunning),
+		running: make(chan Task, maxRunning),
 	}
 }
 
@@ -53,13 +57,13 @@ func (w *Worker) listener() {
 			log.Println(err)
 		}
 
-		w.Running <- task
+		w.running <- task
 		go w.runner(worker.ID)
 	}
 }
 
 func (w *Worker) runner(workerID uuid.UUID) {
-	task := <-w.Running
+	task := <-w.running
 
 	stdout, err := task.CMD.StdoutPipe()
 	if err != nil {
@@ -85,10 +89,6 @@ func (w *Worker) runner(workerID uuid.UUID) {
 		log.Println(err)
 	}
 
-	if err := task.CMD.Wait(); err != nil {
-		log.Println(err)
-	}
-
 	stderrb, err := io.ReadAll(stderr)
 	if err != nil {
 		log.Println(err)
@@ -96,6 +96,10 @@ func (w *Worker) runner(workerID uuid.UUID) {
 
 	stdoutb, err := io.ReadAll(stdout)
 	if err != nil {
+		log.Println(err)
+	}
+
+	if err := task.CMD.Wait(); err != nil {
 		log.Println(err)
 	}
 
@@ -108,7 +112,7 @@ func (w *Worker) runner(workerID uuid.UUID) {
 	}
 
 	if worker.Class == model.ALIGN {
-		shift, err := strconv.Atoi(string(stdoutb))
+		shift, err := strconv.Atoi(strings.Trim(string(string(stdoutb)), "\n"))
 		if err != nil {
 			log.Println(err)
 		}
@@ -116,7 +120,10 @@ func (w *Worker) runner(workerID uuid.UUID) {
 		w.Waiting <- Task{
 			MeetingID: task.MeetingID,
 			Class:     model.ANC,
-			CMD:       exec.Command("python3", "anc.py", strconv.Itoa(shift), ""),
+			CMD: exec.Command("python3", "anc.py", strconv.Itoa(shift),
+				filepath.Join(config.UploadPath, worker.MeetingID.String(), config.FileNameRecJ),
+				filepath.Join(config.UploadPath, worker.MeetingID.String(), config.FileNameDecRecN),
+			),
 		}
 	}
 }

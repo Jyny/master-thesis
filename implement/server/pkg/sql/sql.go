@@ -49,6 +49,12 @@ func Migration(db *gorm.DB) {
 	if err != nil {
 		panic(err)
 	}
+
+	err = db.AutoMigrate(&model.Worker{})
+	if err != nil {
+		panic(err)
+	}
+
 }
 
 func createExtension(db *gorm.DB, ext string) {

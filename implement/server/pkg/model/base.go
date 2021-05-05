@@ -8,5 +8,6 @@ import (
 
 type Base struct {
 	ID        uuid.UUID `gorm:"type:uuid;primaryKey;default:uuid_generate_v4()"`
+	UpdatedAt time.Time
 	CreatedAt time.Time
 }

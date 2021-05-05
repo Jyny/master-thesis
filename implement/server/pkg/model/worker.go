@@ -24,8 +24,8 @@ const (
 
 type Worker struct {
 	Base
-	Class     WorkerClass
-	Status    Status
+	Class     WorkerClass `gorm:"type:workerclass"`
+	Status    Status      `gorm:"type:status"`
 	StdOut    []byte
 	StdErr    []byte
 	MeetingID uuid.UUID

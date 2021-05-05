@@ -4,16 +4,11 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"server/pkg/config"
 	"server/pkg/model"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-)
-
-var (
-	UploadPath   = "upload"
-	FileNameRecJ = "recj"
-	FileNameRecN = "recn"
 )
 
 func uploadRec(c *gin.Context) {
@@ -61,16 +56,16 @@ func uploadRec(c *gin.Context) {
 
 	filename := ""
 	switch {
-	case binding.Kind == FileNameRecJ:
-		filename = FileNameRecJ
-	case binding.Kind == FileNameRecN:
-		filename = FileNameRecN
+	case binding.Kind == config.FileNameRecJ:
+		filename = config.FileNameRecJ
+	case binding.Kind == config.FileNameRecN:
+		filename = config.FileNameRecN
 	default:
 		c.JSON(http.StatusBadRequest, gin.H{})
 		return
 	}
 
-	err = os.MkdirAll(filepath.Join(UploadPath, meetingID.String()), os.ModePerm)
+	err = os.MkdirAll(filepath.Join(config.UploadPath, meetingID.String()), os.ModePerm)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -78,7 +73,7 @@ func uploadRec(c *gin.Context) {
 		return
 	}
 
-	err = c.SaveUploadedFile(file, filepath.Join(UploadPath, meetingID.String(), filename))
+	err = c.SaveUploadedFile(file, filepath.Join(config.UploadPath, meetingID.String(), filename))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
