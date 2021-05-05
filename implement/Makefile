@@ -2,7 +2,6 @@ server/main: anc estimat-shift/main
 	cd server && go build src/main.go
 	DB="postgresql://postgres:8d137db2e7f8@127.0.0.1:5432/postgres" server/main
 
-
 estimat-shift/main:
 	cd estimat-shift && go build src/main.go
 
@@ -14,6 +13,19 @@ anc:
 db:
 	mkdir -p db
 	docker run --name pg-thesis --rm -d -p 5432:5432 -v ${PWD}/db:/var/lib/postgresql/data -e PGDATA=/var/lib/postgresql/data/pgdata -e POSTGRES_PASSWORD=8d137db2e7f8 postgres
+
+
+
+
+.PHONY: pi
+pi: aes
+	python3 pi/raspberry.py
+
+aes:
+	cd server && go build aes/main.go
+	cp server/main ./aes
+
+
 
 .PHONY: clean
 clean:
