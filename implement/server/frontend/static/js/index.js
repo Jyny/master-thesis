@@ -2,6 +2,7 @@ import welcome from "./views/welcome.js";
 import register from "./views/register.js";
 import owner from "./views/owner.js";
 import challenge from "./views/challenge.js";
+import unseal from "./views/unseal.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     router();
@@ -14,7 +15,7 @@ const router = async () => {
         register : {view: register },
         owner:  {view: owner},
         challenge : {view: challenge},
-        unseal: {}
+        unseal: {view: unseal}
     };
 
     let state = docCookies.getItem(appstate)

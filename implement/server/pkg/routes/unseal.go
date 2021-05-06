@@ -84,9 +84,9 @@ func getChallenge(c *gin.Context) {
 		})
 		return
 	}
-	answer := []byte{}
+
 	if json.PK != "" {
-		answer, err = rsa.Decrypt(owner.Challenge, json.PK)
+		answer, err := rsa.Decrypt(owner.Challenge, json.PK)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": err.Error(),
@@ -240,6 +240,9 @@ func solveChallenge(c *gin.Context) {
 		return
 	}
 
+	c.SetCookie(cookieAppstate, appstate_unseal,
+		0, "/app/"+meetingID.String(), "", false, false,
+	)
 	c.JSON(http.StatusOK, gin.H{
 		"status": "challenge succeeded",
 	})
