@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"io/ioutil"
 	"net/http"
 	"server/pkg/worker"
 
@@ -39,9 +40,19 @@ func routes() {
 	meeting.POST("/:id/rec/:kind", uploadRec)
 
 	unseal := v1.Group("/unseal")
+	unseal.GET("/:id", unsealREC)
+
 	challenge := unseal.Group("/challenge")
 	challenge.GET("/:meetingid/:ownerid", getChallenge)
 	challenge.PUT("/:meetingid/:ownerid", solveChallenge)
 
-	unseal.GET("/:id", unsealREC)
+	app := router.Group("/app")
+	app.Static("/static", "server/frontend/static")
+	app.GET("/", index)
+	app.GET("/:route", index)
+}
+
+func index(ctx *gin.Context) {
+	file, _ := ioutil.ReadFile("server/frontend/index.html")
+	ctx.Data(http.StatusOK, "text/html; charset=utf-8", file)
 }
