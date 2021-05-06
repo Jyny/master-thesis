@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"io/ioutil"
 	"net/http"
 	"server/pkg/worker"
 
@@ -28,7 +27,7 @@ func Run(addr string, db *gorm.DB, worker *worker.Worker) {
 func routes() {
 	root := router.Group("/")
 	root.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "master thesis server impl")
+		c.Redirect(http.StatusFound, "/app")
 	})
 
 	v1 := router.Group("/v1")
@@ -49,10 +48,5 @@ func routes() {
 	app := router.Group("/app")
 	app.Static("/static", "server/frontend/static")
 	app.GET("/", index)
-	app.GET("/:route", index)
-}
-
-func index(ctx *gin.Context) {
-	file, _ := ioutil.ReadFile("server/frontend/index.html")
-	ctx.Data(http.StatusOK, "text/html; charset=utf-8", file)
+	app.GET("/:id", insession)
 }

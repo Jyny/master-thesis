@@ -16,7 +16,7 @@ export default class extends abstractview {
                 <div class="input-group-prepend">
                     <span class="input-group-text">Session ID</span>
                 </div>
-                <input type="text" class="form-control" disabled="disabled">
+                <input type="text" class="form-control" value="${this.params.session_id}" readonly>
             </div>
             <p>
                 <a class="btn btn-lg btn-secondary">Register As Owner</a>
