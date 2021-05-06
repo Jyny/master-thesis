@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const router = async () => {
-    const appstate = "appstate"
     const routes = {
         welcome : {view: welcome },
         register : {view: register },
@@ -18,7 +17,7 @@ const router = async () => {
         unseal: {view: unseal}
     };
 
-    let state = docCookies.getItem(appstate)
+    let appstate = docCookies.getItem("appstate") || "welcome"
     let parmas = {
         session_id : docCookies.getItem("session_id"),
         owner_id : docCookies.getItem("owner_id"),
@@ -28,7 +27,7 @@ const router = async () => {
         sign: docCookies.getItem("sign")
     }
 
-    let view = new routes[state].view(parmas)
+    let view = new routes[appstate].view(parmas)
     document.querySelector("#app").innerHTML = await view.getHtml();
     view.listener()
 };

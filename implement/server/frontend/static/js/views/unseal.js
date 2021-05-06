@@ -8,7 +8,7 @@ export default class extends abstractview {
 
     async getHtml() {
         return `
-            <h1>Unseal to Record</h1>
+            <h1>Unseal the Record</h1>
             <p>
                 Challenge Succeeded ! <br/>
                 If every Owner Challenge Succeeded, <br/>

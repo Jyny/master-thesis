@@ -11,11 +11,10 @@ import (
 )
 
 var (
-	appstate_welcome = "welcome"
-	appstate_reg     = "register"
-	appstate_owner   = "owner"
-	appstate_chall   = "challenge"
-	appstate_unseal  = "unseal"
+	appstate_reg    = "register"
+	appstate_owner  = "owner"
+	appstate_chall  = "challenge"
+	appstate_unseal = "unseal"
 
 	cookieAppstate  = "appstate"
 	cookieSessionID = "session_id"
@@ -27,10 +26,6 @@ var (
 )
 
 func index(c *gin.Context) {
-	c.SetCookie(cookieAppstate, appstate_welcome,
-		0, "/app", "", false, false,
-	)
-
 	file, _ := ioutil.ReadFile("server/frontend/index.html")
 	c.Data(http.StatusOK, "text/html; charset=utf-8", file)
 }
