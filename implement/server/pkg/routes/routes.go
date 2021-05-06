@@ -43,6 +43,7 @@ func routes() {
 
 	challenge := unseal.Group("/challenge")
 	challenge.GET("/:meetingid/:ownerid", getChallenge)
+	challenge.POST("/:meetingid/:ownerid", getChallenge)
 	challenge.PUT("/:meetingid/:ownerid", solveChallenge)
 
 	app := router.Group("/app")

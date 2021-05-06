@@ -28,7 +28,7 @@ export default class extends abstractview {
         const el = document.getElementById("reg_btn");
         const url = "/v1/meeting/" + this.params.session_id + "/owner"
         el.addEventListener("click", function() {
-            var xhttp = new XMLHttpRequest();
+            let xhttp = new XMLHttpRequest();
             xhttp.open("POST", url, true);
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4){

@@ -13,6 +13,7 @@ import (
 var (
 	appstate_welcome = "welcome"
 	appstate_reg     = "register"
+	appstate_owner   = "owner"
 	appstate_chall   = "challenge"
 	appstate_unseal  = "unseal"
 
@@ -22,6 +23,7 @@ var (
 	cookieOwnerKey  = "owner_key"
 	cookieChallenge = "challenge"
 	cookieAnswer    = "answer"
+	cookieSign      = "sign"
 )
 
 func index(c *gin.Context) {

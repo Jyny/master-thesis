@@ -1,5 +1,6 @@
 import welcome from "./views/welcome.js";
 import register from "./views/register.js";
+import owner from "./views/owner.js";
 import challenge from "./views/challenge.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -11,8 +12,9 @@ const router = async () => {
     const routes = {
         welcome : {view: welcome },
         register : {view: register },
-        challenge : {view: challenge },
-        unseal: {},
+        owner:  {view: owner},
+        challenge : {view: challenge},
+        unseal: {}
     };
 
     let state = docCookies.getItem(appstate)
@@ -21,7 +23,8 @@ const router = async () => {
         owner_id : docCookies.getItem("owner_id"),
         owner_key : docCookies.getItem("owner_key"),
         challenge : docCookies.getItem("challenge"),
-        answer: docCookies.getItem("answer")
+        answer: docCookies.getItem("answer"),
+        sign: docCookies.getItem("sign")
     }
 
     let view = new routes[state].view(parmas)

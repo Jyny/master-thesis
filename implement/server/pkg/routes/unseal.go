@@ -73,6 +73,55 @@ func getChallenge(c *gin.Context) {
 		return
 	}
 
+	var json struct {
+		PK string `json:"pk"`
+	}
+
+	err = c.Bind(&json)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	answer := []byte{}
+	if json.PK != "" {
+		answer, err = rsa.Decrypt(owner.Challenge, json.PK)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		hash := sha256.Sum256(answer)
+		sign, err := rsa.Sign(json.PK, hash[:])
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		c.SetCookie(cookieAnswer, base64.StdEncoding.EncodeToString(answer),
+			0, "/app/"+meetingID.String(), "", false, false,
+		)
+		c.SetCookie(cookieSign, base64.StdEncoding.EncodeToString(sign),
+			0, "/app/"+meetingID.String(), "", false, false,
+		)
+	}
+
+	if len(owner.Challenge) == 0 {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "no Challenge",
+		})
+		return
+	}
+
+	c.SetCookie(cookieAppstate, appstate_chall,
+		0, "/app/"+meetingID.String(), "", false, false,
+	)
+	c.SetCookie(cookieChallenge, base64.StdEncoding.EncodeToString(owner.Challenge),
+		0, "/app/"+meetingID.String(), "", false, false,
+	)
 	c.JSON(http.StatusOK, gin.H{
 		"session_id": meetingID,
 		"owner_id":   ownerID,

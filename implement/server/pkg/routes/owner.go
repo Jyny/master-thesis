@@ -70,7 +70,7 @@ func registerOwner(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie(cookieAppstate, appstate_chall,
+	c.SetCookie(cookieAppstate, appstate_owner,
 		0, "/app/"+meetingID.String(), "", false, false,
 	)
 	c.SetCookie(cookieOwnerID, owner.ID.String(),
