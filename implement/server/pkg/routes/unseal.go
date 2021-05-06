@@ -288,9 +288,13 @@ func unsealREC(c *gin.Context) {
 	}
 
 	if len(workers) != 0 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status": "start unsealing",
-		})
+		if len(workers) == 2 && workers[0].Status == model.COMPLETE && workers[1].Status == model.COMPLETE {
+			c.File(filepath.Join(config.UploadPath, meetingID.String(), config.FileNameRec))
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status": "start unsealing",
+			})
+		}
 		return
 	}
 

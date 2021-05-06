@@ -37,10 +37,9 @@ export default class extends abstractview {
     }
 
     async listener() {
-        const el = document.getElementById("unseal_btn");
         const url = "/v1/unseal/" + this.params.session_id
-        const ownerkey = this.params.owner_key
-        el.addEventListener("click", function() {
+        const unseal_btn = document.getElementById("unseal_btn");
+        unseal_btn.addEventListener("click", function() {
             let xhttp = new XMLHttpRequest();
             xhttp.open("GET", url, true);
             xhttp.onreadystatechange = function() {
@@ -49,6 +48,10 @@ export default class extends abstractview {
                 }
             };
             xhttp.send();
+        });
+        const dl_btn = document.getElementById("dl_btn");
+        dl_btn.addEventListener("click", function() {
+            window.location.href = url
         });
     }
 }
