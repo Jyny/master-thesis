@@ -27,7 +27,7 @@ func Run(addr string, db *gorm.DB, worker *worker.Worker) {
 func routes() {
 	root := router.Group("/")
 	root.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "master thesis server impl")
+		c.Redirect(http.StatusFound, "/app")
 	})
 
 	v1 := router.Group("/v1")
@@ -39,9 +39,15 @@ func routes() {
 	meeting.POST("/:id/rec/:kind", uploadRec)
 
 	unseal := v1.Group("/unseal")
+	unseal.GET("/:id", unsealREC)
+
 	challenge := unseal.Group("/challenge")
 	challenge.GET("/:meetingid/:ownerid", getChallenge)
+	challenge.POST("/:meetingid/:ownerid", getChallenge)
 	challenge.PUT("/:meetingid/:ownerid", solveChallenge)
 
-	unseal.GET("/:id", unsealREC)
+	app := router.Group("/app")
+	app.Static("/static", "server/frontend/static")
+	app.GET("/", index)
+	app.GET("/:id", insession)
 }

@@ -70,6 +70,15 @@ func registerOwner(c *gin.Context) {
 		return
 	}
 
+	c.SetCookie(cookieAppstate, appstate_owner,
+		0, "/app/"+meetingID.String(), "", false, false,
+	)
+	c.SetCookie(cookieOwnerID, owner.ID.String(),
+		0, "/app/"+meetingID.String(), "", false, false,
+	)
+	c.SetCookie(cookieOwnerKey, sk,
+		0, "/app/"+meetingID.String(), "", false, false,
+	)
 	c.JSON(http.StatusOK, gin.H{
 		"session_id": meetingID,
 		"owner_id":   owner.ID,
