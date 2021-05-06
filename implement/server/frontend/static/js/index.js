@@ -1,21 +1,22 @@
-import register from "./views/register.js";
 import welcome from "./views/welcome.js";
+import register from "./views/register.js";
+import challenge from "./views/challenge.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     router();
 });
 
-const router = async (state) => {
+const router = async () => {
     const appstate = "appstate"
     const routes = {
         welcome : {view: welcome },
         register : {view: register },
-        challenge : {},
+        challenge : {view: challenge },
         unseal: {},
     };
 
-    var state = docCookies.getItem(appstate)
-    var parmas = {
+    let state = docCookies.getItem(appstate)
+    let parmas = {
         session_id : docCookies.getItem("session_id"),
         owner_id : docCookies.getItem("owner_id"),
         owner_key : docCookies.getItem("owner_key"),
@@ -23,8 +24,9 @@ const router = async (state) => {
         answer: docCookies.getItem("answer")
     }
 
-    const view = new routes[state].view(parmas)
+    let view = new routes[state].view(parmas)
     document.querySelector("#app").innerHTML = await view.getHtml();
+    view.listener()
 };
 
 const docCookies = {

@@ -13,12 +13,13 @@ import (
 var (
 	appstate_welcome = "welcome"
 	appstate_reg     = "register"
-	appstate_chal    = "challenge"
+	appstate_chall   = "challenge"
 	appstate_unseal  = "unseal"
 
 	cookieAppstate  = "appstate"
 	cookieSessionID = "session_id"
 	cookieOwnerID   = "owner_id"
+	cookieOwnerKey  = "owner_key"
 	cookieChallenge = "challenge"
 	cookieAnswer    = "answer"
 )
