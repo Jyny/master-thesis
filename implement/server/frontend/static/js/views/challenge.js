@@ -10,8 +10,8 @@ export default class extends abstractview {
         return `
             <h1>Unseal Challenge</h1>
             <p>
-                Solve the Challenge to Unseal the Record. <br/>
-                Dcrypt Challenge and Sign your solve by Owner Key.
+                Solve the Challengeto Unseal the Record. <br/>
+                Decrypt challenge to <code>Solve and Sign</code> with Owner Key.
             </p>
             <div class="input-group mt-5 mb-3">
                 <div class="input-group-prepend">

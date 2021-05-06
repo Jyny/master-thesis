@@ -10,7 +10,7 @@ export default class extends abstractview {
         return `
             <h1>Seesion Owner</h1>
             <p>
-                If you want to Unseal the Session Record <br/> Click the button below to get Unseal Challenge.
+                If you want to Unseal the Session Record <br/> Click the button below to get <code>Unseal Challenge</code>.
             </p>
             <div class="input-group mt-5 mb-3">
                 <div class="input-group-prepend">

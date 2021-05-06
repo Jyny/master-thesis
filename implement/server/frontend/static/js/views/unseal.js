@@ -11,9 +11,9 @@ export default class extends abstractview {
             <h1>Unseal the Record</h1>
             <p>
                 Challenge Succeeded ! <br/>
-                If every Owner Challenge Succeeded, <br/>
-                Click the <code>Unseal</code>  button below to nseal. <br/>
-                After unseal completed, click <code>Access Record</code> to Download Record.
+                If every Owner has solved the challenge, <br/>
+                Click the <code>Unseal</code>  button below to Start Unseal. <br/>
+                Once Unseal completed, click <code>Access Record</code>.
             </p>
             <div class="input-group mt-5 mb-3">
                 <div class="input-group-prepend">

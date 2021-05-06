@@ -8,9 +8,9 @@ export default class extends abstractview {
 
     async getHtml() {
         return `
-            <h1>Welcome to New Session</h1>
+            <h1>Initialize Meeting Session</h1>
             <p>
-                If you want to register as an Session Owner. <br/> Click the button below.
+                If you want to register as an <code>Session Owner</code>. <br/> Click the button below.
             </p>
             <div class="input-group mt-5 mb-3">
                 <div class="input-group-prepend">
