@@ -12,7 +12,7 @@ export default class extends abstractview {
             <p>
                 Challenge Succeeded ! <br/>
                 If every Owner has solved the challenge, <br/>
-                Click the <code>Unseal</code>  button below to Start Unseal. <br/>
+                Click the <code>Unseal</code> button below to Start Unseal. <br/>
                 Once Unseal completed, click <code>Access Record</code>.
             </p>
             <div class="input-group mt-5 mb-3">

@@ -8,10 +8,12 @@ export default class extends abstractview {
 
     async getHtml() {
         return `
-            <h1>Unseal Challenge</h1>
+            <h1>Starting Unseal the Record</h1>
             <p>
-                Solve the Challengeto Unseal the Record. <br/>
-                Decrypt challenge to <code>Solve and Sign</code> with Owner Key.
+                After Meeting Session, <br/>
+                Owners can Request to Uneal the Record. <br/>
+                Solve the Challengeto <code>Proof you're Owner</code>. <br/>
+                Decrypt challenge and Sign it with Owner Key.
             </p>
             <div class="input-group mt-5 mb-3">
                 <div class="input-group-prepend">
