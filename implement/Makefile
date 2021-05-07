@@ -17,9 +17,9 @@ db:
 
 
 
-.PHONY: pi
-pi: aes
-	cd pi && pipenv run python raspberry.py
+.PHONY: client
+client: aes
+	cd client && pipenv run python client.py
 
 aes:
 	cd server && go build aes/main.go
