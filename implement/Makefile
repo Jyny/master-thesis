@@ -19,7 +19,7 @@ db:
 
 .PHONY: pi
 pi: aes
-	python3 pi/raspberry.py
+	cd pi && pipenv run python raspberry.py
 
 aes:
 	cd server && go build aes/main.go
