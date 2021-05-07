@@ -52,9 +52,11 @@ def query_end_reg(session_id):
     print("query_end_reg", r.text)
 
 def start_rec():
+    # TODO
     print("start_rec")
 
 def end_rec():
+    # TODO
     print("end_rec")
 
 def new_session():
@@ -62,7 +64,7 @@ def new_session():
     enc_recn(session_key)
     upload_recn(session_id, session_key)
     os.system("rm " + session_key)
-    qrcode_terminal.draw(server_url + "/app/" +session_id)
+    qrcode_terminal.draw(server_url + "/app/" +session_id) # TODO
     return session_id
 
 def start_session(session_id):
@@ -77,11 +79,11 @@ if __name__ == '__main__':
     if dev :
         print("DEV MODE")
 
-    input("\nCreate Meeting Session, Press key...")
+    input("\nCreate Meeting Session, Press key...") # TODO
     session_id = new_session()
 
-    input("\nStart Meeting Session, Press key...")
+    input("\nStart Meeting Session, Press key...") # TODO
     start_session(session_id)
 
-    input("\nEnd Meeting Session, Press key...")
+    input("\nEnd Meeting Session, Press key...") # TODO
     end_session(session_id)
