@@ -1,12 +1,13 @@
 import os, requests
-import qrcode_terminal
+import qrcode
 import RPi.GPIO as GPIO
+from PIL import Image,ImageDraw,ImageFont
+import epd2in7
 
 server_url = "http://192.168.88.88:8080"
 dev = True
-control_pin = 16
-light_pin = 13
-
+control_pin = 23
+light_pin = 27
 
 def  query_create_meeting():
     if dev :
@@ -37,6 +38,12 @@ def upload_recn(session_id, session_key):
     )
     print("upload_recn", r.text)
 
+def remove_recn(session_key):
+    if dev:
+        print("remove_recn")
+        return
+    os.system("rm " + session_key)
+
 def upload_recj(session_id):
     if dev:
         print("upload_recj")
@@ -63,52 +70,88 @@ def end_rec():
     # TODO
     print("end_rec")
 
+def start_jammer():
+    # TODO
+    print("start_jammer")
+
+def end_jammer():
+    # TODO
+    print("end_jammer")
+
+def genqrcode(url):
+    qr = qrcode.QRCode(
+        version=None,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=4,
+        border=0,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    qrfile = "qr.bmp"
+    img.save(qrfile)
+    return qrfile
+
+def screen_qr(qrfile):
+    bmp = Image.open(qrfile)
+    page = Image.new('1', (epd.height, epd.width), 255)
+    page.paste(bmp, (10,14))
+    epd.display(epd.getbuffer(page))
+
+def screen_clear():
+    page = Image.new('1', (epd.height, epd.width), 255)
+    epd.display(epd.getbuffer(page))
+
 def new_session():
     session_id, session_key = query_create_meeting()
     enc_recn(session_key)
     upload_recn(session_id, session_key)
-    os.system("rm " + session_key)
-    qrcode_terminal.draw(server_url + "/app/" +session_id) # TODO
+    remove_recn(session_key)
+    screen_qr(genqrcode(server_url + "/app/" +session_id))
     return session_id
 
 def start_session(session_id):
+    screen_clear()
     query_end_reg(session_id)
+    start_jammer()
     start_rec()
+    GPIO.output(light_pin, GPIO.HIGH)
 
 def end_session(session_id):
     end_rec()
+    end_jammer()
+    GPIO.output(light_pin, GPIO.LOW)
     upload_recj(session_id)
 
-def callback_gpio(ch):
-    print(ch, GPIO.input(ch))
-
-def setup_gpio():
-    GPIO.setmode(GPIO.BOARD)
-    
+def setup_button():
     GPIO.cleanup(light_pin)
     GPIO.setup(light_pin, GPIO.OUT)
 
     GPIO.cleanup(control_pin)
     GPIO.setup(control_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(control_pin, GPIO.FALLING, callback=callback_gpio, bouncetime=200)
+    GPIO.add_event_detect(control_pin, GPIO.FALLING, bouncetime=200)
+    GPIO.output(light_pin, GPIO.LOW)
 
 if __name__ == '__main__':
     if dev :
         print("DEV MODE")
 
-    setup_gpio()
-
+    epd = epd2in7.EPD()
+    epd.init()
+    setup_button()
+    
     while True:
         while not GPIO.event_detected(control_pin):
             pass
+        print("\n--- Init Meeting Session ---")
         session_id = new_session()
     
         while not GPIO.event_detected(control_pin):
             pass
-        GPIO.output(light_pin, GPIO.HIGH)
+        print("\n--- Start Meeting Session ---")
         start_session(session_id)
 
         while not GPIO.event_detected(control_pin):
             pass
+        print("\n--- End Meeting Session ---")
         end_session(session_id)
-        GPIO.output(light_pin, GPIO.LOW)
