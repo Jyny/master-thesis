@@ -1,4 +1,4 @@
-import os, requests
+import os, requests, subprocess, signal
 import qrcode
 import RPi.GPIO as GPIO
 from PIL import Image,ImageDraw,ImageFont
@@ -6,7 +6,7 @@ import epd2in7
 
 server_url = "http://192.168.88.88:8080"
 dev = True
-control_pin = 23
+btn_pin = 23
 light_pin = 27
 
 def  query_create_meeting():
@@ -63,12 +63,17 @@ def query_end_reg(session_id):
     print("query_end_reg", r.text)
 
 def start_rec():
-    # TODO
-    print("start_rec")
+    # arecord -r 44100 -f FLOAT_LE -c 2 -t wav -v recj.wav
+    proc_args = ['arecord','-r', '44100', '-f', 'FLOAT_LE', '-c', '2', '-t', 'wav', 'recj.wav']
+    rec_proc = subprocess.Popen(proc_args, shell=False, preexec_fn=os.setsid)
+    print("start_rec", rec_proc.pid)
+    return rec_proc
 
-def end_rec():
-    # TODO
-    print("end_rec")
+def end_rec(rec_proc):
+    os.killpg(rec_proc.pid, signal.SIGTERM)
+    rec_proc.terminate()
+    print("end_rec", rec_proc.pid)
+    rec_proc = None
 
 def start_jammer():
     # TODO
@@ -114,11 +119,12 @@ def start_session(session_id):
     screen_clear()
     query_end_reg(session_id)
     start_jammer()
-    start_rec()
+    rec_proc = start_rec()
     GPIO.output(light_pin, GPIO.HIGH)
+    return rec_proc
 
-def end_session(session_id):
-    end_rec()
+def end_session(session_id, rec_proc):
+    end_rec(rec_proc)
     end_jammer()
     GPIO.output(light_pin, GPIO.LOW)
     upload_recj(session_id)
@@ -127,9 +133,9 @@ def setup_button():
     GPIO.cleanup(light_pin)
     GPIO.setup(light_pin, GPIO.OUT)
 
-    GPIO.cleanup(control_pin)
-    GPIO.setup(control_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    GPIO.add_event_detect(control_pin, GPIO.FALLING, bouncetime=200)
+    GPIO.cleanup(btn_pin)
+    GPIO.setup(btn_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    GPIO.add_event_detect(btn_pin, GPIO.FALLING, bouncetime=200)
     GPIO.output(light_pin, GPIO.LOW)
 
 if __name__ == '__main__':
@@ -141,17 +147,17 @@ if __name__ == '__main__':
     setup_button()
     
     while True:
-        while not GPIO.event_detected(control_pin):
+        while not GPIO.event_detected(btn_pin):
             pass
         print("\n--- Init Meeting Session ---")
         session_id = new_session()
     
-        while not GPIO.event_detected(control_pin):
+        while not GPIO.event_detected(btn_pin):
             pass
         print("\n--- Start Meeting Session ---")
-        start_session(session_id)
+        rec_proc = start_session(session_id)
 
-        while not GPIO.event_detected(control_pin):
+        while not GPIO.event_detected(btn_pin):
             pass
         print("\n--- End Meeting Session ---")
-        end_session(session_id)
+        end_session(session_id, rec_proc)
