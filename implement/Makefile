@@ -21,6 +21,10 @@ db:
 client: aes
 	cd client && pipenv run python client.py
 
+.PHONY: pi
+pi: aes
+	python3 pi/pi.py
+
 aes:
 	cd server && go build aes/main.go
 	cp server/main ./aes
