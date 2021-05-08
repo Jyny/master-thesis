@@ -5,9 +5,10 @@ from PIL import Image,ImageDraw,ImageFont
 import epd2in7
 
 server_url = "http://192.168.88.88:8080"
-dev = True
+dev = False
 btn_pin = 23
 light_pin = 27
+jammer_pin = 16
 
 def  query_create_meeting():
     if dev :
@@ -23,8 +24,8 @@ def enc_recn(session_key):
     if dev:
         print("enc_recn")
         return
-    file = "../upload/d06c56b5-0622-466b-b9db-3c18bfc5e3ed/recndec"
-    os.system("../aes " + session_key + " " + file)
+    file = "recn.wav"
+    os.system("./aes " + session_key + " " + file)
     print("enc_recn")
 
 def upload_recn(session_id, session_key):
@@ -48,7 +49,7 @@ def upload_recj(session_id):
     if dev:
         print("upload_recj")
         return
-    file = "../upload/d06c56b5-0622-466b-b9db-3c18bfc5e3ed/recj"
+    file = "recj.wav"
     r = requests.post(
         server_url + "/v1/meeting/"+session_id+"/rec/recj",
         files={"file": open(file, 'rb')}
@@ -76,11 +77,11 @@ def end_rec(rec_proc):
     rec_proc = None
 
 def start_jammer():
-    # TODO
+    GPIO.output(jammer_pin, GPIO.HIGH)
     print("start_jammer")
 
 def end_jammer():
-    # TODO
+    GPIO.output(jammer_pin, GPIO.LOW)
     print("end_jammer")
 
 def genqrcode(url):
@@ -116,9 +117,9 @@ def new_session():
     return session_id
 
 def start_session(session_id):
+    start_jammer()
     screen_clear()
     query_end_reg(session_id)
-    start_jammer()
     rec_proc = start_rec()
     GPIO.output(light_pin, GPIO.HIGH)
     return rec_proc
@@ -129,14 +130,18 @@ def end_session(session_id, rec_proc):
     GPIO.output(light_pin, GPIO.LOW)
     upload_recj(session_id)
 
-def setup_button():
+def setup_gpio():
     GPIO.cleanup(light_pin)
     GPIO.setup(light_pin, GPIO.OUT)
+    GPIO.output(light_pin, GPIO.LOW)
+
+    GPIO.cleanup(jammer_pin)
+    GPIO.setup(jammer_pin, GPIO.OUT)
+    GPIO.output(jammer_pin, GPIO.LOW)
 
     GPIO.cleanup(btn_pin)
     GPIO.setup(btn_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
     GPIO.add_event_detect(btn_pin, GPIO.FALLING, bouncetime=200)
-    GPIO.output(light_pin, GPIO.LOW)
 
 if __name__ == '__main__':
     if dev :
@@ -144,7 +149,7 @@ if __name__ == '__main__':
 
     epd = epd2in7.EPD()
     epd.init()
-    setup_button()
+    setup_gpio()
     
     while True:
         while not GPIO.event_detected(btn_pin):
