@@ -12,8 +12,8 @@ jammer_pin = 16
 
 def  query_create_meeting():
     if dev :
-        session_id = "mock_session_id"
-        session_key = "mock_sessino_key"
+        session_id = "mockuuid-uuid-uuid-uuid-uuidmockuuid"
+        session_key = "mocksessinokeymocksessinokeymock"
         print("query_create_meeting", session_id, session_key)
         return session_id, session_key
     r = requests.post(server_url + "/v1/meeting/")
