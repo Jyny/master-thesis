@@ -87,7 +87,7 @@ def end_jammer():
 def genqrcode(url):
     qr = qrcode.QRCode(
         version=None,
-        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        error_correction=qrcode.constants.ERROR_CORRECT_M,
         box_size=4,
         border=0,
     )
@@ -100,8 +100,9 @@ def genqrcode(url):
 
 def screen_qr(qrfile):
     bmp = Image.open(qrfile)
+    bmp = bmp.resize((epd.width-10, epd.width-10))
     page = Image.new('1', (epd.height, epd.width), 255)
-    page.paste(bmp, (10,14))
+    page.paste(bmp, (5, 5))
     epd.display(epd.getbuffer(page))
 
 def screen_clear():
