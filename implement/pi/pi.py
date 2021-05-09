@@ -4,16 +4,20 @@ import RPi.GPIO as GPIO
 from PIL import Image,ImageDraw,ImageFont
 import epd2in7
 
+font = ImageFont.truetype(os.path.join("pi", 'Font.ttc'), 24)
+
 server_url = "http://192.168.88.88:8080"
 dev = False
 btn_pin = 23
 light_pin = 27
 jammer_pin = 16
 
+
+
 def  query_create_meeting():
     if dev :
-        session_id = "mock_session_id"
-        session_key = "mock_sessino_key"
+        session_id = "mockuuid-uuid-uuid-uuid-uuidmockuuid"
+        session_key = "mocksessinokeymocksessinokeymock"
         print("query_create_meeting", session_id, session_key)
         return session_id, session_key
     r = requests.post(server_url + "/v1/meeting/")
@@ -87,7 +91,7 @@ def end_jammer():
 def genqrcode(url):
     qr = qrcode.QRCode(
         version=None,
-        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        error_correction=qrcode.constants.ERROR_CORRECT_M,
         box_size=4,
         border=0,
     )
@@ -98,37 +102,52 @@ def genqrcode(url):
     img.save(qrfile)
     return qrfile
 
-def screen_qr(qrfile):
+def gen_frame(show_text):
+    page = Image.new('1', (epd.width, epd.height), 255)
+    draw = ImageDraw.Draw(page)
+    w, h = draw.textsize(show_text, font=font)
+    draw.text(((epd.width-w)/2, (epd.height-epd.width-h)/2), show_text, font=font, fill = 0)
+    return page
+
+def screen_text(show_text):
+    frame = gen_frame(show_text)
+    epd.display(epd.getbuffer(frame))
+
+def screen_qr(show_text, qrfile):
+    page = gen_frame(show_text)
     bmp = Image.open(qrfile)
-    page = Image.new('1', (epd.height, epd.width), 255)
-    page.paste(bmp, (10,14))
+    bmp = bmp.resize((epd.width-10, epd.width-10))
+    page.paste(bmp, (5, epd.height - epd.width + 5))
     epd.display(epd.getbuffer(page))
 
 def screen_clear():
-    page = Image.new('1', (epd.height, epd.width), 255)
+    page = Image.new('1', (epd.width, epd.height), 255)
     epd.display(epd.getbuffer(page))
 
 def new_session():
+    screen_text("Init  Session")
     session_id, session_key = query_create_meeting()
     enc_recn(session_key)
     upload_recn(session_id, session_key)
     remove_recn(session_key)
-    screen_qr(genqrcode(server_url + "/app/" +session_id))
+    screen_qr("Reg  Owner", genqrcode(server_url + "/app/" +session_id))
     return session_id
 
 def start_session(session_id):
+    screen_text("Start  Session")
     start_jammer()
-    screen_clear()
     query_end_reg(session_id)
     rec_proc = start_rec()
     GPIO.output(light_pin, GPIO.HIGH)
     return rec_proc
 
 def end_session(session_id, rec_proc):
+    screen_text("End  Session")
+    GPIO.output(light_pin, GPIO.LOW)
     end_rec(rec_proc)
     end_jammer()
-    GPIO.output(light_pin, GPIO.LOW)
     upload_recj(session_id)
+    screen_clear()
 
 def setup_gpio():
     GPIO.cleanup(light_pin)
@@ -152,6 +171,8 @@ if __name__ == '__main__':
     setup_gpio()
     
     while True:
+        screen_text("Meeting  Box")
+
         while not GPIO.event_detected(btn_pin):
             pass
         print("\n--- Init Meeting Session ---")
