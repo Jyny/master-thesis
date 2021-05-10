@@ -12,7 +12,7 @@ anc:
 .PHONY: db
 db:
 	mkdir -p db
-	docker run --name pg-thesis --rm -d -p 5432:5432 -v ${PWD}/db:/var/lib/postgresql/data -e PGDATA=/var/lib/postgresql/data/pgdata -e POSTGRES_PASSWORD=8d137db2e7f8 postgres
+	docker run --name pg-thesis --rm -d -p 127.0.0.1:5432:5432 -v ${PWD}/db:/var/lib/postgresql/data -e PGDATA=/var/lib/postgresql/data/pgdata -e POSTGRES_PASSWORD=8d137db2e7f8 postgres
 
 
 
