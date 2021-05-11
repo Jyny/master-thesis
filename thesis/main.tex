@@ -1,15 +1,21 @@
 \documentclass{style/ntust}
 
+\input{config/config}
 
 \begin{document}
 
-\input{front/cover.tex}
+% front
+\input{front/cover}
+\maketableofcontents
 
+% contents
+\mainmatter
 \input{contents/chapter01}
-% \input{contents/chapter02}
-% \input{contents/chapter03}
-% \input{contents/chapter03}
-% \input{contents/chapter04}
-% \input{contents/chapter04}
+\input{contents/chapter02}
+\input{contents/chapter03}
+\input{contents/chapter04}
+\input{contents/chapter05}
+
+% back
 
 \end{document}
