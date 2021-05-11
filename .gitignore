@@ -19,3 +19,16 @@ implement/qr.bmp
 implement/recj.wav
 implement/recn.wav
 implement/pi/.vscode/
+
+thesis/*.aux
+thesis/*.fdb_latexmk
+thesis/*.fls
+thesis/*.log
+thesis/*.lot
+thesis/*.lof
+thesis/*.toc
+thesis/*.pdf
+thesis/*.bbl
+thesis/*.blg
+thesis/*.out
+thesis/*.gz
