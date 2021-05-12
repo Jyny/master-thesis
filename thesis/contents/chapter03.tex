@@ -91,6 +91,16 @@ $Owner$ 定義為 $Attender$ 中的特權角色。$Owner$ 如未執行本研究�
 
 \subsection{$Server$}
 
+    $Server$ 為本研究所設計的系統核心組成要件之一，其設計能同時間處理一場以上的會談 ({\it Meeting Session}) 的進行，
+其角色為，執行系統機制「解封」 (Unseal)。此機制觸發於會談結束後，$Owner$ 向 $Server$ 發送請求執行。
+目的為取得有經系統機制 {\it ANC} 所產生有效之會談聲音記錄 $REC_{rev}$。本研究所設計系統可以確保 $Server$ 在會談開始後，
+直到成功解封之前，會談錄音 $REC_{N}$ 保有機密性。
+
+    在系統機制「解封」 (Unseal) 中，包含第一步：「{\it Challenge}」，與第二步：「{\it ANC}」。
+執行時，系統首先透過機制 {\it Challenge}，鑑別 $Owner$。在 {\it Single Owner Meeting Session} 情境中，
+$Owner$ 執行 {\it Challenge} 成功之後，$Server$ 即獲得授權，便可以接續執行 Unseal 機制中的第二步 {\it ANC}。
+在 {\it Multi Owner Meeting Session} 的情境中，則等待所有 $Owner$ 執行 {\it Challenge} 成功之後，
+$Server$ 才獲得授權，接續執行 {\it ANC}。
 
 
 \section{符號定義}
