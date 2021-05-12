@@ -94,12 +94,7 @@
 % [版面大小]
 %
 \RequirePackage{geometry}
-\geometry{
-  top=3cm,
-  bottom=2cm,
-  left=3cm,               % inner=3cm
-  right=3cm               % outer=3cm
-}
+\geometry{top=3cm, bottom=3cm, left=3cm, right=3cm}
 
 % [連結設定]
 %
@@ -184,7 +179,7 @@
 %
 \newcommand{\mainmatter}{
     \cleardoublepage
-    \expandafter\newgeometry\expandafter{top=3cm, bottom=2cm, left=3cm, right=3cm}
+    \expandafter\newgeometry\expandafter{top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm}
     \pagenumbering{arabic}
     \fontsize{12}{18}\selectfont
 }
