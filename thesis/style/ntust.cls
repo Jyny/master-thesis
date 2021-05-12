@@ -61,6 +61,23 @@
 % --------------------------------------------------
 % 07 套件設定 (Package Settings)
 % --------------------------------------------------
+% [圖表目錄]
+\graphicspath{{./figures/}}
+
+% [文章排版]
+%
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+\setlength{\parskip}{10pt}
+\setlength{\parindent}{2em}
+
+% 設定行距
+% 1.2：1.5 倍行距
+% 1.6：2.0 倍行距
+\setstretch{1.2}
+
+% [字體設定]
+%
 \setmainfont{Times New Roman}[
     Path = fonts/english/,
     Extension = .ttf ,
@@ -68,7 +85,6 @@
     ItalicFont = *-Italic,
     BoldItalicFont = *-BoldItalic
 ]
-
 \setCJKmainfont{BiauKai}[
     AutoFakeBold=true,
     Path = fonts/chinese/,
@@ -151,7 +167,27 @@
 % --------------------------------------------------
 % 08 自訂命令（Custom Commands）
 % --------------------------------------------------
+
+% [生成目錄]
+% Generate table of contents page.
+%
 \renewcommand{\contentsname}{\centerline{\var@tableofcontents}}
+\newcommand{\maketableofcontents}{
+  \cleardoublepage
+  \phantomsection
+  \addcontentsline{toc}{chapter}{\var@tableofcontents}
+  \tableofcontents
+}
+
+% [正文開始]
+% \mainmatter
+%
+\newcommand{\mainmatter}{
+    \cleardoublepage
+    \expandafter\newgeometry\expandafter{top=3cm, bottom=2cm, left=3cm, right=3cm}
+    \pagenumbering{arabic}
+    \fontsize{12}{18}\selectfont
+}
 
 % --------------------------------------------------
 % 09 自訂環境（Custom Environments）
@@ -160,19 +196,3 @@
 % --------------------------------------------------
 % 10 文檔處理（Document Processing）
 % --------------------------------------------------
-
-
-\newcommand{\mainmatter}{
-    \cleardoublepage
-    \expandafter\newgeometry\expandafter{top=3cm, bottom=2cm, left=3cm, right=3cm}
-    \pagenumbering{arabic}
-    \fontsize{12}{18}\selectfont
-    \spacing{1.5}
-}
-
-\newcommand{\maketableofcontents}{
-  \cleardoublepage
-  \phantomsection
-  \addcontentsline{toc}{chapter}{\var@tableofcontents}
-  \tableofcontents
-}
