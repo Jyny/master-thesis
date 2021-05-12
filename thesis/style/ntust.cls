@@ -8,6 +8,8 @@
 % 02 基礎設定（Basic Settings）
 % --------------------------------------------------
 \newcommand{\var@tableofcontents}{目錄}
+\newcommand{\var@listoftables}{表目錄}
+\newcommand{\var@listoffigures}{圖目錄}
 
 % --------------------------------------------------
 % 03 編譯檢查（Compile Checking）
@@ -23,6 +25,7 @@
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
 \ProcessOptions\relax
 \LoadClass[a4paper, 12pt]{report}
+
 
 
 % --------------------------------------------------
@@ -174,6 +177,25 @@
   \tableofcontents
 }
 
+\renewcommand{\listtablename}{\centerline{\var@listoftables}}
+\newcommand{\makelistoftables}{
+  \cleardoublepage
+  \phantomsection
+  \addcontentsline{toc}{chapter}{\var@listoftables}
+  \renewcommand{\numberline}{\tablename~\oldnumberline}
+  \listoftables
+}
+
+\let\oldnumberline\numberline
+\renewcommand{\listfigurename}{\centerline{\var@listoffigures}}
+\newcommand{\makelistoffigures}{
+  \cleardoublepage
+  \phantomsection
+  \addcontentsline{toc}{chapter}{\var@listoffigures}
+  \renewcommand{\numberline}{\figurename~\oldnumberline}
+  \listoffigures
+}
+
 % [正文開始]
 % \mainmatter
 %
@@ -191,3 +213,7 @@
 % --------------------------------------------------
 % 10 文檔處理（Document Processing）
 % --------------------------------------------------
+
+% 套用翻譯
+\renewcommand{\figurename}{圖}
+\renewcommand{\tablename}{表}
