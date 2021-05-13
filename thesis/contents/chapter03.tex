@@ -18,11 +18,11 @@
     本系統由 MeetingBox、Server 以及會談參與者 Attender 所組成。
 Attender 於 MeetingBox 的周圍進行會談 ({\it Meeting Session})，
 MeetingBox 於會談進行間開啟超聲波麥克風干擾器，
-因此鄰近的麥克風或周邊的聲音記錄裝置，都將因受到干擾而失效，Attender 無法有效記錄會談的聲音內容。
+因此鄰近的麥克風或周邊的聲音記錄裝置，都將因受到干擾而失效，Attender 無法自行有效記錄會談的聲音內容。
 
     MeetingBox 於會談進行中持續紀錄聲音，內容為受到超聲波麥克風干擾器干擾的會談錄音 ($REC_{J}$)。
-於會談結束後，受超聲波麥克風干擾器干擾的會談聲音記錄 ($REC_{J}$) 將透過本研究所設計的「解封」 ({\it Unseal}) 機制，
-使會談參與者 Attender 中的會談擁有者 Owner，得以獲得的系統機制所產生的有效聲音記錄 ($REC_{rev}$)。
+於會談結束後，受超聲波麥克風干擾器干擾的會談聲音記錄 ($REC_{J}$)，將作為系統機制「解封」({\it Unseal}) 的輸入，
+使會談參與者 Attender 中的會談擁有者 Owner，獲得前述機制所產生的有效會談聲音記錄 ($REC_{rev}$)。
 
     各會談的 Attender 僅定義於當次會談，每次參與會談的 Attender 可為不同群體。
 Attender 透過 MeetingBox 上的控制介面與其互動，進而控制本研究所設計系統的生命週期。
@@ -50,7 +50,7 @@ Attender 可以透過 MeetingBox 上的控制介面與其互動，來控制會�
     會談擁有者 Owner 屬於 Attender，為 Attender 的子集合，
 Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設計的系統機制「註冊會議擁有者」 (Register Owner)，
 則視為 not Owner Attender。 Owner 於會談 ({\it Meeting Session}) 結束後，
-有能力決定是否「解封」 ({\it Unseal}) 會談聲音記錄，並獲取系統機制所產生的有效聲音記錄 ($REC_{rev}$)。
+有能力決定是否執行系統機制「解封」 ({\it Unseal})，並獲取 {\it Unseal} 所產生的有效會談聲音記錄 ($REC_{rev}$)。
 
     Owner 可以是一或多人。當會談中只有一個 Owner 時，為 {\it Single Owner Meeting Session} 情境，
 系統架構如圖 \ref{fig.s-o-arch}。當會談中多於一個 Owner 時，為 {\it Multi Owner Meeting Session} 情境，
@@ -92,8 +92,8 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 \subsection{Server}
 
     Server 為本研究所設計的系統核心組成要件之一，其設計能同時間處理一場以上的會談 ({\it Meeting Session}) 的進行，
-其角色為，執行系統機制「解封」 ({\it Unseal})。此機制觸發於會談結束後，Owner 向 Server 發送請求執行。
-目的為取得有經系統機制 {\it ANC} 所產生有效之會談聲音記錄 $REC_{rev}$。本研究所設計系統可以確保 Server 在會談開始後，
+其角色目標為執行系統機制「解封」 ({\it Unseal})。此機制觸發於會談結束後，Owner 向 Server 發送請求執行。
+目的為取得有經系統機制 {\it Unseal} 所產生有效之會談聲音記錄 $REC_{rev}$。本研究所設計系統可以確保 Server 在會談開始後，
 直到成功解封之前，會談錄音 $REC_{N}$ 保有機密性。
 
     在系統機制「解封」 ({\it Unseal}) 中，包含第一步：「{\it Challenge}」，與第二步：「{\it ANC}」。
