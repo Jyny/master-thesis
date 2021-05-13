@@ -115,15 +115,17 @@ Server 才獲得授權，接續執行 {\it ANC}。
         \hline
         \bf{符號} & \bf{釋義} \\
         \hline
-        $Attender_{m}$ & 會議參與者 Attender 中，任意特定一位 \\
-        $Owner_{n}$    & 會議參與者 Owner 中，任意特定一位 \\
+        $Attender_{k}$ & 會議參與者 Attender 中，任意特定一位 \\
+        $Owner_{i}$    & 會議參與者 Owner 中，任意特定一位 \\
+        $EK$           & 用於當次會談對稱式加密 $REC_{N}$ 的金鑰 \\
+        $PK_{i}$       & $Owner_{i}$ 的公開金鑰 \\
+        $SK_{i}$       & $Owner_{i}$ 的私密金鑰 \\
+        $PRNG()$       & 偽隨機數生成器 \\
+        $seed$         & 用於當次會談的隨機種子 \\
         $REC_{J}$      & 已被超聲波麥克風干擾器干擾的會談之聲音記錄 \\
         $REC_{N}$      & 超聲波麥克風干擾器於麥克風的響應輸出之聲音記錄 \\
         $REC_{rev}$    & 執行系統機制 {\it ANC} 所產生有效之會談聲音記錄 \\
         $time_{Max}$   & 會談進行時間長度的最大值、$REC_{N}$ 的時間長度 \\
-        $EK$           & 用於當次會談對稱式加密 $REC_{N}$ 的金鑰 \\
-        $PK_{n}$       & $Attender_{n}$ 的公開金鑰 \\
-        $SK_{n}$       & $Attender_{n}$ 的私密金鑰 \\
 
     \end{tabular}
 \end{table}
@@ -138,17 +140,65 @@ Server 才獲得授權，接續執行 {\it ANC}。
     第一階段作為 {\it Meeting Session} 的起始點，各階段依序執行，於第三階段結束一次系統生命週期的循環。
 系統可以同時存在多個{\it Meeting Session}循環，彼此互相互不干擾影響，獨立執行。
 
+    MeetingBox 於 {\it Meeting Session} 開始前，已經預先設定時間長度為 $time_{Max}$ 的 $REC_{N}$。
+且於第二階段 Running {\it Meeting Session} 中所紀錄的聲音內容之長度，須小於  $time_{Max}$。
+{\it Meeting Session} 生命週期開始前，MeetingBox 根據此次 {\it Meeting Session} 的 $seed$，
+預先使用 MeetingBox 內的超音波麥克風干擾器與麥克風，預先錄製產生 $REC_{N}$。於 {\it Meeting Session} 結束後，
+重新配置與產生 $seed$ 與 $REC_{N}$。
 
-\subsection{初始化會談 (Initialize {\it Meeting Session}}
+
+\subsection{初始化會談 (Initialize {\it Meeting Session})}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{single-owner-sequence-diagram-init}
+    \caption{Single Owner Initialize {\it Meeting Session}}
+    \label{fig.s-o-init}
+\end{figure}
 
 
 \subsection{進行會談 (Running {\it Meeting Session})}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{single-owner-sequence-diagram-sessioning}
+    \caption{Single Owner Running {\it Meeting Session}}
+    \label{fig.s-o-sessioning}
+\end{figure}
+
 
 \subsection{解封 ({\it Unseal})}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{single-owner-sequence-diagram-unseal}
+    \caption{Single Owner {\it Unseal}}
+    \label{fig.s-o-unseal}
+\end{figure}
+
 
 \subsection{{\it Multi Owner Meeting Session}}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{multi-owner-sequence-diagram-init}
+    \caption{Multi Owner Initialize {\it Meeting Session}}
+    \label{fig.m-o-init}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{multi-owner-sequence-diagram-sessioning}
+    \caption{Multi Owner Running {\it Meeting Session}}
+    \label{fig.m-o-sessioning}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{multi-owner-sequence-diagram-unseal}
+    \caption{Multi Owner {\it Unseal}}
+    \label{fig.m-o-unseal}
+\end{figure}
 
 
 \section{系統機制}
