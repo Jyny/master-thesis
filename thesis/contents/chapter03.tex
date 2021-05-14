@@ -1,6 +1,6 @@
 \chapter{系統架構與實作}
 
-    本研究所設計之系統，利用超聲波對麥克風造成的非線性響應輸出，與主動式噪音控制消除高關聯度噪音等特性。
+    本研究所設計之系統，利用超音波對麥克風造成的非線性響應輸出，與主動式噪音控制消除高關聯度噪音等特性。
 嘗試解決在部署麥克風干擾器的場域裡，無法取得有效聲學紀錄的問題。
 同時借鏡密碼系統的機密性與不可否認性，發展一套於會談結束後，以其為基礎的會談錄音存取控制機制。
 透過上述機制的結合，能夠使在部署超音波麥克風干擾器的會談情境中，於會談結束後，允許特定參與者得以取得有效之聲音記錄。
@@ -17,11 +17,11 @@
 
     本系統由 MeetingBox、Server 以及會談參與者 Attender 所組成。
 Attender 於 MeetingBox 的周圍進行會談 ({\it Meeting Session})，
-MeetingBox 於會談進行間開啟超聲波麥克風干擾器，
+MeetingBox 於會談進行間開啟超音波麥克風干擾器，
 因此鄰近的麥克風或周邊的聲音記錄裝置，都將因受到干擾而失效，Attender 無法自行有效記錄會談的聲音內容。
 
-    MeetingBox 於會談進行中持續紀錄聲音，內容為受到超聲波麥克風干擾器干擾的會談錄音 ($REC_{J}$)。
-於會談結束後，受超聲波麥克風干擾器干擾的會談聲音記錄 ($REC_{J}$)，將作為系統機制「解封」({\it Unseal}) 的輸入，
+    MeetingBox 於會談進行中持續紀錄聲音，內容為受到超音波麥克風干擾器干擾的會談錄音 ($REC_{J}$)。
+於會談結束後，受超音波麥克風干擾器干擾的會談聲音記錄 ($REC_{J}$)，將作為系統機制「解封」({\it Unseal}) 的輸入，
 使會談參與者 Attender 中的會談擁有者 Owner，獲得前述機制所產生的有效會談聲音記錄 ($REC_{rev}$)。
 
     各會談的 Attender 僅定義於當次會談，每次參與會談的 Attender 可為不同群體。
@@ -32,9 +32,9 @@ Attender 透過 MeetingBox 上的控制介面與其互動，進而控制本研�
 
     會談參與者 Attender 為一集合，代表所有當次會談 ({\it Meeting Session}) 的參與者。
 Attender 包含 Owner，為 Owner 的超集合。其餘非 Owner 的 Attender 視為 not Owner Attender。
-Attender 可以透過 MeetingBox 上的控制介面與其互動，來控制會議的開始與終止，本研究以實體按鈕為例。
+Attender 可以透過 MeetingBox 上的控制介面與其互動，來控制會談的開始與終止，本研究以實體按鈕為例。
 
-    Attender 受到 MeetingBox 中的超聲波麥克風干擾器的干擾，使得隨身的麥克風或聲音記錄裝置，
+    Attender 受到 MeetingBox 中的超音波麥克風干擾器的干擾，使得隨身的麥克風或聲音記錄裝置，
 都將因受到干擾而失效，無法有效記錄會談內容。例如：智慧型手機、智慧手錶、筆電、平板、智慧喇叭等。
 
 
@@ -48,7 +48,7 @@ Attender 可以透過 MeetingBox 上的控制介面與其互動，來控制會�
 \end{figure}
 
     會談擁有者 Owner 屬於 Attender，為 Attender 的子集合，
-Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設計的系統機制「註冊會議擁有者」 (Register Owner)，
+Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設計的系統機制「註冊會談擁有者」 (Register Owner)，
 則視為 not Owner Attender。 Owner 於會談 ({\it Meeting Session}) 結束後，
 有能力決定是否執行系統機制「解封」 ({\it Unseal})，並獲取 {\it Unseal} 所產生的有效會談聲音記錄 ($REC_{rev}$)。
 
@@ -57,7 +57,7 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 系統架構如圖 \ref{fig.m-o-arch} 所示。
 
     Owner 持有智慧型裝置，透過其與 MeetingBox 互動，獲取 MeetingBox 上的資訊，並有能力於會談進行中、會談結束後，
-與 Server 持續通訊，執行本研究所設計的系統機制「註冊會議擁有者」 (Register Owner) 與「解封」 ({\it Unseal})。
+與 Server 持續通訊，執行本研究所設計的系統機制「註冊會談擁有者」 (Register Owner) 與「解封」 ({\it Unseal})。
 
     上述 Owner 獲取 MeetingBox 資訊的方法，本研究以掃描 QR Code 為例。
 
@@ -65,7 +65,7 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 \subsection{MeetingBox}
 
     MeetingBox 為本研究所設計系統核心組成要件的終端，部署於會談 ({\it Meeting Session}) 的場域，
-與會議參與者 Attender 實體接觸。透過與 Attender 的互動，成為觸發會談生命週期改變事件的控制核心。
+與會談參與者 Attender 實體接觸。透過與 Attender 的互動，成為觸發會談生命週期改變事件的控制核心。
 同時也作為系統主要資料 ($REC_{J}$、$REC_{N}$) 的輸入來源。
 在本研究的設計中，一組 MeetingBox 僅能同時間處理一場會談的進行。
 
@@ -76,7 +76,7 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
             使用偽隨機數產生亂數頻率的超音波，於會談進行中開啟。用於干擾鄰近周圍含有麥克風的裝置，使其無法有效記錄會談內容。
 
         \item 錄音麥克風：\\
-            用於紀錄會談的聲音內容 ($REC_{J}$)，與產生超聲波麥克風干擾器於麥克風的響應輸出 ($REC_{N}$)
+            用於紀錄會談的聲音內容 ($REC_{J}$)，與產生超音波麥克風干擾器於麥克風的響應輸出 ($REC_{N}$)
 
         \item 物理控制介面：\\
             提供 Attender 操作與 MeetingBox 互動，獲得外部觸發事件。本研究實做以實體按鈕為例。
@@ -115,16 +115,16 @@ Server 才獲得授權，接續執行 {\it ANC}。
         \hline
         \bf{符號} & \bf{釋義} \\
         \hline
-        $Attender_{k}$ & 會議參與者 Attender 中，任意特定一位 \\
-        $Owner_{i}$    & 會議參與者 Owner 中，任意特定一位 \\
+        $Attender_{k}$ & 會談參與者 Attender 中，任意特定一位 \\
+        $Owner_{i}$    & 會談參與者 Owner 中，任意特定一位 \\
         $SID$          & 當次會談唯一識別碼 \\
         $EK$           & 用於當次會談對稱式加密 $REC_{N}$ 的金鑰 \\
         $PK_{i}$       & $Owner_{i}$ 的公開金鑰 \\
         $SK_{i}$       & $Owner_{i}$ 的私密金鑰 \\
         $PRNG()$       & 偽隨機數生成器 \\
         $seed$         & 用於當次會談的隨機種子 \\
-        $REC_{J}$      & 已被超聲波麥克風干擾器干擾的會談之聲音記錄 \\
-        $REC_{N}$      & 超聲波麥克風干擾器於麥克風的響應輸出之聲音記錄 \\
+        $REC_{J}$      & 已被超音波麥克風干擾器干擾的會談之聲音記錄 \\
+        $REC_{N}$      & 超音波麥克風干擾器於麥克風的響應輸出之聲音記錄 \\
         $REC_{rev}$    & 執行系統機制 {\it ANC} 所產生有效之會談聲音記錄 \\
         $time_{Max}$   & 會談進行時間長度的最大值、$REC_{N}$ 的時間長度 \\
 
@@ -135,8 +135,8 @@ Server 才獲得授權，接續執行 {\it ANC}。
 \section{系統流程}
 
     本研究所設計之系統，其流程跟隨會談 ({\it Meeting Session}) 的生命週期，其分為三個階段定義。分別為：
-一：「初始化會談 (Initialize {\it Meeting Session})」；二：「進行會談 (Running {\it Meeting Session})」；
-三：「解封 ({\it Unseal})」。
+一、「初始化會談 (Initialize {\it Meeting Session})」；二、「進行會談 (Running {\it Meeting Session})」；
+三、「解封 ({\it Unseal})」。
 
     第一階段作為 {\it Meeting Session} 的起始點，各階段依序執行，於第三階段結束一次系統生命週期的循環。
 系統可以同時存在多個{\it Meeting Session}循環，彼此互相互不干擾影響，獨立執行。
@@ -170,8 +170,8 @@ Server 才獲得授權，接續執行 {\it ANC}。
     \item Create Meeting Session：\\
         MeetingBox 觸發 Initialize Session 後，首先對 Server 傳送請求 Create Meeting Session。
         Server 收到請求後產生 ($SID$, $EK$) 並回傳至 MeetingBox。
-        其中 $SID$ 為此次 {\it Meeting Session} 的唯一識別碼，
-        $EK$ 為此次 {\it Meeting Session} 的 Session Key。
+        其中 $SID$ 為此次 {\it Meeting Session} 的唯一識別碼；$EK$ 是 AES 對稱是加密金鑰，
+        作為此次 {\it Meeting Session} 的 Session Key。
         $SID$ 的產生必須滿足唯一性，隨機性，不可預測性，本研究實作 $SID$ 以 UUID v4 為例。
 
     \item Upload Encrypted $REC_{N}$：\\
@@ -187,10 +187,11 @@ Server 才獲得授權，接續執行 {\it ANC}。
 
     \item Register Owner：\\
         $Owner_{i}$ 收到 MeetingBox 產生的 URI 後，
-        使用此 URI 向 Server 進行系統機制「註冊會議擁有者」 (Register Owner)。運作方式如下：
-        首先 $Owner_{i}$ 對 Server 發送 Register Owner 請求。Server 收到 Register Owner 請求後，
-        隨即產生一組 ($PK_{i}$, $SK_{i}$)，並將請求來源 URI 中的 $SID$ 與 $PK_{i}$ 做關聯綁定，
-        隨後回傳 $SK_{i}$ 給 $Owner_{i}$ ，且銷毀於 Server 中的$SK_{i}$，即完成此系統步驟。
+        使用此 URI 向 Server 進行系統機制「註冊會談擁有者」 (Register Owner)。運作細節如下：
+        一、$Owner_{i}$ 對 Server 發送 Register Owner 請求；
+        二、Server 收到 Register Owner 請求後，隨即產生一組 RSA 公私金鑰對 ($PK_{i}$, $SK_{i}$)，
+        並將請求來源 URI 中的 $SID$ 與公開金鑰 $PK_{i}$ 做關聯綁定；
+        三、回傳私密金鑰 $SK_{i}$ 給 $Owner_{i}$，且銷毀於 Server 中的$SK_{i}$；即完成此系統步驟。
         Onwer 為 Attender 中的特權角色，其特權來源為 $Owner_{i}$ 的 $SK_{i}$，
         因此 Owner 須妥善保管 $SK_{i}$，維持其機密性。在 {\it Single Owner Meeting Session} 情境中，
         只存在一個 Owner，因此當唯一 Owner 執行成功後，即完成進入下一階段。
