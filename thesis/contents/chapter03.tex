@@ -156,6 +156,14 @@ Server 才獲得授權，接續執行 {\it ANC}。
     \label{fig.s-o-init}
 \end{figure}
 
+\begin{steps}
+    \item Initialize Session (Push Button)：\\
+    \item CreateMeeting Session：\\
+    \item Upload Encrypted $REC_{N}$：\\
+    \item Get SessionURL (Scan QR Code)：\\
+    \item Register Owner：\\
+\end{steps}
+
 
 \subsection{進行會談 (Running {\it Meeting Session})}
 
@@ -166,6 +174,13 @@ Server 才獲得授權，接續執行 {\it ANC}。
     \label{fig.s-o-sessioning}
 \end{figure}
 
+\begin{steps}
+    \item Start Session (Push Button)：\\
+    \item End Owner Registration：\\
+    \item End Session (Push Button)：\\
+    \item Upload $REC_{J}$：\\
+\end{steps}
+
 
 \subsection{解封 ({\it Unseal})}
 
@@ -175,6 +190,12 @@ Server 才獲得授權，接續執行 {\it ANC}。
     \caption{Single Owner {\it Unseal}}
     \label{fig.s-o-unseal}
 \end{figure}
+
+\begin{steps}
+    \item Unseal Session Record Request：\\
+    \item SolveChallenge：\\
+    \item AccessSession Record：\\
+\end{steps}
 
 
 \subsection{{\it Multi Owner Meeting Session}}

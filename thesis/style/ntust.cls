@@ -60,6 +60,7 @@
 \RequirePackage[labelformat=simple]{subcaption}
 \RequirePackage{geometry}
 \RequirePackage{float}
+\RequirePackage{enumitem}
 
 % --------------------------------------------------
 % 07 套件設定 (Package Settings)
@@ -209,6 +210,9 @@
 % --------------------------------------------------
 % 09 自訂環境（Custom Environments）
 % --------------------------------------------------
+
+\newlist{steps}{enumerate}{1}
+\setlist[steps, 1]{label = {\bf Step \arabic*}, leftmargin=\parindent+\labelwidth+\labelsep, align=left}
 
 % --------------------------------------------------
 % 10 文檔處理（Document Processing）
