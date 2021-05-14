@@ -198,6 +198,10 @@ Server 才獲得授權，接續執行 {\it ANC}。
 
 \subsection{進行會談 (Running {\it Meeting Session})}
 
+    此章節將說明 {\it Single Owner Meeting Session} 情境中，
+{\it Meeting Session} 生命週期第二個階段：Running {\it Meeting Session} 的系統流程。
+如圖 \ref{fig.s-o-sessioning} 所示。
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{single-owner-sequence-diagram-sessioning}
@@ -207,9 +211,18 @@ Server 才獲得授權，接續執行 {\it ANC}。
 
 \begin{steps}
     \item Start Session (Push Button)：\\
+        進入到此階段代表 Owner 已經完成系統機制 Register Owner，MeetingBox 也已初始化完成。
+        此時 $Attender_{k}$ 即可透過 MeetingBox 的物理控制介面，使 MeetingBox 獲得外部事件，
+        觸發 Start Session。本研究實驗以按鈕為例，當 $Attender_{k}$ 按下 MeetingBox 上的按鈕後，
+        觸發 MeetingBox 執行 Start Session。
+
     \item End Owner Registration：\\
+        MeetingBox 觸發 Start Session 後，首先對 Server 傳送請求 End Owner Registration。
+
     \item End Session (Push Button)：\\
+
     \item Upload $REC_{J}$：\\
+
 \end{steps}
 
 
