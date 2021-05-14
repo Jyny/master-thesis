@@ -218,9 +218,20 @@ Server 才獲得授權，接續執行 {\it ANC}。
         觸發 MeetingBox 執行 Start Session。
 
     \item End Owner Registration：\\
-        MeetingBox 觸發 Start Session 後，首先對 Server 傳送請求 End Owner Registration。
+        MeetingBox 觸發 Start Session 後，接續觸發 Server 執行 End Owner Registration，
+        其運作細節如下：一、MeetingBox 對 Server 傳送 End Owner Registration 請求；
+        二、Server 透過限制無法在在同 $SID$ 綁定新的$SK_{i}$，
+        來終止此 {\it Meeting Session} 註冊，產生新的 Owner；
+        三、在 {\it Single Owner Meeting Session} 情境中，只有單一個 Owner，
+        Server 使用唯一 Owner 的 $PK_{i}$，透過 RSA 非對稱金鑰演算法加密將儲存的 $EK$ 加密且儲存，
+        並銷毀於 Server 上的 $EK$；Server 即完成此系統步驟。
+        隨後 MeetingBox 開啟麥克風與超音波麥克風干擾器，並透過 MeetingBox 上的人機互動介面提示系統已經開始錄音。
+        麥克風錄製的聲音內容結果 $REC_{J}$，為超音波麥克風干擾器與會談聲音內容的疊加，屬非有效之聲音記錄。
+        此時 Attender 即可進行私密會談，不用擔心有其他麥克風或聲音記錄裝置，可以取得有效之聲音記錄。
+        本研究實驗以錄音指示燈與螢幕為例，當開始錄音時，前述兩者人機互動介面提示將會提示當下系統狀態。
 
     \item End Session (Push Button)：\\
+        
 
     \item Upload $REC_{J}$：\\
 
