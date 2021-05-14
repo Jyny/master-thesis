@@ -117,6 +117,7 @@ Server 才獲得授權，接續執行 {\it ANC}。
         \hline
         $Attender_{k}$ & 會議參與者 Attender 中，任意特定一位 \\
         $Owner_{i}$    & 會議參與者 Owner 中，任意特定一位 \\
+        $SID$          & 當次會談唯一識別碼 \\
         $EK$           & 用於當次會談對稱式加密 $REC_{N}$ 的金鑰 \\
         $PK_{i}$       & $Owner_{i}$ 的公開金鑰 \\
         $SK_{i}$       & $Owner_{i}$ 的私密金鑰 \\
@@ -149,6 +150,10 @@ Server 才獲得授權，接續執行 {\it ANC}。
 
 \subsection{初始化會談 (Initialize {\it Meeting Session})}
 
+    此章節將說明 {\it Single Owner Meeting Session} 情境中，
+{\it Meeting Session} 生命週期第一個階段：Initialize {\it Meeting Session} 的系統流程。
+如圖 \ref{fig.s-o-init} 所示。
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{single-owner-sequence-diagram-init}
@@ -158,12 +163,38 @@ Server 才獲得授權，接續執行 {\it ANC}。
 
 \begin{steps}
     \item Initialize Session (Push Button)：\\
-    \item CreateMeeting Session：\\
-    \item Upload Encrypted $REC_{N}$：\\
-    \item Get SessionURL (Scan QR Code)：\\
-    \item Register Owner：\\
-\end{steps}
+        Attender 在欲進行會談 MeetingBox 的周圍準備開始會談，$Attender_{k}$ 透過 MeetingBox 的物理控制介面，
+        使 MeetingBox 獲得外部事件，觸發 Initialize Session。本研究實驗以按鈕為例，
+        當 $Attender_{k}$ 按下 MeetingBox 上的按鈕後，觸發 MeetingBox 執行 Initialize Session。
 
+    \item Create Meeting Session：\\
+        MeetingBox 觸發 Initialize Session 後，首先對 Server 傳送請求 Create Meeting Session。
+        Server 收到請求後產生 ($SID$, $EK$) 並回傳至 MeetingBox。
+        其中 $SID$ 為此次 {\it Meeting Session} 的唯一識別碼，
+        $EK$ 為此次 {\it Meeting Session} 的 Session Key。
+        $SID$ 的產生必須滿足唯一性，隨機性，不可預測性，本研究實作 $SID$ 以 UUID v4 為例。
+
+    \item Upload Encrypted $REC_{N}$：\\
+        MeetingBox 收到產生自 Server 的回傳訊息 ($SID$, $EK$)後，使用 AES 對稱密鑰演算法加密 $REC_{J}$，
+        在將加密後的 $REC_{J}$ 上傳至 Server，並銷毀於 MeetingBox 中的 $EK$。
+
+    \item Get SessionURL (Scan QR Code)：\\
+        MeetingBox 收到產生自 Server 的回傳訊息 ($SID$, $EK$)後，
+        將 $SID$ 資訊封裝為此次 {\it Meeting Session} 專用的 URI (Uniform Resource Identifier)，
+        並傳送給 Owner。URI 的封裝方法為，將 $SID$ 填充入系統已知包含 Server 網址的字串。
+        前述 MeetingBox 將資訊傳遞給 Owner 的方法，本研究以 MeetingBox 搭配螢幕顯示 QR Code 為例。
+        $Owner_{i}$ 持智慧裝置，掃描 MeetingBox 螢幕顯示的 QR Code，以獲得 $SID$ 封裝後的 URI 。
+
+    \item Register Owner：\\
+        $Owner_{i}$ 收到 MeetingBox 產生的 URI 後，
+        使用此 URI 向 Server 進行系統機制「註冊會議擁有者」 (Register Owner)。運作方式如下：
+        首先 $Owner_{i}$ 對 Server 發送 Register Owner 請求。Server 收到 Register Owner 請求後，
+        隨即產生一組 ($PK_{i}$, $SK_{i}$)，並將請求來源 URI 中的 $SID$ 與 $PK_{i}$ 做關聯綁定，
+        隨後回傳 $SK_{i}$ 給 $Owner_{i}$ ，且銷毀於 Server 中的$SK_{i}$，即完成此系統步驟。
+        Onwer 為 Attender 中的特權角色，其特權來源為 $Owner_{i}$ 的 $SK_{i}$，
+        因此 Owner 須妥善保管 $SK_{i}$，維持其機密性。在 {\it Single Owner Meeting Session} 情境中，
+        只存在一個 Owner，因此當唯一 Owner 執行成功後，即完成進入下一階段。
+\end{steps}
 
 \subsection{進行會談 (Running {\it Meeting Session})}
 
