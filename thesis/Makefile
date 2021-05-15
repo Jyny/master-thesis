@@ -1,4 +1,5 @@
 MAIN = main
+buildName = thesis-$(shell date +'%Y-%m-%dT%H:%M:%SZ')-$(shell git describe --always --tags --dirty)
 
 all: pdf
 
@@ -12,6 +13,10 @@ ${MAIN}.pdf: ${MAIN}.tex
 
 .PHONY: dev
 dev: clean all
+
+.PHONY: build
+build: dev
+	cp ${MAIN}.pdf $(buildName).pdf
 
 .PHONY: clean
 clean:
