@@ -117,6 +117,7 @@ Server 才獲得授權，接續執行 {\it ANC}。
         \hline
         $Attender_{k}$ & 會談參與者 Attender 中，任意特定一位 \\
         $Owner_{i}$    & 會談參與者 Owner 中，任意特定一位 \\
+        $OID_{i}$          & $Owner_{i}$ 的唯一識別碼 \\
         $SID$          & 當次會談唯一識別碼 \\
         $EK$           & 用於當次會談對稱式加密 $REC_{N}$ 的金鑰 \\
         $PK_{i}$       & $Owner_{i}$ 的公開金鑰 \\
@@ -189,11 +190,15 @@ Server 才獲得授權，接續執行 {\it ANC}。
         $Owner_{i}$ 收到 MeetingBox 產生的 URI 後，
         使用此 URI 向 Server 進行系統機制「註冊會談擁有者」 (Register Owner)。運作細節如下：
         一、$Owner_{i}$ 對 Server 發送 Register Owner 請求；
-        二、Server 收到 Register Owner 請求後，隨即產生一組 RSA 公私金鑰對 ($PK_{i}$, $SK_{i}$)，
-        並將請求來源 URI 中的 $SID$ 與公開金鑰 $PK_{i}$ 做關聯綁定；
-        三、回傳私密金鑰 $SK_{i}$ 給 $Owner_{i}$，且銷毀於 Server 中的$SK_{i}$；即完成此系統步驟。
+        二、Server 收到 Register Owner 請求後，隨即產生一組 RSA 公私金鑰對 ($PK_{i}$, $SK_{i}$)
+        與 $Owner_{i}$ 的唯一識別碼 $OID_{i}$，
+        並將請求來源 URI 中的 $SID$ 與公開金鑰 $PK_{i}$ 和 $OID_{i}$ 做關聯綁定；
+        三、回傳私密金鑰 $SK_{i}$ 與 $OID_{i}$ 給 $Owner_{i}$，且銷毀於 Server 中的$SK_{i}$；
+        即完成此系統步驟。
         Onwer 為 Attender 中的特權角色，其特權來源為 $Owner_{i}$ 的 $SK_{i}$，
-        因此 Owner 須妥善保管 $SK_{i}$，維持其機密性。在 {\it Single Owner Meeting Session} 情境中，
+        因此 Owner 須妥善保管 $SK_{i}$，維持其機密性。$OID_{i}$ 的產生必須滿足唯一性，隨機性，
+        不可預測性，本研究實作 $SID$ 以 UUID v4 為例。
+        在 {\it Single Owner Meeting Session} 情境中，
         只存在一個 Owner，因此當唯一 Owner 執行成功後，即完成進入下一階段。
 \end{steps}
 
@@ -247,6 +252,12 @@ Server 才獲得授權，接續執行 {\it ANC}。
 
 \subsection{解封 ({\it Unseal})}
 
+    此章節將說明 {\it Single Owner Meeting Session} 情境中，
+{\it Meeting Session} 生命週期第三個階段：{\it Unseal} 的系統流程。
+如圖 \ref{fig.s-o-unseal} 所示。此階段執行於 Running {\it Meeting Session} 之後，
+Attender 間的談話已結束，Attender 可以離開會談的場域，且不再需要與 MeetingBox 實體接觸。
+此階段僅 Owner 與 Server 互動，透過此階段機制，最終可取得有效之會談聲音記錄 ($REC_{rev}$)。
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{single-owner-sequence-diagram-unseal}
@@ -256,8 +267,13 @@ Server 才獲得授權，接續執行 {\it ANC}。
 
 \begin{steps}
     \item Unseal Session Record Request：\\
+        在會談對話結束後，Owner 欲取得當時的有效聲音紀錄，則執行此機制。
+        Owner 向 Server 傳送 Unseal Session Record Request，
+
     \item SolveChallenge：\\
-    \item AccessSession Record：\\
+
+    \item Access Session Record：\\
+
 \end{steps}
 
 
