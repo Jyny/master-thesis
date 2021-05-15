@@ -23,7 +23,7 @@
 % 05 選項設定（Options Settings）
 % --------------------------------------------------
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
-\ProcessOptions\relax
+\ProcessOptions*\relax
 \LoadClass[a4paper, 12pt]{report}
 
 
@@ -103,11 +103,11 @@
 % [連結設定]
 %
 \hypersetup{
-  colorlinks=true,
-  linkcolor=black,
-  filecolor=gray,
-  anchorcolor=blue,
-  citecolor=blue
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=gray,
+    anchorcolor=blue,
+    citecolor=blue
 }
 
 % [目錄格式]
@@ -163,6 +163,14 @@
 \captionsetup[figure]{position=bottom,belowskip={12bp-\intextsep},aboveskip=6bp}
 \captionsetup[sub]{skip=6bp}
 
+% [列表]
+%
+\setlist*[]{
+    topsep=0pt,
+    partopsep=0pt,
+    listparindent=\parindent,
+}
+
 % --------------------------------------------------
 % 08 自訂命令（Custom Commands）
 % --------------------------------------------------
@@ -172,29 +180,29 @@
 %
 \renewcommand{\contentsname}{\centerline{\var@tableofcontents}}
 \newcommand{\maketableofcontents}{
-  \cleardoublepage
-  \phantomsection
-  \addcontentsline{toc}{chapter}{\var@tableofcontents}
-  \tableofcontents
+    \cleardoublepage
+    \phantomsection
+    \addcontentsline{toc}{chapter}{\var@tableofcontents}
+    \tableofcontents
 }
 
 \renewcommand{\listtablename}{\centerline{\var@listoftables}}
 \newcommand{\makelistoftables}{
-  \cleardoublepage
-  \phantomsection
-  \addcontentsline{toc}{chapter}{\var@listoftables}
-  \renewcommand{\numberline}{\tablename~\oldnumberline}
-  \listoftables
+    \cleardoublepage
+    \phantomsection
+    \addcontentsline{toc}{chapter}{\var@listoftables}
+    \renewcommand{\numberline}{\tablename~\oldnumberline}
+    \listoftables
 }
 
 \let\oldnumberline\numberline
 \renewcommand{\listfigurename}{\centerline{\var@listoffigures}}
 \newcommand{\makelistoffigures}{
-  \cleardoublepage
-  \phantomsection
-  \addcontentsline{toc}{chapter}{\var@listoffigures}
-  \renewcommand{\numberline}{\figurename~\oldnumberline}
-  \listoffigures
+    \cleardoublepage
+    \phantomsection
+    \addcontentsline{toc}{chapter}{\var@listoffigures}
+    \renewcommand{\numberline}{\figurename~\oldnumberline}
+    \listoffigures
 }
 
 % [正文開始]
@@ -212,7 +220,11 @@
 % --------------------------------------------------
 
 \newlist{steps}{enumerate}{1}
-\setlist[steps, 1]{label = {\bf Step \arabic*}, leftmargin=\parindent+\labelwidth+\labelsep, align=left}
+\setlist[steps, 1]{
+    label = {\bf Step \arabic*},
+    leftmargin=\parindent+\labelwidth+\labelsep,
+    align=left,
+}
 
 % --------------------------------------------------
 % 10 文檔處理（Document Processing）
