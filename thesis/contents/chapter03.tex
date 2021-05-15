@@ -148,9 +148,16 @@ Owner 執行 {\it Challenge} 成功之後，Server 即透過 Owner 的 Challenge
 
 \section{系統流程}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{system-stage}
+    \caption{{\it Meeting Session} 生命週期}
+    \label{fig.system-stage}
+\end{figure}
+
     本研究所設計之系統，其流程跟隨會談 ({\it Meeting Session}) 的生命週期，其分為三個階段定義。分別為：
 一、「初始化會談 (Initialize {\it Meeting Session})」；二、「進行會談 (Running {\it Meeting Session})」；
-三、「解封 ({\it Unseal})」。
+三、「解封 ({\it Unseal})」；如圖 \ref{fig.system-stage}。
 
     第一階段作為 {\it Meeting Session} 的起始點，各階段依序執行，於第三階段結束一次系統生命週期的循環。
 系統可以同時存在多個{\it Meeting Session}循環，彼此互相互不干擾影響，獨立執行。
