@@ -118,12 +118,15 @@ Server 才獲得授權，接續執行 {\it ANC}。
         $Attender_{k}$  & 會談參與者 Attender 中，任意特定一位 \\
         $Owner_{i}$     & 會談參與者 Owner 中，任意特定一位 \\
         $OID_{i}$       & $Owner_{i}$ 的唯一識別碼 \\
+        $PK_{i}$        & $Owner_{i}$ 的公開金鑰 \\
+        $SK_{i}$        & $Owner_{i}$ 的私密金鑰 \\
+        $Challenge_{i}$ & 使用 $PK_{i}$ 加密的 $Owner_{i}$ 權限 Token \\
+        $Solve_{i}$     & 使用 $SK_{i}$ 解密的 $Owner_{i}$ 權限 Token \\
+        $SolvSig_{i}$   & 使用 $SK_{i}$ 簽名的 $Solve_{i}$ \\
         $SID$           & 當次會談唯一識別碼 \\
         $EK$            & 用於當次會談對稱式加密 $REC_{N}$ 的金鑰 \\
         $ENC_{EK}(·)$   & 使用金鑰 $EK$ 的對稱是加密，輸入為明文 \\
         $DEC_{EK}(·)$   & 使用金鑰 $EK$ 的對稱是解密，輸入為密文 \\
-        $PK_{i}$        & $Owner_{i}$ 的公開金鑰 \\
-        $SK_{i}$        & $Owner_{i}$ 的私密金鑰 \\
         $Sign_{SK}(·)$  & 使用私密金鑰 $SK$ 產生數位簽章，輸入為明文 \\
         $Verf_{PK}(·)$  & 使用公開金鑰 $PK$ 驗證數位簽章，輸入為明文與其簽章 \\
         $Enc_{PK}(·)$   & 使用公開金鑰 $PK$ 的非對稱是加密，輸入為明文 \\
@@ -238,8 +241,9 @@ Server 才獲得授權，接續執行 {\it ANC}。
         二、Server 透過限制無法在在同 $SID$ 綁定新的$SK_{i}$，
         來終止此 {\it Meeting Session} 註冊，產生新的 Owner；
         三、在 {\it Single Owner Meeting Session} 情境中，只有單一個 Owner，
-        Server 使用唯一 Owner 的公開金鑰 $PK_{i}$，透過非對稱式金鑰演算法加密將儲存的 $EK$ 加密且儲存，
+        Server 使用唯一 $Owner_{i}$ 的公開金鑰 $PK_{i}$，透過非對稱式金鑰演算法加密將 $EK$ 加密，
         並銷毀於 Server 上的 $EK$；Server 即完成此系統步驟。
+        加密的 $EK$ 將其定義為 $Owner_{i}$ 的 $Challenge_{i}$。
         隨後 MeetingBox 開啟麥克風與超音波麥克風干擾器，並透過 MeetingBox 上的人機互動介面提示系統已經開始錄音。
         麥克風錄製的聲音內容結果 $REC_{J}$，為超音波麥克風干擾器與會談聲音內容的疊加，屬非有效之聲音記錄。
         此時 Attender 即可進行私密會談，不用擔心有其他麥克風或聲音記錄裝置，可以取得有效之聲音記錄。
@@ -281,8 +285,29 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \item Unseal Session Record Request：\\
         在會談對話結束後，Owner 欲取得當時的有效聲音紀錄，則執行此機制。
         $Owner_{i}$ 向 Server 傳送 Unseal Session Record Request，
+        Server 則回傳 $Owner_{i}$ 的 $Challenge_{i}$。
+        {\it Single Owner Meeting Session} 情境中，只有單一個 Owner，
+        因此傳送至 $Owner_{i}$ 的 $Challenge_{i}$ 其內容，即為使用 $Enc_{PK}(·)$ 加密的 $EK$。
 
-    \item SolveChallenge：\\
+    \item Solve Challenge：\\
+        $Owner_{i}$ 收到 Server 回傳的 $Challenge_{i}$ 後，因 $Owner_{i}$ 持有 $SK_{i}$，
+        因此 $Owner_{i}$ 有能力透過相同的非對稱加密演算法透過其解密。
+        而 $Challenge_{i}$ 解密後的明文，本文將其定義為 $Solve_{i}$。
+        得到 $Solve_{i}$ 後，$Owner_{i}$ 再將其透過 $SK_{i}$ 使用數位簽章演算法簽名，
+        所產生之簽章，本文定義為 $SolvSig_{i}$。
+        $Owner_{i}$ 成功產生 $Solve_{i}$ 與 $SolvSig_{i}$ 後，
+        將兩者作為參數向 Server 請求 Solve Challenge。
+        Server 收到來自$Owner_{i}$ 的 $Solve_{i}$ 與 $SolvSig_{i}$ 之後，驗證 $SolvSig_{i}$ 是否正確。
+        透過 Server 的 $PK_{i}$ 利用數位簽章演算法驗證 $SolvSig_{i}$ 是否為合法的簽章。
+        若簽章合法，依據其不可否認性，Server 得以信任 $Solve_{i}$ 的是產生自 $Owner_{i}$，
+        於 {\it Single Owner Meeting Session} 情境中，
+        $Challenge_{i}$ 的內容為使用 $Enc_{PK}(·)$ 加密的 $EK$。
+        而 $Solve_{i}$ 為解密後的 $Challenge_{i}$ ，即為 $EK$，即完成此步驟。
+        前述非對稱式金鑰加密演算法，本研究所設計之系統以 AES PKCS \#1 為例。其解密方法，
+        本文定義為 $Dec_{SK}(·)$，輸入為 $Enc_{PK}(·)$ 輸出的密文，輸出為 $Enc_{PK}(·)$ 的明文輸入。
+        前述數位簽章演算法，以 AES PKCS \#1 與 SHA256 為例。其簽名方法，本文定義為 $Sign_{SK}(·)$，
+        輸入為欲簽名的資料的，輸出為資料的簽章。驗證方法，本文定義為 $Verf_{PK}(·)$，
+        輸入為欲驗證簽名的資料與簽章，輸出為合法與否。
 
     \item Access Session Record：\\
 
