@@ -149,6 +149,7 @@
 % - before: 標題內容前增加文字
 % - after: 標題內容後增加文字
 %
+\titlespacing{\chapter}{0pt}{0pt}{0pt}
 \titleformat{\chapter}                      % 設置 Chapter 格式
 {\centering\Huge\bfseries}                  % 定義 format
 {第\CJKnumber{\thechapter}章}          	     % 定義 label
