@@ -16,6 +16,7 @@
 \end{figure}
 
     本系統由 MeetingBox、Server 以及會談參與者 Attender 所組成。
+各會談的 Attender 僅定義於當次會談，每次參與會談的 Attender 可為不同群體。
 Attender 於 MeetingBox 的周圍進行會談 ({\it Meeting Session})，如圖 \ref{fig.s-o-arch}。
 MeetingBox 於會談進行間開啟超音波麥克風干擾器，因此鄰近的麥克風或周邊的聲音記錄裝置，
 都將因受到其干擾而失效，Attender 無法自行有效記錄會談的聲音內容。
@@ -25,15 +26,12 @@ MeetingBox 於會談進行間開啟超音波麥克風干擾器，因此鄰近的
 將作為系統機制「解封」({\it Unseal}) 的輸入 (見 \ref{subsec.unseal})，
 使會談參與者 Attender 中的會談擁有者 Owner，獲得前述機制所產生的有效會談聲音記錄 ($REC_{rev}$)。
 
-    各會談的 Attender 僅定義於當次會談，每次參與會談的 Attender 可為不同群體。
-Attender 透過 MeetingBox 上的控制介面與其互動，進而控制本研究所設計系統的生命週期。
-
 
 \subsection{Attender}
 
     會談參與者 Attender 為一集合，代表所有當次會談 ({\it Meeting Session}) 的參與者。
 Attender 包含 Owner，為 Owner 的超集合。其餘非 Owner 的 Attender 視為 non Owner Attender。
-Attender 可以透過 MeetingBox 上的控制介面與其互動，來控制會談的開始與終止，本研究以實體按鈕為例。
+Attender 透過 MeetingBox 上的控制介面與其互動，進而控制系統的生命週期，本研究以實體按鈕為例。
 
     Attender 受到 MeetingBox 中的超音波麥克風干擾器的干擾，使得隨身的麥克風或聲音記錄裝置，
 都將因受到干擾而失效，無法有效記錄會談內容。例如：智慧型手機、智慧手錶、筆電、平板、智慧喇叭等。
@@ -94,22 +92,19 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 
     Server 為本研究所設計的系統核心組成要件之一，其設計能同時間處理一場以上的會談 ({\it Meeting Session}) 的進行，
 其角色目標為執行系統機制「解封」 ({\it Unseal})。此機制觸發於會談結束後，Owner 向 Server 發送請求執行。
-目的為取得有經系統機制 {\it Unseal} 所產生有效之會談聲音記錄 $REC_{rev}$。本研究所設計系統可以確保 Server 在會談開始後，
-直到成功解封之前，會談錄音 $REC_{N}$ 保有機密性。
+目的為取得有經系統機制 {\it Unseal} 所產生有效之會談聲音記錄 $REC_{rev}$。
 
-    在系統機制「解封」 ({\it Unseal}) 中，包含第一步：「{\it Challenge}」，與第二步：「{\it ANC}」。
-執行時，系統首先透過機制 {\it Challenge} 鑑別 Owner 身份。在 {\it Single Owner Meeting Session} 情境中，
-若 Owner 執行 {\it Challenge} 成功，Server 即透過 Owner 的 Challenge Response 獲得 $EK$ (Unseal Key)，
-便可以接續執行 {\it Unseal} 機制中的第二步 {\it ANC}。在 {\it Multi Owner Meeting Session} 的情境中，
-則等待所有 Owner 成功執行 {\it Challenge} 之後，Server 得以獲取 $EK$ (Unseal Key)，接續執行 {\it ANC}。
-待 {\it ANC} 完成後，即可取得有效之會談聲音記錄 $REC_{rev}$。
-其中 {\it Challenge} 為利用公開金鑰密碼系統，與 Owner 互動的機制 (見 \ref{subsec.unseal})，
-{\it ANC} 為 「主動式噪音控制」。
+    Server 執行系統機制「解封」 ({\it Unseal}) 時，包含以下步驟：
+    \begin{enumerate}[itemsep=0pt,parsep=0pt,]
+        \item {\it Challenge}： \\
+            目標為使 Server 獲得 Owner 授權得以接續執行後續步驟。
+        \item 「主動式噪音控制」({\it ANC})： \\
+            將受干擾的會談聲音記錄 $REC_{J}$，還原為有效的會談聲音記錄 $REC_{rev}$。
+    \end{enumerate}
 
 \section{符號定義}
 
     本研究設計之系統所使用符號與其意義如表 \ref{table:tab.symbol} 所示。
-
 
 \rowcolors{1}{white}{whitesmoke}
 \begin{longtable}{c l}
@@ -207,7 +202,8 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 
             MeetingBox 觸發 Initialize Session 後，首先對 Server 傳送請求 Create Meeting Session。
         Server 收到請求後產生 ($sID$, $EK$) 並回傳至 MeetingBox。
-        其中 $sID$ 為此次 {\it Meeting Session} 的唯一識別碼；$EK$ 是對稱式加密金鑰，
+
+            其中 $sID$ 為此次 {\it Meeting Session} 的唯一識別碼；$EK$ 是對稱式加密金鑰，
         定義為此次 {\it Meeting Session} 的解封金鑰 (Unseal Key)。
         $sID$ 的產生必須滿足唯一性，隨機性，不可預測性，本研究實作 $sID$ 以 UUID v4 為例。
         $EK$ 為對稱式加密的金鑰，其產生方式，本研究所設計之系統以 AES CFB mode 為例。
@@ -216,7 +212,8 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 
             MeetingBox 收到產生自 Server 的回傳訊息 ($sID$, $EK$)後，使用對稱式加密演算法與金鑰 $EK$ 加密 $REC_{N}$，
         在將加密後的 $REC_{N}$ 上傳至 Server，並銷毀於 MeetingBox 中的 $EK$。
-        前述對稱式密鑰演算法，本研究所設計之系統以 AES CFB mode 為例。本文中定義為 $ENC_{EK}(·)$，
+
+            前述對稱式密鑰演算法，本研究所設計之系統以 AES CFB mode 為例。本文中定義為 $ENC_{EK}(·)$，
         其輸入為欲加密明文資料，輸出為已加密的密文。
 
     \item Get Session URI (Scan QR Code)：
@@ -224,10 +221,11 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
             MeetingBox 收到產生自 Server 的回傳訊息 ($sID$, $EK$)後，
         將 $sID$ 資訊封裝為此次 {\it Meeting Session} 專用的 URI (Uniform Resource Identifier)，
         並傳送給 Owner。URI 的封裝方法為，將 $sID$ 填入系統已知包含 Server 網址的字串。
-        前述 MeetingBox 將資訊傳遞給 Owner 的方法，本研究以 MeetingBox 搭配螢幕顯示 QR Code 為例。
+
+            前述 MeetingBox 將資訊傳遞給 Owner 的方法，本研究以 MeetingBox 搭配螢幕顯示 QR Code 為例。
         $Owner_{i}$ 持智慧裝置，掃描 MeetingBox 螢幕顯示的 QR Code，以獲得 $sID$ 封裝後的 URI 。
 
-    \item Register Owner：：
+    \item Register Owner：
 
             $Owner_{i}$ 收到 MeetingBox 產生的 URI 後，
         使用此 URI 向 Server 進行系統機制「註冊會談擁有者」 (Register Owner)。運作細節如下：
@@ -236,14 +234,15 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
         與 $Owner_{i}$ 的唯一識別碼 $oID_{i}$，
         並將請求來源 URI 中的 $sID$ 與公開金鑰 $PK_{i}$ 和 $oID_{i}$ 做關聯綁定；
         三、回傳私密金鑰 $SK_{i}$ 與 $oID_{i}$ 給 $Owner_{i}$，且銷毀於 Server 中的$SK_{i}$；
-        即完成此系統步驟。
 
-            Onwer 為 Attender 中的特權角色，其特權來源為 $Owner_{i}$ 的 $SK_{i}$，
-        因此 Owner 須妥善保管 $SK_{i}$，維持其機密性。$oID_{i}$ 的產生必須滿足唯一性，隨機性，
+            在 {\it Single Owner Meeting Session} 情境中，只存在一個 Owner，
+        因此當唯一 Owner 執行成功後，即完成此系統步驟，進入下一階段。
+        Onwer 為 Attender 中的特權角色，其特權來源為 $Owner_{i}$ 的 $SK_{i}$，
+        因此 Owner 須妥善保管 $SK_{i}$，維持其機密性。
+
+            $oID_{i}$ 的產生必須滿足唯一性，隨機性，
         不可預測性，本研究實作 $oID_{i}$ 以 UUID v4 為例。
-        前述公私金鑰對，本研究所設計之系統以 RSA PKCS \#1 為例。
-        在 {\it Single Owner Meeting Session} 情境中，
-        只存在一個 Owner，因此當唯一 Owner 執行成功後，即完成進入下一階段。
+        前述公私金鑰對的產生方法，本研究所設計之系統以 RSA PKCS \#1 為例。
 \end{steps}
 
 \subsection{進行會談 (Running {\it Meeting Session})}
@@ -264,7 +263,9 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 
             進入到此階段代表 Owner 已經完成系統機制 Register Owner，MeetingBox 也已初始化完成。
         此時 $Attender_{k}$ 即可透過 MeetingBox 的物理控制介面，使 MeetingBox 獲得外部事件，
-        觸發 Start Session。本研究實驗以按鈕為例，當 $Attender_{k}$ 按下 MeetingBox 上的按鈕後，
+        觸發 Start Session。
+
+            本研究實驗以按鈕為例，當 $Attender_{k}$ 按下 MeetingBox 上的按鈕後，
         觸發 MeetingBox 執行 Start Session。
 
     \item End Owner Registration：
@@ -292,7 +293,8 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
             當會談對話結束時時 $Attender_{k}$ 即可透過 MeetingBox 的物理控制介面，使 MeetingBox 獲得外部事件，
         觸發 End Session。MeetingBox 在此時會關閉麥克風與超音波麥克風干擾器，並產生 $REC_{J}$。
         MeetingBox 上的人機互動介面同時提示系統已結束錄音。
-        本研究實驗以按鈕為例，當 $Attender_{k}$ 再次按下 MeetingBox 上的按鈕後，
+
+            本研究實驗以按鈕為例，當 $Attender_{k}$ 再次按下 MeetingBox 上的按鈕後，
         觸發 MeetingBox 執行 End Session。人機互動介面則以錄音指示燈與螢幕為例，
         當錄音已結束時，前述兩者人機互動介面將會提示當下系統狀態為 End Session。
 
@@ -312,6 +314,8 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 如圖 \ref{fig.s-o-unseal} 所示。此階段執行於 Running {\it Meeting Session} 之後，
 Attender 間的談話已結束，Attender 可以離開會談的場域，且不再需要與 MeetingBox 實體接觸。
 此階段僅 Owner 與 Server 互動，透過此階段機制，最終可取得有效之會談聲音記錄 ($REC_{rev}$)。
+本研究所設計之系統可以確保 Server 在 Running {\it Meeting Session}結束後，
+直到成功解封 ({\it Unseal})之前，$REC_{rev}$ 保有機密性。
 
 \begin{figure}[H]
     \centering
