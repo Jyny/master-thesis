@@ -35,7 +35,7 @@
 \RequirePackage{xeCJK}
 \RequirePackage{indentfirst}
 \RequirePackage{fontspec}
-\RequirePackage{xcolor}
+\RequirePackage[table]{xcolor}
 \RequirePackage{titlesec}
 \RequirePackage{titletoc, tocloft}
 \RequirePackage{fancyhdr}
@@ -226,6 +226,8 @@
     leftmargin=\parindent+\labelwidth+\labelsep,
     align=left,
 }
+
+\definecolor{whitesmoke}{rgb}{0.9, 0.9, 0.9}
 
 % --------------------------------------------------
 % 10 文檔處理（Document Processing）
