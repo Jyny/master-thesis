@@ -129,14 +129,14 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
     \showrowcolors
     $Attender_{k}$  & 會談參與者 Attender 中，任意特定一位 \\
     $Owner_{i}$     & 會談參與者 Owner 中，任意特定一位 \\
-    $oID_{i}$       & $Owner_{i}$ 的唯一識別碼 \\
+    $OID_{i}$       & $Owner_{i}$ 的唯一識別碼 \\
     $PK_{i}$        & $Owner_{i}$ 的公開金鑰 \\
     $SK_{i}$        & $Owner_{i}$ 的私密金鑰 \\
     $AK_{i}$        & $Owner_{i}$ 的代理金鑰 (Agent Key) \\
     $Challenge_{i}$ & 透過 $PK_{i}$ 加密的 $AK_{i}$ \\
     $Solve_{i}$     & 透過 $SK_{i}$ 解密的 $Challenge_{i}$ \\
     $SolvSig_{i}$   & 使用 $SK_{i}$ 簽名的 $Solve_{i}$ \\
-    $sID$           & 當次會談唯一識別碼 \\
+    $SID$           & 當次會談唯一識別碼 \\
     $EK$            & 用於當次會談的解封金鑰 (Unseal Key) \\
     $ENC_{EK}(·)$   & 使用金鑰 $EK$ 的對稱式加密演算法函數，輸入為明文 \\
     $DEC_{EK}(·)$   & 使用金鑰 $EK$ 的對稱式加密演算法之解密函數，輸入為密文 \\
@@ -202,16 +202,16 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
     \item Create Meeting Session：
 
             MeetingBox 觸發 Initialize Session 後，首先對 Server 傳送請求 Create Meeting Session。
-        Server 收到請求後產生 ($sID$, $EK$) 並回傳至 MeetingBox。
+        Server 收到請求後產生 ($SID$, $EK$) 並回傳至 MeetingBox。
 
-            其中 $sID$ 為此次 {\it Meeting Session} 的唯一識別碼；$EK$ 是對稱式加密金鑰，
+            其中 $SID$ 為此次 {\it Meeting Session} 的唯一識別碼；$EK$ 是對稱式加密金鑰，
         定義為此次 {\it Meeting Session} 的解封金鑰 (Unseal Key)。
-        $sID$ 的產生必須滿足唯一性，隨機性，不可預測性，本研究實作 $sID$ 以 UUID v4 為例。
+        $SID$ 的產生必須滿足唯一性，隨機性，不可預測性，本研究實作 $SID$ 以 UUID v4 為例。
         $EK$ 為對稱式加密的金鑰，其產生方式，本研究所設計之系統以 AES CFB mode 為例。
 
     \item Upload Encrypted $REC_{N}$：
 
-            MeetingBox 收到產生自 Server 的回傳訊息 ($sID$, $EK$)後，使用對稱式加密演算法與金鑰 $EK$ 加密 $REC_{N}$，
+            MeetingBox 收到產生自 Server 的回傳訊息 ($SID$, $EK$)後，使用對稱式加密演算法與金鑰 $EK$ 加密 $REC_{N}$，
         在將加密後的 $REC_{N}$ 上傳至 Server，並銷毀於 MeetingBox 中的 $EK$。
 
             前述對稱式密鑰演算法，本研究所設計之系統以 AES CFB mode 為例。本文中定義為 $ENC_{EK}(·)$，
@@ -219,12 +219,12 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 
     \item Get Session URI (Scan QR Code)：
 
-            MeetingBox 收到產生自 Server 的回傳訊息 ($sID$, $EK$)後，
-        將 $sID$ 資訊封裝為此次 {\it Meeting Session} 專用的 URI (Uniform Resource Identifier)，
-        並傳送給 Owner。URI 的封裝方法為，將 $sID$ 填入系統已知包含 Server 網址的字串。
+            MeetingBox 收到產生自 Server 的回傳訊息 ($SID$, $EK$)後，
+        將 $SID$ 資訊封裝為此次 {\it Meeting Session} 專用的 URI (Uniform Resource Identifier)，
+        並傳送給 Owner。URI 的封裝方法為，將 $SID$ 填入系統已知包含 Server 網址的字串。
 
             前述 MeetingBox 將資訊傳遞給 Owner 的方法，本研究以 MeetingBox 搭配螢幕顯示 QR Code 為例。
-        $Owner_{i}$ 持智慧裝置，掃描 MeetingBox 螢幕顯示的 QR Code，以獲得 $sID$ 封裝後的 URI 。
+        $Owner_{i}$ 持智慧裝置，掃描 MeetingBox 螢幕顯示的 QR Code，以獲得 $SID$ 封裝後的 URI 。
 
     \item Register Owner：
 
@@ -232,17 +232,17 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
         使用此 URI 向 Server 進行系統機制「註冊會談擁有者」 (Register Owner)。運作細節如下：
         一、$Owner_{i}$ 對 Server 發送 Register Owner 請求；
         二、Server 收到 Register Owner 請求後，隨即產生一組公私金鑰對 ($PK_{i}$, $SK_{i}$)
-        與 $Owner_{i}$ 的唯一識別碼 $oID_{i}$，
-        並將請求來源 URI 中的 $sID$ 與公開金鑰 $PK_{i}$ 和 $oID_{i}$ 做關聯綁定；
-        三、回傳私密金鑰 $SK_{i}$ 與 $oID_{i}$ 給 $Owner_{i}$，且銷毀於 Server 中的$SK_{i}$；
+        與 $Owner_{i}$ 的唯一識別碼 $OID_{i}$，
+        並將請求來源 URI 中的 $SID$ 與公開金鑰 $PK_{i}$ 和 $OID_{i}$ 做關聯綁定；
+        三、回傳私密金鑰 $SK_{i}$ 與 $OID_{i}$ 給 $Owner_{i}$，且銷毀於 Server 中的$SK_{i}$；
 
             在 {\it Single Owner Meeting Session} 情境中，只存在一個 Owner，
         因此當唯一 Owner 執行成功後，即完成此系統步驟，進入下一階段。
         Onwer 為 Attender 中的特權角色，其特權來源為 $Owner_{i}$ 的 $SK_{i}$，
         因此 Owner 須妥善保管 $SK_{i}$，維持其機密性。
 
-            $oID_{i}$ 的產生必須滿足唯一性，隨機性，
-        不可預測性，本研究實作 $oID_{i}$ 以 UUID v4 為例。
+            $OID_{i}$ 的產生必須滿足唯一性，隨機性，
+        不可預測性，本研究實作 $OID_{i}$ 以 UUID v4 為例。
         前述公私金鑰對的產生方法，本研究所設計之系統以 RSA PKCS \#1 為例。
 \end{steps}
 
@@ -274,7 +274,7 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 
             MeetingBox 觸發 Start Session 後，接續觸發 Server 執行 End Owner Registration，
         其運作細節如下：一、MeetingBox 對 Server 傳送 End Owner Registration 請求；
-        二、Server 透過限制無法在同 $sID$ 綁定新的$SK_{i}$，
+        二、Server 透過限制無法在同 $SID$ 綁定新的$SK_{i}$，
         來終止此 {\it Meeting Session} 註冊產生新的 Owner；
         三、透過 $EK$ 派生出 $Owner_{i}$ 的代理金鑰，定義為 $AK_{i}$。當 $AK_{i}$ 產生完即銷毀 $EK$ 。
         在 {\it Single Owner Meeting Session} 情境中，$AK_{i}$ 的值即等於 $EK$。
