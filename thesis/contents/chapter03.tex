@@ -176,6 +176,7 @@ Owner 執行 {\it Challenge} 成功之後，Server 即透過 Owner 的 Challenge
 
 
 \subsection{初始化會談 (Initialize {\it Meeting Session})}
+\label{subsec.initialize}
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
 {\it Meeting Session} 生命週期第一個階段：Initialize {\it Meeting Session} 的系統流程。
@@ -239,6 +240,7 @@ Owner 執行 {\it Challenge} 成功之後，Server 即透過 Owner 的 Challenge
 \end{steps}
 
 \subsection{進行會談 (Running {\it Meeting Session})}
+\label{subsec.sessioning}
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
 {\it Meeting Session} 生命週期第二個階段：Running {\it Meeting Session} 的系統流程。
@@ -363,12 +365,22 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
 \subsection{{\it Multi Owner Meeting Session}}
 
+此章節將說明 Multi Owner Meeting Session 情境中，系統生命週期階段的流程步驟。
+當存在 {\it Meeting Session} 中 Owner 數量為二人以上，即定義為 Multi Owner Meeting Session 之情境。
+於此情境中，{\it Meeting Session} 生命週期的三個階段與前篇 Single Owner Meeting Session 情境相似。
+其差異之處在於 Owner 數量大於二人。基於前篇 Single Owner Meeting Session 情境，
+僅需小幅度的系統改動與引入 Shamir's Secret Sharing，即可達成 Multi Owner Meeting Session 情境。
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{multi-owner-sequence-diagram-init}
     \caption{Multi Owner Initialize {\it Meeting Session}}
     \label{fig.m-o-init}
 \end{figure}
+
+    {\it Multi Owner Meeting Session} 情境中，
+{\it Meeting Session} 生命週期第一個階段：Initialize {\it Meeting Session} 的系統流程。
+如圖 \ref{fig.s-o-init} 所示。
 
 \begin{figure}[H]
     \centering
