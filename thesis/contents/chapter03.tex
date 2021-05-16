@@ -274,22 +274,23 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
         其運作細節如下：一、MeetingBox 對 Server 傳送 End Owner Registration 請求；
         二、Server 透過限制無法在同 $sID$ 綁定新的$SK_{i}$，
         來終止此 {\it Meeting Session} 註冊產生新的 Owner；
-        三、在 {\it Single Owner Meeting Session} 情境中只有單一個 Owner，
-        Server 使用唯一 $Owner_{i}$ 的公開金鑰 $PK_{i}$，透過非對稱式金鑰演算法加密將 $EK$ 加密，
-        並銷毀於 Server 上的 $EK$；Server 即完成此系統步驟。
-
-            在此情境中，加密後的 $EK$ 將其視為 $Owner_{i}$ 的 $Challenge_{i}$，
-        意即 $EK$ 視為 $Owner_{i}$ 授權金鑰。
-        隨後 MeetingBox 開啟麥克風與超音波麥克風干擾器，並透過 MeetingBox 上的人機互動介面提示系統已經開始錄音。
-        麥克風錄製的聲音內容結果 $REC_{J}$，此為超音波麥克風干擾器與會談聲音內容的疊加，屬非有效之聲音記錄。
-        此時 Attender 即可進行私密會談，不用擔心有其他麥克風或聲音記錄裝置可以取得有效之聲音記錄。
+        三、透過 $EK$ 派生出 $Owner_{i}$ 的代理金鑰，定義為 $AK_{i}$。當 $AK_{i}$ 產生完即銷毀 $EK$ 。
+        在 {\it Single Owner Meeting Session} 情境中，$AK_{i}$ 的值即等於 $EK$。
+        四、Server 使用此情境中唯一 $Owner_{i}$ 的公開金鑰 $PK_{i}$，透過非對稱式金鑰演算法加密將 $AK_{i}$ 加密，
+        並銷毀 $AK_{i}$；Server 即完成此系統步驟。
 
             前述非對稱式金鑰加密演算法，本研究所設計之系統 RSA PKCS \#1 為例。 本文中定義為 $Enc_{PK}(·)$，
-        其輸入為欲加密明文資料，輸出為已加密的密文。
-        本研究實驗以錄音指示燈與螢幕為例，當開始錄音時，前述兩者人機互動介面將會提示當下系統狀態。
+        其輸入為欲加密明文資料，輸出為已加密的密文。加密後的 $AK_{i}$ 定義為 $Owner_{i}$ 的 $Challenge_{i}$，
+        待 $Owner_{i}$ 將其解密方可還原 $AK_{i}$。
+        意即，在此情境中，唯一 $Owner_{i}$ 的 $Challenge_{i}$ 即為透過 $Enc_{PK}(·)$ 加密的 $EK$。
+
+            隨後 MeetingBox 開啟麥克風與超音波麥克風干擾器，並透過 MeetingBox 上的人機互動介面提示系統已經開始錄音。
+        麥克風錄製的聲音內容結果 $REC_{J}$，此為超音波麥克風干擾器與會談聲音內容的疊加，屬非有效之聲音記錄。
+        此時 Attender 即可進行私密會談，不用擔心有其他麥克風或聲音記錄裝置可以取得有效之聲音記錄。
+        前述人機互動介面，本研究實驗以錄音指示燈與螢幕為例，當開始錄音時，將會提示當下系統狀態。
 
     \item End Session (Push Button)：
-
+ㄑ
             當會談對話結束時時 $Attender_{k}$ 即可透過 MeetingBox 的物理控制介面，使 MeetingBox 獲得外部事件，
         觸發 End Session。MeetingBox 在此時會關閉麥克風與超音波麥克風干擾器，並產生 $REC_{J}$。
         MeetingBox 上的人機互動介面同時提示系統已結束錄音。
