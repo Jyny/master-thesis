@@ -106,51 +106,55 @@ Owner 執行 {\it Challenge} 成功之後，Server 即透過 Owner 的 Challenge
 其中 {\it Challenge} 為利用公開金鑰密碼系統，與 Owner 互動的機制 (見 \ref{subsec.unseal})，
 {\it ANC} 為 「主動式噪音控制」。
 
-
 \section{符號定義}
 
     本研究設計之系統所使用符號與其意義如表 \ref{table:tab.symbol} 所示。
 
-\begin{table}[H]
-    \centering
-    \caption{符號定義表}
-    \label{table:tab.symbol}
-    \begin{tabular}{ c c }
-        \hline
-        \bf{符號} & \bf{釋義} \\
-        \hline
-        $Attender_{k}$  & 會談參與者 Attender 中，任意特定一位 \\
-        $Owner_{i}$     & 會談參與者 Owner 中，任意特定一位 \\
-        $OID_{i}$       & $Owner_{i}$ 的唯一識別碼 \\
-        $PK_{i}$        & $Owner_{i}$ 的公開金鑰 \\
-        $SK_{i}$        & $Owner_{i}$ 的私密金鑰 \\
-        $Challenge_{i}$ & 透過 $PK_{i}$ 加密的 $Owner_{i}$ 授權金鑰 \\
-        $Solve_{i}$     & 透過 $SK_{i}$ 解密的 $Challenge_{i}$ \\
-        $SolvSig_{i}$   & 使用 $SK_{i}$ 簽名的 $Solve_{i}$ \\
-        $SID$           & 當次會談唯一識別碼 \\
-        $EK$            & 用於當次會談對稱式加密 $REC_{N}$ 的會議金鑰 (Session Key) \\
-        $ENC_{EK}(·)$   & 使用金鑰 $EK$ 的對稱式加密演算法函數，輸入為明文 \\
-        $DEC_{EK}(·)$   & 使用金鑰 $EK$ 的對稱式加密演算法之解密函數，輸入為密文 \\
-        $Sign_{SK}(·)$  & 使用私密金鑰 $SK$ 產生數位簽章演算法函數，輸入為明文 \\
-        $Verf_{PK}(·)$  & 使用公開金鑰 $PK$ 數位簽章驗證演算法函數，輸入為明文與其簽章 \\
-        $Enc_{PK}(·)$   & 使用公開金鑰 $PK$ 的非對稱式加密演算法函數，輸入為明文 \\
-        $Dec_{SK}(·)$   & 使用私密金鑰 $SK$ 的非對稱式加密演算法之解密函數，輸入為密文 \\
-        $PRNG(·)$       & 偽隨機數生成器演算法函數，輸入為 $seed$  \\
-        $seed$          & 用於當次會談的隨機種子 \\
-        $REC_{J}$       & 已被超音波麥克風干擾器干擾的會談聲音記錄 \\
-        $REC_{N}$       & 純超音波麥克風干擾器於麥克風的響應輸出之聲音記錄 \\
-        $REC_{rev}$     & 執行系統機制 {\it Unseal} 所產生有效之會談聲音記錄 \\
-        $time_{Max}$    & 會談進行時間長度的最大值、$REC_{N}$ 的時間長度 \\
+\begin{longtable}{c l}
+    \caption{符號定義表} \label{table:tab.symbol} \\
 
-    \end{tabular}
-\end{table}
+    \hline
+    \multicolumn{1}{c}{\bf{符號}} & \multicolumn{1}{c}{\bf{釋義}} \\
+    \hline
+    \endfirsthead
+
+    \multicolumn{1}{c}{\bf{符號}} & \multicolumn{1}{c}{\bf{釋義}} \\
+    \hline
+    \endhead
+
+    \hline
+    \endlastfoot
+
+    $Attender_{k}$  & 會談參與者 Attender 中，任意特定一位 \\
+    $Owner_{i}$     & 會談參與者 Owner 中，任意特定一位 \\
+    $OID_{i}$       & $Owner_{i}$ 的唯一識別碼 \\
+    $PK_{i}$        & $Owner_{i}$ 的公開金鑰 \\
+    $SK_{i}$        & $Owner_{i}$ 的私密金鑰 \\
+    $Challenge_{i}$ & 透過 $PK_{i}$ 加密的 $Owner_{i}$ 授權金鑰 \\
+    $Solve_{i}$     & 透過 $SK_{i}$ 解密的 $Challenge_{i}$ \\
+    $SolvSig_{i}$   & 使用 $SK_{i}$ 簽名的 $Solve_{i}$ \\
+    $SID$           & 當次會談唯一識別碼 \\
+    $EK$            & 用於當次會談對稱式加密 $REC_{N}$ 的會議金鑰 (Session Key) \\
+    $ENC_{EK}(·)$   & 使用金鑰 $EK$ 的對稱式加密演算法函數，輸入為明文 \\
+    $DEC_{EK}(·)$   & 使用金鑰 $EK$ 的對稱式加密演算法之解密函數，輸入為密文 \\
+    $Sign_{SK}(·)$  & 使用私密金鑰 $SK$ 產生數位簽章演算法函數，輸入為明文 \\
+    $Verf_{PK}(·)$  & 使用公開金鑰 $PK$ 數位簽章驗證演算法函數，輸入為明文與其簽章 \\
+    $Enc_{PK}(·)$   & 使用公開金鑰 $PK$ 的非對稱式加密演算法函數，輸入為明文 \\
+    $Dec_{SK}(·)$   & 使用私密金鑰 $SK$ 的非對稱式加密演算法之解密函數，輸入為密文 \\
+    $PRNG(·)$       & 偽隨機數生成器演算法函數，輸入為 $seed$  \\
+    $seed$          & 用於當次會談的隨機種子 \\
+    $REC_{J}$       & 已被超音波麥克風干擾器干擾的會談聲音記錄 \\
+    $REC_{N}$       & 純超音波麥克風干擾器於麥克風的響應輸出之聲音記錄 \\
+    $REC_{rev}$     & 執行系統機制 {\it Unseal} 所產生有效之會談聲音記錄 \\
+    $time_{Max}$    & 會談進行時間長度的最大值、$REC_{N}$ 的時間長度 \\
+\end{longtable}
 
 
 \section{系統流程}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{system-stage}
+    \includegraphics[width=0.9\textwidth]{system-stage}
     \caption{{\it Meeting Session} 生命週期}
     \label{fig.system-stage}
 \end{figure}
