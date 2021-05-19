@@ -150,6 +150,7 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
     $REC_{N}$       & 純超音波麥克風干擾器於麥克風的響應輸出之聲音記錄 \\
     $REC_{rev}$     & 執行系統機制 {\it Unseal} 所產生有效之會談聲音記錄 \\
     $time_{Max}$    & 會談進行時間長度的最大值、$REC_{N}$ 的時間長度 \\
+    \hiderowcolors
 \end{longtable}
 
 
@@ -413,6 +414,42 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \section{系統機制}
 
 \subsection{錄音存取控制與解密}
+
+\begin{center}
+\noindent
+\begin{tabularx}{0.95\textwidth} {
+        |c
+        >{\raggedright\arraybackslash}X
+        >{\centering\arraybackslash}c
+        >{\raggedright\arraybackslash}X
+        c|
+    }
+    \hline
+
+    & \multicolumn{1}{c}{\bf{Meetingbox}} &
+    & \multicolumn{1}{c}{\bf{Server}} & \\
+
+    & \multicolumn{1}{c}{$\{\}$} &
+    & \multicolumn{1}{c}{$\{\}$} & \\
+
+    \cline{2-2} \cline{4-4}
+
+    &
+    pseudocode
+    & & & \\
+
+    & &
+    $\xrightarrow{~~M~~}$
+    & & \\
+
+    & & &
+    pseudocode
+    & \\
+
+    \hline
+\end{tabularx}
+\end{center}
+
 
 \subsection{主動式噪音控制}
 
