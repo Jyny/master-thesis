@@ -20,6 +20,7 @@
 \usepackage{zhlipsum}                   % 中文亂字
 
 \usepackage[utf8]{inputenc}
+\usepackage{algorithm2e}
 
 % --------------------------------------------------
 % 套件設定（Packages Settings）
@@ -40,13 +41,13 @@
 \newcommand{\DEFakEncDecSig}{$SIG.RK_{i}$}
 \newcommand{\DEFsessionID}{$SID$}
 \newcommand{\DEFunsealKey}{$EK$}
-\newcommand{\DEFfuncEncEK}{$Enc_{k}(·)$}
-\newcommand{\DEFfuncDecEK}{$Dec_{k}(·)$}
-\newcommand{\DEFfuncSignSK}{$Sign_{sk}(·)$}
-\newcommand{\DEFfuncVerfPK}{$Verf_{pk}(·)$}
-\newcommand{\DEFfuncEncPK}{$Enc_{pk}(·)$}
-\newcommand{\DEFfuncDecSK}{$Dec_{sk}(·)$}
-\newcommand{\DEFfuncPRNG}{$Prng(·)$}
+\newcommand{\DEFfuncEncEK}[1]{$Enc_{k}($#1$)$}
+\newcommand{\DEFfuncDecEK}[1]{$Dec_{k}($#1$)$}
+\newcommand{\DEFfuncSignSK}[1]{$Sign_{sk}($#1$)$}
+\newcommand{\DEFfuncVerfPK}[1]{$Verf_{pk}($#1$)$}
+\newcommand{\DEFfuncEncPK}[1]{$Enc_{pk}($#1$)$}
+\newcommand{\DEFfuncDecSK}[1]{$Dec_{sk}($#1$)$}
+\newcommand{\DEFfuncPRNG}[1]{$Prng($#1$)$}
 \newcommand{\DEFseed}{$RS$}
 \newcommand{\DEFrecJ}{$REC_{J}$}
 \newcommand{\DEFrecN}{$REC_{N}$}

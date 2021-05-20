@@ -31,29 +31,29 @@
     \endlastfoot
 
     \showrowcolors
-    \DEFattender    & 第 $h$ 位會談參與者 (Attender) \\
-    \DEFowner       & 第 $i$ 位會談擁有者 (Owner) \\
-    \DEFownerID     & 會談擁有者 $i$ 的唯一識別碼 \\
-    \DEFpublicKey   & 會談擁有者 $i$ 的公開金鑰 \\
-    \DEFprivateKey  & 會談擁有者 $i$ 的私密金鑰 \\
-    \DEFagentKey    & 會談擁有者 $i$ 的代理金鑰 (Agent Key) \\
-    \DEFakEnc       & 透過會談擁有者 $i$ 的公開金鑰所加密的 \DEFagentKey \\
-    \DEFakEncDec    & 透過會談擁有者 $i$ 的私密金鑰所解密的 \DEFakEnc \\
-    \DEFakEncDecSig & \DEFakEncDec 的數位簽章 \\
-    \DEFsessionID   & 當次會談唯一識別碼 \\
-    \DEFunsealKey   & 當次會談的解封金鑰 (Unseal Key) \\
-    \DEFfuncEncEK   & 對稱式加密演算法之加密函數 \\
-    \DEFfuncDecEK   & 對稱式加密演算法之解密函數 \\
-    \DEFfuncSignSK  & 使用私密金鑰 $sk$ 的數位簽章演算法簽之名函數 \\
-    \DEFfuncVerfPK  & 使用公開金鑰 $pk$ 的數位簽章演算法之驗證函數 \\
-    \DEFfuncEncPK   & 使用公開金鑰 $pk$ 的非對稱式加密演算法之加密函數 \\
-    \DEFfuncDecSK   & 使用私密金鑰 $sk$ 的非對稱式加密演算法之解密函數 \\
-    \DEFfuncPRNG    & 偽隨機數產生器演算法函數 \\
-    \DEFseed        & 用於當次會談的偽隨機數產生器種子 \\
-    \DEFrecJ        & 於開啟音波麥克風干擾器場域裡的會談聲音記錄 \\
-    \DEFrecN        & 純超音波麥克風干擾器於麥克風的響應輸出之聲音記錄 \\
-    \DEFrecREV      & 執行系統機制 {\it Unseal} 所產生之有效會談聲音記錄 \\
-    \DEFtimeMAX     & 會談進行時間長度的最大值、\DEFrecN 的時間長度 \\
+    \DEFattender      & 第 $h$ 位會談參與者 (Attender) \\
+    \DEFowner         & 第 $i$ 位會談擁有者 (Owner) \\
+    \DEFownerID       & 會談擁有者 $i$ 的唯一識別碼 \\
+    \DEFpublicKey     & 會談擁有者 $i$ 的公開金鑰 \\
+    \DEFprivateKey    & 會談擁有者 $i$ 的私密金鑰 \\
+    \DEFagentKey      & 會談擁有者 $i$ 的代理金鑰 (Agent Key) \\
+    \DEFakEnc         & 透過會談擁有者 $i$ 的公開金鑰所加密的 \DEFagentKey \\
+    \DEFakEncDec      & 透過會談擁有者 $i$ 的私密金鑰所解密的 \DEFakEnc \\
+    \DEFakEncDecSig   & \DEFakEncDec 的數位簽章 \\
+    \DEFsessionID     & 當次會談唯一識別碼 \\
+    \DEFunsealKey{·}  & 當次會談的解封金鑰 (Unseal Key) \\
+    \DEFfuncEncEK{·}  & 對稱式加密演算法之加密函數 \\
+    \DEFfuncDecEK{·}  & 對稱式加密演算法之解密函數 \\
+    \DEFfuncSignSK{·} & 使用私密金鑰 $sk$ 的數位簽章演算法簽之名函數 \\
+    \DEFfuncVerfPK{·} & 使用公開金鑰 $pk$ 的數位簽章演算法之驗證函數 \\
+    \DEFfuncEncPK{·}  & 使用公開金鑰 $pk$ 的非對稱式加密演算法之加密函數 \\
+    \DEFfuncDecSK{·}  & 使用私密金鑰 $sk$ 的非對稱式加密演算法之解密函數 \\
+    \DEFfuncPRNG{·}   & 偽隨機數產生器演算法函數 \\
+    \DEFseed          & 用於當次會談的偽隨機數產生器種子 \\
+    \DEFrecJ          & 於開啟音波麥克風干擾器場域裡的會談聲音記錄 \\
+    \DEFrecN          & 純超音波麥克風干擾器於麥克風的響應輸出之聲音記錄 \\
+    \DEFrecREV        & 執行系統機制 {\it Unseal} 所產生之有效會談聲音記錄 \\
+    \DEFtimeMAX       & 會談進行時間長度的最大值、\DEFrecN 的時間長度 \\
     \hiderowcolors
 \end{longtable}
 
@@ -430,21 +430,54 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     & \multicolumn{1}{c}{\bf{Meetingbox}} &
     & \multicolumn{1}{c}{\bf{Server}} & \\
 
-    & \multicolumn{1}{c}{$\{\}$} &
-    & \multicolumn{1}{c}{$\{\}$} & \\
+    & \multicolumn{1}{c}{$\{$ \DEFrecN $\}$} &
+    & \multicolumn{1}{c}{} & \\
 
     \cline{2-2} \cline{4-4}
 
     &
-    pseudocode
+    \begin{algorithm}[H]
+        \setstretch{1}
+        $M_1$ $\leftarrow$ $\{$\DEFrecN$\}$
+    \end{algorithm}
     & & & \\
 
     & &
-    $\xrightarrow{~~M~~}$
+    $\xrightarrow{~~M_1~~}$
     & & \\
 
     & & &
-    pseudocode
+    \begin{algorithm}[H]
+        \setstretch{1}
+        \DEFunsealKey $\leftarrow$ $Gen_{K}()$ \\
+        \DEFsessionID $\leftarrow$ $Gen_{ID}()$ \\
+        $M_2$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey$\}$
+    \end{algorithm}
+    & \\
+
+    & &
+    $\xleftarrow{~~M_2~~}$
+    & & \\
+
+    &
+    \begin{algorithm}[H]
+        \setstretch{1}
+        $k$ $\leftarrow$ \DEFunsealKey \\
+        $m_3$ $\leftarrow$ $\{$\DEFfuncEncEK{\DEFrecN}$\}$ \\
+        $M_2$ $\leftarrow$ $\{$\DEFsessionID, $m_3$ $\}$
+    \end{algorithm}
+    & & & \\
+
+    & &
+    $\xrightarrow{~~M_3~~}$
+    & & \\
+
+    & & &
+    \begin{algorithm}[H]
+        \setstretch{1}
+        {\bf BIND RELATION} \DEFsessionID, $m_3$ \\
+        {\bf STORE} $m_3$ \\
+    \end{algorithm}
     & \\
 
     \hline
