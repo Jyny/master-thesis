@@ -31,13 +31,15 @@
     \endlastfoot
 
     \showrowcolors
+    \DEFmeetingbox    & 系統角色 MeetingBox \\
+    \DEFserver        & 系統角色解封伺服器 \\
     \DEFattender      & 第 $h$ 位會談參與者 (Attender) \\
     \DEFowner         & 第 $i$ 位會談擁有者 (Owner) \\
     \DEFownerID       & 會談擁有者 $i$ 的唯一識別碼 \\
     \DEFpublicKey     & 會談擁有者 $i$ 的公開金鑰 \\
     \DEFprivateKey    & 會談擁有者 $i$ 的私密金鑰 \\
-    \DEFagentKey      & 會談擁有者 $i$ 的代理金鑰 (Agent Key) \\
-    \DEFakEnc         & 透過會談擁有者 $i$ 的公開金鑰所加密的 \DEFagentKey \\
+    \DEFagentKey      & 會談擁有者 $i$ 的授權金鑰 \\
+    \DEFakEnc         & 授權金鑰 \\
     \DEFakEncDec      & 透過會談擁有者 $i$ 的私密金鑰所解密的 \DEFakEnc \\
     \DEFakEncDecSig   & \DEFakEncDec 的數位簽章 \\
     \DEFsessionID     & 當次會談唯一識別碼 \\
@@ -49,6 +51,8 @@
     \DEFfuncEncPK{·}  & 使用公開金鑰 $pk$ 的非對稱式加密演算法之加密函數 \\
     \DEFfuncDecSK{·}  & 使用私密金鑰 $sk$ 的非對稱式加密演算法之解密函數 \\
     \DEFfuncPRNG{·}   & 偽隨機數產生器演算法函數 \\
+    \DEFfuncKgen{·}   & 金鑰產生函數 \\
+    \DEFfuncIDgen{·}  & 唯一識別碼產生函數 \\
     \DEFseed          & 用於當次會談的偽隨機數產生器種子 \\
     \DEFrecJ          & 於開啟音波麥克風干擾器場域裡的會談聲音記錄 \\
     \DEFrecN          & 純超音波麥克風干擾器於麥克風的響應輸出之聲音記錄 \\
@@ -418,6 +422,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
 \begin{pcvstack}[boxed, center]
 \pseudocode[
+    head=Protocol for Initialize Meeting Session,
     mode=text,
     codesize=\scriptsize,
 ]{
@@ -442,8 +447,8 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     %
     \> \sendmessageright *{\text{$M_3$}} \> \\
     %
-    \> \> {\bf BIND RELATION} \DEFsessionID, $m_3$ \\
-    \> \> {\bf STORE} $m_3$
+    \> \> {\bf BIND RELATIONS:}\\
+    \> \> \pcind $m_3$ ~ {\bf BELONGS TO} ~ \DEFsessionID
 }
 \end{pcvstack}
 
