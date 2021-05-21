@@ -416,74 +416,33 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
 \subsection{錄音存取控制與解密}
 
-\begin{center}
-\noindent
-\begin{tabularx}{0.95\textwidth} {
-        |c
-        >{\raggedright\arraybackslash}X
-        >{\centering\arraybackslash}c
-        >{\raggedright\arraybackslash}X
-        c|
-    }
-    \hline
-
-    & \multicolumn{1}{c}{\bf{Meetingbox}} &
-    & \multicolumn{1}{c}{\bf{Server}} & \\
-
-    & \multicolumn{1}{c}{$\{$ \DEFrecN $\}$} &
-    & \multicolumn{1}{c}{} & \\
-
-    \cline{2-2} \cline{4-4}
-
-    &
-    \begin{algorithm}[H]
-        \setstretch{1}
-        $M_1$ $\leftarrow$ $\{$\DEFrecN$\}$
-    \end{algorithm}
-    & & & \\
-
-    & &
-    $\xrightarrow{~~M_1~~}$
-    & & \\
-
-    & & &
-    \begin{algorithm}[H]
-        \setstretch{1}
-        \DEFunsealKey $\leftarrow$ $Gen_{K}()$ \\
-        \DEFsessionID $\leftarrow$ $Gen_{ID}()$ \\
-        $M_2$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey$\}$
-    \end{algorithm}
-    & \\
-
-    & &
-    $\xleftarrow{~~M_2~~}$
-    & & \\
-
-    &
-    \begin{algorithm}[H]
-        \setstretch{1}
-        $k$ $\leftarrow$ \DEFunsealKey \\
-        $m_3$ $\leftarrow$ $\{$\DEFfuncEncEK{\DEFrecN}$\}$ \\
-        $M_2$ $\leftarrow$ $\{$\DEFsessionID, $m_3$ $\}$
-    \end{algorithm}
-    & & & \\
-
-    & &
-    $\xrightarrow{~~M_3~~}$
-    & & \\
-
-    & & &
-    \begin{algorithm}[H]
-        \setstretch{1}
-        {\bf BIND RELATION} \DEFsessionID, $m_3$ \\
-        {\bf STORE} $m_3$ \\
-    \end{algorithm}
-    & \\
-
-    \hline
-\end{tabularx}
-\end{center}
-
+\begin{pcvstack}[boxed, center, space=5em]
+\pseudocodeblock[]{
+    \bf{Meetingbox} \> \> \bf{Server} \\
+    \text{$\{$ \DEFrecN $\}$} \> \> \\
+    [0.8\baselineskip][\hline]
+    \> \> \> \\
+    %
+    \text{$M_1$ $\leftarrow$ $\{$\DEFrecN$\}$} \> \> \\
+    %
+    \> \sendmessageright *{\text{$M_1$}} \> \\
+    %
+    \> \> \text{\DEFunsealKey $\leftarrow$ $KGen()$} \\
+    \> \> \text{\DEFsessionID $\leftarrow$ $IDGen()$} \\
+    \> \> \text{$M_2$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey$\}$} \\
+    %
+    \> \sendmessageleft *{\text{$M_2$}} \> \\
+    %
+    \text{$k$ $\leftarrow$ \DEFunsealKey} \> \> \\
+    \text{$m_3$ $\leftarrow$ \DEFfuncEncEK{\DEFrecN}} \> \> \\
+    \text{$M_3$ $\leftarrow$ $\{$\DEFsessionID, $m_3$ $\}$} \> \> \\
+    %
+    \> \sendmessageright *{\text{$M_3$}} \> \\
+    %
+    \> \> \text{{\bf BIND RELATION} \DEFsessionID, $m_3$} \\
+    \> \> \text{{\bf STORE} $m_3$} \\
+}
+\end{pcvstack}
 
 \subsection{主動式噪音控制}
 
