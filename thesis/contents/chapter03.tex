@@ -416,31 +416,34 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
 \subsection{錄音存取控制與解密}
 
-\begin{pcvstack}[boxed, center, space=5em]
-\pseudocodeblock[]{
-    \bf{Meetingbox} \> \> \bf{Server} \\
-    \text{$\{$ \DEFrecN $\}$} \> \> \\
-    [0.8\baselineskip][\hline]
-    \> \> \> \\
+\begin{pcvstack}[boxed, center]
+\pseudocode[
+    mode=text,
+    codesize=\scriptsize,
+]{
+    \\
+    \bf{\normalsize Meetingbox} \> \> \bf{\normalsize Server} \\
+    $\{$ \DEFrecN $\}$ \> \> \\
+    [0.5\baselineskip][\hline] \\
     %
-    \text{$M_1$ $\leftarrow$ $\{$\DEFrecN$\}$} \> \> \\
+    $M_1$ $\leftarrow$ $\{$\DEFrecN$\}$ \> \> \\
     %
     \> \sendmessageright *{\text{$M_1$}} \> \\
     %
-    \> \> \text{\DEFunsealKey $\leftarrow$ $KGen()$} \\
-    \> \> \text{\DEFsessionID $\leftarrow$ $IDGen()$} \\
-    \> \> \text{$M_2$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey$\}$} \\
+    \> \> \DEFunsealKey $\leftarrow$ $KGen()$ \\
+    \> \> \DEFsessionID $\leftarrow$ $IDGen()$ \\
+    \> \> $M_2$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey$\}$ \\
     %
     \> \sendmessageleft *{\text{$M_2$}} \> \\
     %
-    \text{$k$ $\leftarrow$ \DEFunsealKey} \> \> \\
-    \text{$m_3$ $\leftarrow$ \DEFfuncEncEK{\DEFrecN}} \> \> \\
-    \text{$M_3$ $\leftarrow$ $\{$\DEFsessionID, $m_3$ $\}$} \> \> \\
+    $k$ $\leftarrow$ \DEFunsealKey \> \> \\
+    $m_3$ $\leftarrow$ \DEFfuncEncEK{\DEFrecN} \> \> \\
+    $M_3$ $\leftarrow$ $\{$\DEFsessionID, $m_3$ $\}$ \> \> \\
     %
     \> \sendmessageright *{\text{$M_3$}} \> \\
     %
-    \> \> \text{{\bf BIND RELATION} \DEFsessionID, $m_3$} \\
-    \> \> \text{{\bf STORE} $m_3$} \\
+    \> \> {\bf BIND RELATION} \DEFsessionID, $m_3$ \\
+    \> \> {\bf STORE} $m_3$
 }
 \end{pcvstack}
 
