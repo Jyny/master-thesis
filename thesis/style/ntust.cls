@@ -61,6 +61,15 @@
 \RequirePackage{geometry}
 \RequirePackage{float}
 \RequirePackage{enumitem}
+\RequirePackage[sort&compress]{natbib}
+\RequirePackage{amsmath, amsthm, amssymb}
+\RequirePackage{ulem, CJKulem}
+\RequirePackage{lipsum}
+\RequirePackage{zhlipsum}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{algorithm2e}
+\RequirePackage{cryptocode}
+
 
 % --------------------------------------------------
 % 07 套件設定 (Package Settings)
@@ -97,7 +106,6 @@
 
 % [版面大小]
 %
-\RequirePackage{geometry}
 \geometry{top=3cm, bottom=3cm, left=3cm, right=3cm}
 
 % [連結設定]
