@@ -50,6 +50,7 @@
 \RequirePackage{diagbox}
 \RequirePackage{array}
 \RequirePackage{longtable}
+\RequirePackage{arydshln}
 \RequirePackage{datetime}
 \RequirePackage{CJKnumb}
 \RequirePackage{fp, calc}
