@@ -1,6 +1,6 @@
 \chapter{系統架構與實作}
 
-    本研究所設計之系統系利用超音波對麥克風造成的非線性響應輸出與主動式噪音控制消除高關聯度噪音等特性。
+    本研究所設計之系統系利用超音波對麥克風造成的非線性響應輸出與自適應噪音消除高關聯度噪音等特性。
 來嘗試解決在部署麥克風干擾器的場域裡無法取得有效聲學紀錄的問題。
 同時藉由密碼系統的機密性與不可否認性，發展一套以其為基礎的會談錄音存取控制機制。
 透過上述機制的結合，能夠使在部署超音波麥克風干擾器的會談情境中，於會談結束後，允許特定參與者得以取得有效之聲音記錄。
@@ -43,14 +43,18 @@
     \DEFprivateKey    & 會談擁有者 $i$ 的私密金鑰 \\
     \DEFagentKey      & 會談擁有者 $i$ 的授權金鑰 \\
     \DEFakEnc         & 加密保護的授權金鑰 \DEFagentKey \\
-    \DEFakEncDec      & 透過會談擁有者 $i$ 的私密金鑰所解密的 \DEFakEnc \\
-    \DEFakEncDecSig   & \DEFakEncDec 的數位簽章 \\
+    % \DEFakEncDec      & 透過會談擁有者 $i$ 的私密金鑰所解密的 \DEFakEnc \\
+    % \DEFakEncDecSig   & \DEFakEncDec 的數位簽章 \\
     \DEFsessionID     & 當次會談唯一識別碼 \\
     \DEFunsealKey     & 當次會談的解封金鑰 (Unseal Key) \\
     \DEFrecJ          & 於開啟音波麥克風干擾器場域裡的會談聲音記錄 \\
     \DEFrecN          & 純超音波麥克風干擾器於麥克風的響應輸出之聲音記錄 \\
     \DEFrecP          & 受加密保護的聲音記錄 \DEFrecN \\
+    \DEFtimeMAX       & 會談進行時間長度的最大值、\DEFrecN 的時間長度 \\
     \DEFrecREV        & 執行系統機制 {\it Unseal} 所產生之有效會談聲音記錄 \\
+    \DEFshift         & 聲音樣本的時間誤差 \\
+    \DEFfuncEstm{·}   & 聲音樣本的時間誤差推估函數 \\
+    \DEFfuncAnc{·}    & 自適應噪音消除函數\\
     \DEFfuncKgen{}    & 對稱式金鑰之產生函數 \\
     \DEFfuncPKgen{}   & 非對稱式金鑰之產生函數 \\
     \DEFfuncIDgen{}   & 唯一識別碼之產生函數 \\
@@ -61,9 +65,9 @@
     \DEFfuncEncPK{·}  & 使用公開金鑰 $pk$ 的非對稱式加密演算法之加密函數 \\
     \DEFfuncDecSK{·}  & 使用私密金鑰 $sk$ 的非對稱式加密演算法之解密函數 \\
     \DEFfuncSSS{·}    & 金鑰分割函數，$p$ 為分割數，$t$ 為還原閾值 \\
+    \DEFfuncSSC{·}    & 金鑰分割合併函數 \\
     \DEFfuncPRNG{·}   & 偽隨機數產生器演算法函數 \\
     \DEFseed          & 用於當次會談的偽隨機數產生器種子 \\
-    \DEFtimeMAX       & 會談進行時間長度的最大值、\DEFrecN 的時間長度 \\
     \hiderowcolors
 \end{longtable}
 
@@ -160,7 +164,7 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
     \begin{enumerate}[itemsep=0pt,parsep=0pt,]
         \item {\it Challenge}： \\
             目標為使 Server 獲得 Owner 授權得以接續執行後續步驟。
-        \item 「主動式噪音控制」({\it ANC})： \\
+        \item 「自適應噪音消除」({\it ANC})： \\
             將受干擾的會談聲音記錄 \DEFrecJ，還原為有效的會談聲音記錄 \DEFrecREV。
     \end{enumerate}
 
@@ -383,7 +387,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
             Server 上儲存的 \DEFrecJ 為非有效聲音紀錄，其原因為含有高信噪比的噪音。
         此噪音由 MeetingBox 的 超音波麥克風干擾器所產生，與 \DEFrecN 有高相似度與關聯度。
-        因此透過 \DEFrecN 與 \DEFrecJ 輸入 「主動式噪音控制」(ANC)，即可獲得有效會談聲音記錄。
+        因此透過 \DEFrecN 與 \DEFrecJ 輸入 「自適應噪音消除」(ANC)，即可獲得有效會談聲音記錄。
         透過 ANC 還原的有效會談聲音記錄，本文定義為 \DEFrecREV。
 \end{steps}
 
@@ -451,7 +455,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     & & & \\
 
     & &
-    $\xrightarrow{ \enskip M_{1} \enskip }$
+    $\xrightarrow{ \qquad M_{1} \qquad }$
     & & \\
 
     & & &
@@ -464,7 +468,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     & \\
 
     & &
-    $\xleftarrow{ \enskip M_{2} \enskip }$
+    $\xleftarrow{ \qquad M_{2} \qquad }$
     & & \\
 
     &
@@ -474,7 +478,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     & & & \\
 
     & &
-    $\xrightarrow{ \enskip M_{3} \enskip }$
+    $\xrightarrow{ \qquad M_{3} \qquad }$
     & & \\
 
     & & &
@@ -485,7 +489,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     & \\
 
     & &
-    $\xleftarrow{ \enskip M_{4} \enskip }$
+    $\xleftarrow{ \qquad M_{4} \qquad }$
     & & \\
 
     &
@@ -674,7 +678,122 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \captionof{figure}{進行會談之協定}\label{fig:protocol-sessioning}
 
 
-\subsection{主動式噪音控制}
+\begin{center}\scriptsize\setstretch{1}
+\noindent\begin{tabularx}{0.95\textwidth} {
+        |c
+        >{\raggedright\arraybackslash}X
+        >{\centering\arraybackslash}c
+        >{\raggedright\arraybackslash}X
+        c|
+    }
+    \hline
+
+    \multicolumn{5}{|c|}{} \\
+    & \multicolumn{1}{c}{\small{\DEFowner}} &
+    & \multicolumn{1}{c}{\small{\DEFserver}} & \\
+    %
+    & \multicolumn{1}{c}{$\{$ \DEFsessionID,
+        $\{[($ \DEFownerID, \DEFprivateKey $)] \mid i=1~...\mid$\DEFownerAll$\mid$ $\}\}$}
+    & & \multicolumn{1}{c}{\shortstack[c]{$\{$
+        \DEFsessionID, \DEFowreg, \DEFrecP, \DEFrecJ, \\
+        $\{[($ \DEFownerID, \DEFpublicKey, \DEFakEnc $)] \mid i=1~...$\DEFowreg $\}\}$}}
+    & \\
+    %
+    \cline{2-2} \cline{4-4}
+    \multicolumn{5}{|c|}{} \\
+
+    & {\bf for each~} \DEFowner $\in$ \DEFownerAll \newline
+    \pcind {\bf where~} $i=1~...\mid$\DEFownerAll$\mid$ {\bf:}
+    & & & \\
+
+    \cdashline{2-4}
+
+    & \multicolumn{1}{:l}{
+    \pcind\pcind $M_{1}$ $\leftarrow$ $\{$\DEFsessionID, \DEFownerID$\}$
+    } & & \multicolumn{1}{l:}{} & \\
+
+    & \multicolumn{1}{:l}{} &
+    $\xrightarrow{ \qquad M_{1} \qquad }$
+    & \multicolumn{1}{l:}{} & \\
+
+    & \multicolumn{1}{:l}{} & & \multicolumn{1}{l:}{
+    $M_{2}$ $\leftarrow$ $\{$\DEFownerID, \DEFakEnc$\}$
+    } & \\
+
+    & \multicolumn{1}{:l}{} &
+    $\xleftarrow{ \qquad M_{2} \qquad }$
+    & \multicolumn{1}{l:}{} & \\
+
+    & \multicolumn{1}{:l}{\shortstack[l]{
+    \pcind\pcind $sk$ $\leftarrow$ \DEFprivateKey \\
+    \pcind\pcind $m_{3}$ $\leftarrow$ \DEFfuncDecSK{\DEFakEnc} \\
+    \pcind\pcind $m_{3}.sig$ $\leftarrow$ \DEFfuncSignSK{$m_{3}$} \\
+    \pcind\pcind $M_{3}$ $\leftarrow$ $\{m_{3}, ~m_{3}.sig\}$
+    }} & & \multicolumn{1}{l:}{} & \\
+
+    & \multicolumn{1}{:l}{} &
+    $\xrightarrow{ \qquad M_{3} \qquad }$
+    & \multicolumn{1}{l:}{} & \\
+
+    & \multicolumn{1}{:l}{} & & \multicolumn{1}{l:}{\shortstack[l]{
+    $pk$ $\leftarrow$ \DEFpublicKey \\
+    $valid$ $\leftarrow$ \DEFfuncVerfPK{$m_{3},~m_{3}.sig$} \\
+    {\bf if} !$valid$ {\bf :} \\
+    \pcind {\bf terminate session} \\
+    {\bf else} {\bf :} \\
+    \pcind \DEFagentKey $\leftarrow$ $m_{3}$ \\
+    \pcind {\bf bind relations:} \\
+    \pcind\pcind \DEFagentKey $\in$ \DEFownerID \\
+    $M_{4}$ $\leftarrow$ $\{\}$
+    }} & \\
+
+    & \multicolumn{1}{:l}{} &
+    $\xleftarrow{ \qquad M_{4} \qquad }$
+    & \multicolumn{1}{l:}{} & \\
+
+    & \multicolumn{1}{:l}{} & & \multicolumn{1}{l:}{} & \\
+    \cdashline{2-4}
+    \multicolumn{5}{|c|}{} \\
+    
+    &
+    $M_{5}$ $\leftarrow$ $\{$\DEFsessionID$\}$
+    & & & \\
+
+    & &
+    $\xrightarrow{ \qquad M_{5} \qquad }$
+    & & \\
+
+    & & &
+    {\bf if~} \DEFowreg $=1${\bf:} \newline
+    \pcind \DEFunsealKey $\leftarrow$ \DEFagentKey \newline
+
+    {\bf if~} \DEFowreg $>1${\bf:} \newline
+    \pcind $[s_{i}]$ $\leftarrow$ $\{[$ \DEFagentKey $] \mid i=1~...$\DEFowreg $\}$ \newline
+    \pcind \DEFunsealKey $\leftarrow$ \DEFfuncSSC{$[s_{i}]$} \newline
+
+    $k$ $\leftarrow$ \DEFunsealKey \newline
+    \DEFrecN $\leftarrow$ \DEFfuncDecEK{\DEFrecP} \newline
+    \DEFshift $\leftarrow$ \DEFfuncEstm{\DEFrecJ,~\DEFrecN} \newline
+    \DEFrecREV $\leftarrow$ \DEFfuncAnc{\DEFrecJ,~\DEFrecN} \newline
+    $M_{6}$ $\leftarrow$ $\{$\DEFsessionID,\DEFrecREV$\}$
+    & \\
+
+    & \multicolumn{1}{:l}{} &
+    $\xleftarrow{ \qquad M_{6} \qquad }$
+    & \multicolumn{1}{l:}{} & \\
+
+    &
+    {\bf output~} \DEFrecREV
+    & & & \\
+
+    \multicolumn{5}{|c|}{} \\
+    \hline
+\end{tabularx}
+\normalsize\end{center}
+\captionof{figure}{解封會談聲音記錄之協定}\label{fig:protocol-unseal}
+
+
+\subsection{自適應噪音消除}
 
 \subsection{樣本對齊}
 
