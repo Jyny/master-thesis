@@ -8,12 +8,12 @@
 
 \section{符號定義}
 
-    本研究設計之系統所使用符號與其意義如表 \ref{table:tab.symbol} 所示。
+    本研究設計之系統所使用符號與其意義如表 \ref{table:symbol} 所示。
 
 \rowcolors{1}{white}{whitesmoke}
 \begin{longtable}{c l}
     \hiderowcolors
-    \caption{符號定義表} \label{table:tab.symbol} \\
+    \caption{符號定義表} \label{table:symbol} \\
 
     \hiderowcolors
     \hline
@@ -31,15 +31,18 @@
     \endlastfoot
 
     \showrowcolors
+    \DEFattenderAll   & 系統角色會談參與者 \\
+    \DEFownerAll      & 系統角色會談擁有者 \\
     \DEFmeetingbox    & 系統角色 MeetingBox \\
     \DEFserver        & 系統角色解封伺服器 \\
     \DEFattender      & 第 $h$ 位會談參與者 (Attender) \\
     \DEFowner         & 第 $i$ 位會談擁有者 (Owner) \\
+    \DEFowreg         & 會談擁有者註冊人數 \\
     \DEFownerID       & 會談擁有者 $i$ 的唯一識別碼 \\
     \DEFpublicKey     & 會談擁有者 $i$ 的公開金鑰 \\
     \DEFprivateKey    & 會談擁有者 $i$ 的私密金鑰 \\
     \DEFagentKey      & 會談擁有者 $i$ 的授權金鑰 \\
-    \DEFakEnc         & 授權金鑰 \\
+    \DEFakEnc         & 加密保護的的授權金鑰 \DEFagentKey \\
     \DEFakEncDec      & 透過會談擁有者 $i$ 的私密金鑰所解密的 \DEFakEnc \\
     \DEFakEncDecSig   & \DEFakEncDec 的數位簽章 \\
     \DEFsessionID     & 當次會談唯一識別碼 \\
@@ -69,12 +72,12 @@
     \centering
     \includegraphics[width=0.8\textwidth]{single-owner-architecture}
     \caption{單一 Owner 系統架構圖}
-    \label{fig.s-o-arch}
+    \label{fig:s-o-arch}
 \end{figure}
 
     本系統由 MeetingBox、Server 以及會談參與者 Attender 所組成。
 各會談的 Attender 僅定義於當次會談，每次參與會談的 Attender 可為不同群體。
-Attender 於 MeetingBox 的周圍進行會談 ({\it Meeting Session})，如圖 \ref{fig.s-o-arch}。
+Attender 於 MeetingBox 的周圍進行會談 ({\it Meeting Session})，如圖 \ref{fig:s-o-arch}。
 MeetingBox 於會談進行間開啟超音波麥克風干擾器，因此鄰近的麥克風或周邊的聲音記錄裝置，
 都將因受到其干擾而失效，Attender 無法自行有效記錄會談的聲音內容。
 
@@ -100,7 +103,7 @@ Attender 透過 MeetingBox 上的控制介面與其互動，進而控制系統�
     \centering
     \includegraphics[width=0.8\textwidth]{multi-owner-architecture}
     \caption{多 Owner 系統架構圖}
-    \label{fig.m-o-arch}
+    \label{fig:m-o-arch}
 \end{figure}
 
     會談擁有者 Owner 屬於 Attender，為 Attender 的子集合，
@@ -109,8 +112,8 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 有能力決定是否執行系統機制「解封」 ({\it Unseal})，並獲取 {\it Unseal} 所產生的有效會談聲音記錄 (\DEFrecREV)。
 
     Owner 必須是一或多人。當會談中只有一個 Owner 時，為 {\it Single Owner Meeting Session} 情境，
-系統架構如圖 \ref{fig.s-o-arch}。當會談中多於一個 Owner 時，為 {\it Multi Owner Meeting Session} 情境，
-系統架構如圖 \ref{fig.m-o-arch} 所示。
+系統架構如圖 \ref{fig:s-o-arch}。當會談中多於一個 Owner 時，為 {\it Multi Owner Meeting Session} 情境，
+系統架構如圖 \ref{fig:m-o-arch} 所示。
 
     Owner 持有智慧型裝置，透過其與 MeetingBox 互動，獲取 MeetingBox 上的資訊，並有能力於會談進行中、會談結束後，
 與 Server 持續通訊，執行本研究所設計的系統機制「註冊會談擁有者」 (Register Owner) 與「解封」 ({\it Unseal})。
@@ -166,12 +169,12 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
     \centering
     \includegraphics[width=0.9\textwidth]{system-stage}
     \caption{{\it Meeting Session} 生命週期}
-    \label{fig.system-stage}
+    \label{fig:system-stage}
 \end{figure}
 
     本研究所設計之系統，其流程跟隨會談 ({\it Meeting Session}) 的生命週期，其分為三個階段定義。分別為：
 一、「初始化會談 (Initialize {\it Meeting Session})」；二、「進行會談 (Running {\it Meeting Session})」；
-三、「解封 ({\it Unseal})」；如圖 \ref{fig.system-stage}。
+三、「解封 ({\it Unseal})」；如圖 \ref{fig:system-stage}。
 
     第一階段作為 {\it Meeting Session} 的起始點，各階段依序執行，於第三階段結束一次系統生命週期的循環。
 系統可以同時存在多個{\it Meeting Session}循環，彼此互相互不干擾影響，獨立執行。
@@ -190,13 +193,13 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
 {\it Meeting Session} 生命週期第一個階段：Initialize {\it Meeting Session} 的系統流程。
-如圖 \ref{fig.s-o-init} 所示。
+如圖 \ref{fig:s-o-init} 所示。
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{single-owner-sequence-diagram-init}
     \caption{Single Owner Initialize {\it Meeting Session}}
-    \label{fig.s-o-init}
+    \label{fig:s-o-init}
 \end{figure}
 
 \begin{steps}
@@ -258,13 +261,13 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
 {\it Meeting Session} 生命週期第二個階段：Running {\it Meeting Session} 的系統流程。
-如圖 \ref{fig.s-o-sessioning} 所示。
+如圖 \ref{fig:s-o-sessioning} 所示。
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{single-owner-sequence-diagram-sessioning}
     \caption{Single Owner Running {\it Meeting Session}}
-    \label{fig.s-o-sessioning}
+    \label{fig:s-o-sessioning}
 \end{figure}
 
 \begin{steps}
@@ -321,7 +324,7 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
 {\it Meeting Session} 生命週期第三個階段：{\it Unseal} 的系統流程。
-如圖 \ref{fig.s-o-unseal} 所示。此階段執行於 Running {\it Meeting Session} 之後，
+如圖 \ref{fig:s-o-unseal} 所示。此階段執行於 Running {\it Meeting Session} 之後，
 Attender 間的談話已結束，Attender 可以離開會談的場域，且不再需要與 MeetingBox 實體接觸。
 此階段僅 Owner 與 Server 互動，透過此階段機制，最終可取得有效之會談聲音記錄 (\DEFrecREV)。
 本研究所設計之系統可以確保 Server 在 Running {\it Meeting Session}結束後，
@@ -331,7 +334,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \centering
     \includegraphics[width=0.7\textwidth]{single-owner-sequence-diagram-unseal}
     \caption{Single Owner {\it Unseal}}
-    \label{fig.s-o-unseal}
+    \label{fig:s-o-unseal}
 \end{figure}
 
 \begin{steps}
@@ -395,25 +398,25 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \centering
     \includegraphics[width=0.9\textwidth]{multi-owner-sequence-diagram-init}
     \caption{Multi Owner Initialize {\it Meeting Session}}
-    \label{fig.m-o-init}
+    \label{fig:m-o-init}
 \end{figure}
 
     {\it Multi Owner Meeting Session} 情境中，
 {\it Meeting Session} 生命週期第一個階段：Initialize {\it Meeting Session} 的系統流程。
-如圖 \ref{fig.s-o-init} 所示。
+如圖 \ref{fig:s-o-init} 所示。
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{multi-owner-sequence-diagram-sessioning}
     \caption{Multi Owner Running {\it Meeting Session}}
-    \label{fig.m-o-sessioning}
+    \label{fig:m-o-sessioning}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{multi-owner-sequence-diagram-unseal}
     \caption{Multi Owner {\it Unseal}}
-    \label{fig.m-o-unseal}
+    \label{fig:m-o-unseal}
 \end{figure}
 
 
@@ -438,9 +441,9 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     & \multicolumn{1}{c}{\bf{\DEFmeetingbox}} &
     & \multicolumn{1}{c}{\bf{\DEFserver}} & \\
     %
-    & &
-    & \multicolumn{1}{c}{$\{$ \DEFrecN $\}$} &
-    & \multicolumn{1}{c}{} & \\
+    & \multicolumn{1}{c}{} &
+    & \multicolumn{1}{c}{$\{$\DEFrecN $\}$} &
+    & \multicolumn{1}{c}{$\{$\DEFsessionID, \DEFowreg $\}$} & \\
     %
     \cline{2-2} \cline{4-4} \cline{6-6}
     \multicolumn{7}{|c|}{} \\
@@ -455,7 +458,9 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
     & & & & &
     \DEFunsealKey $\leftarrow$ \DEFfuncKgen{} \newline
-    \DEFsessionID $\leftarrow$ \DEFfuncIDgen{} \newline
+    {\bf Bind Relations:} \newline
+    \pcind \DEFunsealKey ~ $\in$ ~ \DEFsessionID \newline
+    \DEFowreg $\leftarrow$ $0$ \newline
     $M_2$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey$\}$
     & \\
 
@@ -480,8 +485,8 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     & \\
 
     &
-    \bf{for each~} \DEFowner : \newline
-    \pcind \bf{where~} $i=1~...~n$:
+    \bf{for each~} \DEFowner $\in$ \DEFownerAll: \newline
+    \pcind \bf{where~} $i=1~...\mid$\DEFownerAll$\mid$:
     & & & & & \\
 
     \cline{2-6}
@@ -517,6 +522,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     {\bf Bind Relations:} \\
     \pcind \DEFownerID $\in$ \DEFsessionID \\
     \pcind \DEFpublicKey $\in$ \DEFownerID \\
+    \DEFowreg $\leftarrow$ \DEFowreg $+ 1$ \\
     $M_{3+2i+2}$ $\leftarrow$ $\{$\DEFownerID, \DEFprivateKey$\}$
     }} & \\
 
@@ -535,6 +541,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \hline
 \end{tabularx}
 \normalsize\end{center}
+\captionof{figure}{Initialize {\it Meeting Session}}\label{fig:protocol-init}
 
 
 \subsection{主動式噪音控制}
