@@ -420,37 +420,68 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
 \subsection{錄音存取控制與解密}
 
-\begin{pcvstack}[boxed, center]
-\pseudocode[
-    head=Protocol for Initialize Meeting Session,
-    mode=text,
-    codesize=\scriptsize,
-]{
-    \\
-    \bf{\normalsize Meetingbox} \> \> \bf{\normalsize Server} \\
-    $\{$ \DEFrecN $\}$ \> \> \\
-    [0.5\baselineskip][\hline] \\
-    %
-    $M_1$ $\leftarrow$ $\{$\DEFrecN$\}$ \> \> \\
-    %
-    \> \sendmessageright *{\text{$M_1$}} \> \\
-    %
-    \> \> \DEFunsealKey $\leftarrow$ $KGen()$ \\
-    \> \> \DEFsessionID $\leftarrow$ $IDGen()$ \\
-    \> \> $M_2$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey$\}$ \\
-    %
-    \> \sendmessageleft *{\text{$M_2$}} \> \\
-    %
-    $k$ $\leftarrow$ \DEFunsealKey \> \> \\
-    $m_3$ $\leftarrow$ \DEFfuncEncEK{\DEFrecN} \> \> \\
-    $M_3$ $\leftarrow$ $\{$\DEFsessionID, $m_3$ $\}$ \> \> \\
-    %
-    \> \sendmessageright *{\text{$M_3$}} \> \\
-    %
-    \> \> {\bf BIND RELATIONS:}\\
-    \> \> \pcind $m_3$ ~ {\bf BELONGS TO} ~ \DEFsessionID
-}
-\end{pcvstack}
+\begin{center}\scriptsize
+\noindent\begin{tabularx}{0.95\textwidth} {
+        |c
+        >{\raggedright\arraybackslash}X
+        >{\centering\arraybackslash}c
+        >{\raggedright\arraybackslash}X
+        c|
+    }
+
+    \hline
+
+    & \multicolumn{1}{c}{\bf{Meetingbox}} &
+    & \multicolumn{1}{c}{\bf{Server}} & \\
+
+    & \multicolumn{1}{c}{$\{$ \DEFrecN $\}$} &
+    & \multicolumn{1}{c}{} & \\
+
+    \cline{2-2} \cline{4-4}
+
+    &
+    \begin{algorithm}[H]
+        \setstretch{1}
+        $M_1$ $\leftarrow$ $\{\}$
+    \end{algorithm}
+    & & & \\
+
+    & &
+    $\xrightarrow{~~M_1~~}$
+    &
+    \begin{algorithm}[H]
+        \setstretch{1}
+        \DEFunsealKey $\leftarrow$ \DEFfuncKgen{} \\
+        \DEFsessionID $\leftarrow$ \DEFfuncIDgen{} \\
+        $M_2$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey$\}$
+    \end{algorithm}
+    & \\
+
+    &
+    \begin{algorithm}[H]
+        \setstretch{1}
+        $k$ $\leftarrow$ \DEFunsealKey \\
+        $m_3$ $\leftarrow$ \DEFfuncEncEK{\DEFrecN} \\
+        $M_3$ $\leftarrow$ $\{$\DEFsessionID, $m_3$ $\}$
+    \end{algorithm}
+    &
+    $\xleftarrow{~~M_2~~}$
+    & & \\
+
+    & &
+    $\xrightarrow{~~M_3~~}$
+    &
+    \begin{algorithm}[H]
+        \setstretch{1}
+        {\bf BIND RELATIONS:} \\
+        \pcind $m_3$ ~ {\bf BELONGS TO} ~ \DEFsessionID \\
+    \end{algorithm}
+    & \\
+
+    \hline
+\end{tabularx}
+\normalsize\end{center}
+
 
 \subsection{主動式噪音控制}
 
