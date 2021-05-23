@@ -428,7 +428,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
 \section{系統機制}
 
-\subsection{錄音存取控制與解密}
+\subsection{聲音記錄存取控制}
 
 \begin{center}\scriptsize\setstretch{1}
 \noindent\begin{tabularx}{0.95\textwidth} {
@@ -695,7 +695,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     & \multicolumn{1}{c}{$\{$ \DEFsessionID,
         $\{[($ \DEFownerID, \DEFprivateKey $)] \mid i=1~...\mid$\DEFownerAll$\mid$ $\}\}$}
     & & \multicolumn{1}{c}{\shortstack[c]{$\{$
-        \DEFsessionID, \DEFowreg, \DEFrecP, \DEFrecJ, \\
+        \DEFsessionID,
         $\{[($ \DEFownerID, \DEFpublicKey, \DEFakEnc $)] \mid i=1~...$\DEFowreg $\}\}$}}
     & \\
     %
@@ -713,7 +713,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     } & & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} &
-    $\xrightarrow{ \qquad M_{1}^{i} \qquad }$
+    $\xrightarrow{ \enskip M_{1}^{i} \enskip }$
     & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} & & \multicolumn{1}{l:}{
@@ -721,7 +721,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     } & \\
 
     & \multicolumn{1}{:l}{} &
-    $\xleftarrow{ \qquad M_{2}^{i} \qquad }$
+    $\xleftarrow{ \enskip M_{2}^{i} \enskip }$
     & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{\shortstack[l]{
@@ -732,7 +732,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     }} & & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} &
-    $\xrightarrow{ \qquad M_{3}^{i} \qquad }$
+    $\xrightarrow{ \enskip M_{3}^{i} \enskip }$
     & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} & & \multicolumn{1}{l:}{\shortstack[l]{
@@ -748,19 +748,48 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     }} & \\
 
     & \multicolumn{1}{:l}{} &
-    $\xleftarrow{ \qquad M_{4}^{i} \qquad }$
+    $\xleftarrow{ \enskip M_{4}^{i} \enskip }$
     & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} & & \multicolumn{1}{l:}{} & \\
     \cdashline{2-4}
+
+    \multicolumn{5}{|c|}{} \\
+    \hline
+\end{tabularx}
+\normalsize\end{center}
+\captionof{figure}{會談擁有者授權解封伺服器之協定}\label{fig:protocol-auth}
+
+
+\begin{center}\scriptsize\setstretch{1}
+\noindent\begin{tabularx}{0.95\textwidth} {
+        |c
+        >{\raggedright\arraybackslash}X
+        >{\centering\arraybackslash}c
+        >{\raggedright\arraybackslash}X
+        c|
+    }
+    \hline
+
+    \multicolumn{5}{|c|}{} \\
+    & \multicolumn{1}{c}{\small{\DEFowner}} &
+    & \multicolumn{1}{c}{\small{\DEFserver}} & \\
+    %
+    & \multicolumn{1}{c}{$\{$\DEFsessionID$\}$}
+    & & \multicolumn{1}{c}{\shortstack[c]{$\{$
+        \DEFsessionID, \DEFowreg, \DEFrecP, \DEFrecJ, \\
+        $\{[($ \DEFownerID, \DEFagentKey $)] \mid i=1~...$\DEFowreg $\}\}$}}
+    & \\
+    %
+    \cline{2-2} \cline{4-4}
     \multicolumn{5}{|c|}{} \\
     
     &
-    $M_{5}$ $\leftarrow$ $\{$\DEFsessionID$\}$
+    $M_{1}$ $\leftarrow$ $\{$\DEFsessionID$\}$
     & & & \\
 
     & &
-    $\xrightarrow{ \qquad M_{5} \qquad }$
+    $\xrightarrow{ \qquad M_{1} \qquad }$
     & & \\
 
     & & &
@@ -775,12 +804,12 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \DEFrecN $\leftarrow$ \DEFfuncDecEK{\DEFrecP} \newline
     \DEFshift $\leftarrow$ \DEFfuncEstm{\DEFrecJ,~\DEFrecN} \newline
     \DEFrecREV $\leftarrow$ \DEFfuncAnc{\DEFrecJ,~\DEFrecN} \newline
-    $M_{6}$ $\leftarrow$ $\{$\DEFsessionID,\DEFrecREV$\}$
+    $M_{2}$ $\leftarrow$ $\{$\DEFsessionID,\DEFrecREV$\}$
     & \\
 
-    & \multicolumn{1}{:l}{} &
-    $\xleftarrow{ \qquad M_{6} \qquad }$
-    & \multicolumn{1}{l:}{} & \\
+    & &
+    $\xleftarrow{ \qquad M_{2} \qquad }$
+    & & \\
 
     &
     {\bf output~} \DEFrecREV
@@ -795,6 +824,6 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
 \subsection{自適應噪音消除}
 
-\subsection{樣本對齊}
+\subsection{樣本時間對齊}
 
 \section{系統實作}
