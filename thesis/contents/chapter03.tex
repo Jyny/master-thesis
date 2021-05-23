@@ -533,28 +533,28 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
     \cdashline{2-6}
 
-    & \multicolumn{1}{:l}{
-    \pcind\pcind $M_{1}$ $\leftarrow$ $\{\}$
+    \rule{0pt}{10pt} & \multicolumn{1}{:l}{
+    \pcind\pcind $M_{1}^{i}$ $\leftarrow$ $\{\}$
     } & & & & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} &
-    $\xrightarrow{ \enskip M_{1} \enskip }$
+    $\xrightarrow{ \enskip M_{1}^{i} \enskip }$
     & & & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} & &
-    $M_{2}$ $\leftarrow$ $\{$\DEFsessionID$\}$
+    $M_{2}^{i}$ $\leftarrow$ $\{$\DEFsessionID$\}$
     & $\quad\quad\quad\quad$ & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} &
-    $\xleftarrow{ \enskip M_{2} \enskip }$
+    $\xleftarrow{ \enskip M_{2}^{i} \enskip }$
     & & & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{
-    \pcind\pcind $M_{3}$ $\leftarrow$ $\{$\DEFsessionID$\}$
+    \pcind\pcind $M_{3}^{i}$ $\leftarrow$ $\{$\DEFsessionID$\}$
     } & & & & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} & \multicolumn{3}{c}{
-    $\xrightarrow{\qquad\qquad\qquad\qquad\qquad M_{3} \qquad\qquad\qquad\qquad\qquad}$
+    $\xrightarrow{\qquad\qquad\qquad\qquad\qquad M_{3}^{i} \qquad\qquad\qquad\qquad\qquad}$
     }& \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} & & & & \multicolumn{1}{l:}{\shortstack[l]{
@@ -564,11 +564,11 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \pcind \DEFownerID $\in$ \DEFsessionID \\
     \pcind \DEFpublicKey $\in$ \DEFownerID \\
     \DEFowreg $\leftarrow$ \DEFowreg $+1$ \\
-    $M_{4}$ $\leftarrow$ $\{$\DEFownerID, \DEFprivateKey$\}$
+    $M_{4}^{i}$ $\leftarrow$ $\{$\DEFownerID, \DEFprivateKey$\}$
     }} & \\
 
     & \multicolumn{1}{:l}{} & \multicolumn{3}{c}{
-    $\xleftarrow{\qquad\qquad\qquad\qquad\qquad M_{4} \qquad\qquad\qquad\qquad\qquad}$
+    $\xleftarrow{\qquad\qquad\qquad\qquad\qquad M_{4}^{i} \qquad\qquad\qquad\qquad\qquad}$
     }& \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{
@@ -708,31 +708,31 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
     \cdashline{2-4}
 
-    & \multicolumn{1}{:l}{
-    \pcind\pcind $M_{1}$ $\leftarrow$ $\{$\DEFsessionID, \DEFownerID$\}$
+    \rule{0pt}{10pt} & \multicolumn{1}{:l}{
+    \pcind\pcind $M_{1}^{i}$ $\leftarrow$ $\{$\DEFsessionID, \DEFownerID$\}$
     } & & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} &
-    $\xrightarrow{ \qquad M_{1} \qquad }$
+    $\xrightarrow{ \qquad M_{1}^{i} \qquad }$
     & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} & & \multicolumn{1}{l:}{
-    $M_{2}$ $\leftarrow$ $\{$\DEFownerID, \DEFakEnc$\}$
+    $M_{2}^{i}$ $\leftarrow$ $\{$\DEFownerID, \DEFakEnc$\}$
     } & \\
 
     & \multicolumn{1}{:l}{} &
-    $\xleftarrow{ \qquad M_{2} \qquad }$
+    $\xleftarrow{ \qquad M_{2}^{i} \qquad }$
     & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{\shortstack[l]{
     \pcind\pcind $sk$ $\leftarrow$ \DEFprivateKey \\
     \pcind\pcind $m_{3}$ $\leftarrow$ \DEFfuncDecSK{\DEFakEnc} \\
     \pcind\pcind $m_{3}.sig$ $\leftarrow$ \DEFfuncSignSK{$m_{3}$} \\
-    \pcind\pcind $M_{3}$ $\leftarrow$ $\{m_{3}, ~m_{3}.sig\}$
+    \pcind\pcind $M_{3}^{i}$ $\leftarrow$ $\{m_{3}, ~m_{3}.sig\}$
     }} & & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} &
-    $\xrightarrow{ \qquad M_{3} \qquad }$
+    $\xrightarrow{ \qquad M_{3}^{i} \qquad }$
     & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} & & \multicolumn{1}{l:}{\shortstack[l]{
@@ -744,11 +744,11 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \pcind \DEFagentKey $\leftarrow$ $m_{3}$ \\
     \pcind {\bf bind relations:} \\
     \pcind\pcind \DEFagentKey $\in$ \DEFownerID \\
-    $M_{4}$ $\leftarrow$ $\{\}$
+    $M_{4}^{i}$ $\leftarrow$ $\{\}$
     }} & \\
 
     & \multicolumn{1}{:l}{} &
-    $\xleftarrow{ \qquad M_{4} \qquad }$
+    $\xleftarrow{ \qquad M_{4}^{i} \qquad }$
     & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} & & \multicolumn{1}{l:}{} & \\
