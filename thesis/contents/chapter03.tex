@@ -31,22 +31,22 @@
     \endlastfoot
 
     \showrowcolors
-    \DEFattenderAll   & 系統角色會談參與者 (Attender) \\
-    \DEFownerAll      & 系統角色會談擁有者 (Owner) \\
-    \DEFmeetingbox    & 系統角色會談終端 (MeetingBox) \\
-    \DEFserver        & 系統角色解封伺服器 (Unsealing Service Provider) \\
+    \DEFattenderAll   & 系統角色－會談參與者 (Attender) \\
+    \DEFownerAll      & 系統角色－會談主持者 (Owner) \\
+    \DEFmeetingbox    & 系統角色－會談終端 (MeetingBox) \\
+    \DEFserver        & 系統角色－解封伺服器 (Unsealing Service Provider) \\
     \DEFattender      & 第 $h$ 位會談參與者\\
-    \DEFowner         & 第 $i$ 位會談擁有者\\
-    \DEFowreg         & 會談擁有者註冊人數 \\
-    \DEFownerID       & 會談擁有者 $i$ 的唯一識別碼 \\
-    \DEFpublicKey     & 會談擁有者 $i$ 的公開金鑰 \\
-    \DEFprivateKey    & 會談擁有者 $i$ 的私密金鑰 \\
-    \DEFagentKey      & 會談擁有者 $i$ 的授權金鑰 \\
+    \DEFowner         & 第 $i$ 位會談主持者\\
+    \DEFowreg         & 會談主持者註冊人數 \\
+    \DEFownerID       & 會談主持者 $i$ 的唯一識別碼 \\
+    \DEFpublicKey     & 會談主持者 $i$ 的公開金鑰 \\
+    \DEFprivateKey    & 會談主持者 $i$ 的私密金鑰 \\
+    \DEFagentKey      & 會談主持者 $i$ 的授權金鑰 \\
     \DEFakEnc         & 加密保護的授權金鑰 \DEFagentKey \\
-    % \DEFakEncDec      & 透過會談擁有者 $i$ 的私密金鑰所解密的 \DEFakEnc \\
+    % \DEFakEncDec      & 透過會談主持者 $i$ 的私密金鑰所解密的 \DEFakEnc \\
     % \DEFakEncDecSig   & \DEFakEncDec 的數位簽章 \\
     \DEFsessionID     & 當次會談唯一識別碼 \\
-    \DEFunsealKey     & 當次會談的解封金鑰 (Unseal Key) \\
+    \DEFunsealKey     & 當次會談的解封金鑰 (Unsealing Key) \\
     \DEFfuncKgen{}    & 對稱式金鑰之產生函數 \\
     \DEFfuncPKgen{}   & 非對稱式金鑰之產生函數 \\
     \DEFfuncIDgen{}   & 唯一識別碼之產生函數 \\
@@ -79,97 +79,93 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{single-owner-architecture}
-    \caption{單一 Owner 系統架構圖}
+    \includegraphics[width=0.9\textwidth]{single-owner-architecture}
+    \caption{單一會談主持者情境圖}
     \label{fig:s-o-arch}
 \end{figure}
 
-    本系統由 MeetingBox、Server 以及會談參與者 Attender 所組成。
-各會談的 Attender 僅定義於當次會談，每次參與會談的 Attender 可為不同群體。
-Attender 於 MeetingBox 的周圍進行會談 ({\it Meeting Session})，如圖 \ref{fig:s-o-arch}。
-MeetingBox 於會談進行間開啟超音波麥克風干擾器，因此鄰近的麥克風或周邊的聲音記錄裝置，
-都將因受到其干擾而失效，Attender 無法自行有效記錄會談的聲音內容。
+    本系統由會談終端(MeetingBox)、會談參與者(Attender)以解封伺服器(Unsealing Service Provider)所組成。
+各會談({\it Meeting Session})的會談參與者僅定義於當次會談，每次參與會談的會談參與者可為不同群體。
+會談參與者於會談終端的周圍進行會談，如圖 \ref{fig:s-o-arch}。
+會談終端於會談進行間開啟超音波麥克風干擾器，因此鄰近的麥克風或周邊的聲音記錄裝置，
+都將因受到其干擾而失效，會談參與者無法自行有效記錄會談的聲音內容。
 
-    MeetingBox 於會談進行中持續紀錄聲音，內容為受到超音波麥克風干擾器干擾的會談錄音 (\DEFrecJ)。
-於會談結束後，受超音波麥克風干擾器干擾的會談聲音記錄 (\DEFrecJ)，
-將作為系統機制「解封」({\it Unseal}) 的輸入 (見 \ref{subsec.unseal})，
-使會談參與者 Attender 中的會談擁有者 Owner，獲得前述機制所產生的有效會談聲音記錄 (\DEFrecREV)。
+    會談終端於會談進行中持續紀錄聲音，內容為受到超音波麥克風干擾器干擾的會談錄音 (\DEFrecJ)。
+於會談結束後，受干擾的會談聲音記錄 (\DEFrecJ)，
+將透過系統機制「解封會談錄音」({\it Unsealing Session Record})，
+使會談參與者中的會談主持者(Owner)，獲得前述機制所產生的有效會談聲音記錄 (\DEFrecREV)。
 
 
-\subsection{Attender}
+\subsection{會談參與者}
 
-    會談參與者 Attender 為一集合，代表所有當次會談 ({\it Meeting Session}) 的參與者。
-Attender 包含 Owner，為 Owner 的超集合。其餘非 Owner 的 Attender 視為 non Owner Attender。
-Attender 透過 MeetingBox 上的控制介面與其互動，進而控制系統的生命週期，本研究以實體按鈕為例。
+    會談參與者(Attender) 為一集合，代表所有當次會談 ({\it Meeting Session}) 的所有參與者。
+會談參與者包含會談主持者(Owner)，為會談主持者的超集合。其餘非會談主持者的會談參與者視為一般參與者。
+會談參與者透過會談終端上的控制介面與其互動，進而控制會談的生命週期。
 
-    Attender 受到 MeetingBox 中的超音波麥克風干擾器的干擾，使得隨身的麥克風或聲音記錄裝置，
+    於會談進行中，會談參與者受到會談終端中的超音波麥克風干擾器的干擾，使得隨身的麥克風或聲音記錄裝置，
 都將因受到干擾而失效，無法有效記錄會談內容。例如：智慧型手機、智慧手錶、筆電、平板、智慧喇叭等。
 
 
-\subsection{Owner}
+\subsection{會談主持者}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{multi-owner-architecture}
-    \caption{多 Owner 系統架構圖}
+    \includegraphics[width=0.9\textwidth]{multi-owner-architecture}
+    \caption{多會談主持者情境圖}
     \label{fig:m-o-arch}
 \end{figure}
 
-    會談擁有者 Owner 屬於 Attender，為 Attender 的子集合，
-Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設計的系統機制「註冊會談擁有者」 (Register Owner)，
-則視為 non Owner Attender。 Owner 於會談 ({\it Meeting Session}) 結束後，
-有能力決定是否執行系統機制「解封」 ({\it Unseal})，並獲取 {\it Unseal} 所產生的有效會談聲音記錄 (\DEFrecREV)。
+    會談主持者(Owner)，屬於會談參與者(Attender)，為會談參與者的子集合，定義為會談參與者中的特權角色。
+會談主持者如未執行本研究所設計的系統機制「註冊會談主持者」 (Register Owner)，則視為一般參與者。
+於會談 ({\it Meeting Session}) 結束後，
+會談主持者有能力決定是否執行系統機制「解封會談錄音」({\it Unsealing Session Record})，
+並獲取解封會談錄音後所產生的有效會談聲音記錄 (\DEFrecREV)。
 
-    Owner 必須是一或多人。當會談中只有一個 Owner 時，為 {\it Single Owner Meeting Session} 情境，
-系統架構如圖 \ref{fig:s-o-arch}。當會談中多於一個 Owner 時，為 {\it Multi Owner Meeting Session} 情境，
+    會談主持者可以是一或多人。當會談中只有一個會談主持者時，為「單一會談主持者」情境，
+系統架構如圖 \ref{fig:s-o-arch}。當會談中多於一個會談主持者時，為「多會談主持者」情境，
 系統架構如圖 \ref{fig:m-o-arch} 所示。
 
-    Owner 持有智慧型裝置，透過其與 MeetingBox 互動，獲取 MeetingBox 上的資訊，並有能力於會談進行中、會談結束後，
-與 Server 持續通訊，執行本研究所設計的系統機制「註冊會談擁有者」 (Register Owner) 與「解封」 ({\it Unseal})。
-
-    上述 Owner 獲取 MeetingBox 資訊的方法，本研究以掃描 QR Code 為例。
+    會談主持者持有智慧型裝置，且透過 App 與會談終端互動，獲取會談終端上的資訊。
+並同樣有能力於會談進行中、談結束後，與解封伺服器進行通訊。
 
 
-\subsection{MeetingBox}
+\subsection{會談終端}
 
-    MeetingBox 為本研究所設計系統核心組成要件的終端，部署於會談 ({\it Meeting Session}) 的場域，
-與會談參與者 Attender 實體接觸。透過與 Attender 的互動，成為觸發會談生命週期改變事件的控制核心。
-同時也作為系統聲音紀錄的輸入來源。在本研究的設計中，一組 MeetingBox 僅能同時間處理一場會談的進行。
+    會談終端(MeetingBox)，定義符號為 \DEFmeetingbox 。
+會談終端部署於會談 ({\it Meeting Session}) 的場域，與會談參與者(Attender)實體接觸，
+透過與會談參與者的互動，成為觸發會談生命週期改變事件的控制核心，同時也作為系統聲音紀錄的輸入來源。
+故一組會談終端僅能同時間處理一場會談的進行。
 
-    本研究所設計的 MeetingBox 裝置包含下列組件：
+    會談終端包含多個組件，如下所列：
 
     \begin{enumerate}
         \item 超音波麥克風干擾器：\\
-            使用偽隨機數 \DEFfuncPRNG 產生亂數頻率的超音波，於會談進行中開啟。
+            使用偽隨機數產生器 \DEFfuncPRNG{} 產生亂數頻率的超音波，於會談進行中開啟。
             用於干擾鄰近周圍含有麥克風的裝置，使其無法有效記錄會談內容。
+            \DEFfuncPRNG{} 的輸入為亂數種子 \DEFseed。
 
         \item 錄音麥克風：\\
-            用於紀錄會談的聲音內容 (\DEFrecJ)，與產生超音波麥克風干擾器於麥克風的響應輸出 (\DEFrecN)
+            用於錄製受超音波麥克風干擾器干擾的會談對話聲音記錄 (\DEFrecJ)，
+            與產生純超音波麥克風干擾器於麥克風的響應輸出(噪音)之聲音記錄 (\DEFrecN)。
 
         \item 物理控制介面：\\
-            提供 Attender 操作與 MeetingBox 互動，獲得外部觸發事件。本研究實做以實體按鈕為例。
+            提供會談參與者操作與會談終端互動，獲得外部觸發事件。
 
         \item 人機互動介面：\\
-            用於傳遞會談的 meta data 與系統狀態提示給 Attender，本研究實做以 QR Code 搭配螢幕顯示為例。
+            用於傳遞會談的元資料與系統狀態提示給會談參與者。
 
         \item 運算控制核心與網路介面：\\
-            周邊裝置控制與邏輯運算核心，用於加密，與 Server 通訊等運算工作。
+            周邊裝置控制與邏輯運算核心，用於處理聲音記錄、執行加密與解封伺服器通訊等運算工作。
     \end{enumerate}
 
 
-\subsection{Server}
+\subsection{解封伺服器}
 
-    Server 為本研究所設計的系統核心組成要件之一，其設計能同時間處理一場以上的會談 ({\it Meeting Session}) 的進行，
-其角色目標為執行系統機制「解封」 ({\it Unseal})。此機制觸發於會談結束後，Owner 向 Server 發送請求執行。
-目的為取得有經系統機制 {\it Unseal} 所產生有效之會談聲音記錄 \DEFrecREV。
-
-    Server 執行系統機制「解封」 ({\it Unseal}) 時，包含以下步驟：
-    \begin{enumerate}[itemsep=0pt,parsep=0pt,]
-        \item {\it Challenge}： \\
-            目標為使 Server 獲得 Owner 授權得以接續執行後續步驟。
-        \item 「自適應噪音消除」({\it ANC})： \\
-            將受干擾的會談聲音記錄 \DEFrecJ，還原為有效的會談聲音記錄 \DEFrecREV。
-    \end{enumerate}
+    解封伺服器(Unsealing Service Provider)，定義符號為 \DEFserver，
+不需實體與會談參與者(Attender)接觸，可存在於雲端。
+其角色目標為執行系統機制「解封會談錄音」({\it Unsealing Session Record})。
+透過會談主持者(Owner)的註冊與授權實現存取控制，最終產生效之會談聲音記錄 \DEFrecREV。
+解封伺服器之設計能與多個會談終端(MeetingBox)配合，同時間處理一場以上的會談 ({\it Meeting Session}) 的進行。
 
 
 \section{系統流程}
@@ -197,7 +193,7 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 重新配置與產生 \DEFseed 與 \DEFrecN。
 
 
-\subsection{初始化會談 (Initialize {\it Meeting Session})}
+\subsection{初始化會談}
 \label{subsec.initialize}
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
@@ -224,7 +220,7 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
         Server 收到請求後產生 (\DEFsessionID, \DEFunsealKey) 並回傳至 MeetingBox。
 
             其中 \DEFsessionID 為此次 {\it Meeting Session} 的唯一識別碼；\DEFunsealKey 是對稱式加密金鑰，
-        定義為此次 {\it Meeting Session} 的解封金鑰 (Unseal Key)。
+        定義為此次 {\it Meeting Session} 的解封金鑰 (Unsealing Key)。
         \DEFsessionID 的產生必須滿足唯一性，隨機性，不可預測性，本研究實作 \DEFsessionID 以 UUID v4 為例。
         \DEFunsealKey 為對稱式加密的金鑰，其產生方式，本研究所設計之系統以 AES CFB mode 為例。
 
@@ -248,7 +244,7 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
     \item Register Owner：
 
             \DEFowner 收到 MeetingBox 產生的 URI 後，
-        使用此 URI 向 Server 進行系統機制「註冊會談擁有者」 (Register Owner)。運作細節如下：
+        使用此 URI 向 Server 進行系統機制「註冊會談主持者」 (Register Owner)。運作細節如下：
         一、\DEFowner 對 Server 發送 Register Owner 請求；
         二、Server 收到 Register Owner 請求後，隨即產生一組公私金鑰對 (\DEFpublicKey, \DEFprivateKey)
         與 \DEFowner 的唯一識別碼 \DEFownerID，
@@ -265,7 +261,7 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
         前述公私金鑰對的產生方法，本研究所設計之系統以 RSA PKCS \#1 為例。
 \end{steps}
 
-\subsection{進行會談 (Running {\it Meeting Session})}
+\subsection{進行會談}
 \label{subsec.sessioning}
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
@@ -328,7 +324,7 @@ Owner 定義為 Attender 中的特權角色。Owner 如未執行本研究所設�
 \end{steps}
 
 
-\subsection{解封 ({\it Unseal})}
+\subsection{解封會談錄音}
 \label{subsec.unseal}
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
@@ -587,7 +583,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \hline
 \end{tabularx}
 \normalsize\end{center}
-\captionof{figure}{註冊會談擁有者之協定}\label{fig:protocol-init-reg}
+\captionof{figure}{註冊會談主持者之協定}\label{fig:protocol-init-reg}
 
 
 \begin{center}\scriptsize\setstretch{1}
@@ -761,7 +757,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \hline
 \end{tabularx}
 \normalsize\end{center}
-\captionof{figure}{會談擁有者授權解封伺服器之協定}\label{fig:protocol-auth}
+\captionof{figure}{會談主持者授權解封伺服器之協定}\label{fig:protocol-auth}
 
 
 \begin{center}\scriptsize\setstretch{1}
@@ -856,5 +852,3 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \caption{干涉抵銷後之總能量計算演算法}
     \label{fig:estimate-power}
 \end{figure}
-
-\section{系統實作}
