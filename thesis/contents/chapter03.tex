@@ -172,24 +172,29 @@
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{system-stage}
-    \caption{{\it Meeting Session} 生命週期}
+    \caption{會談生命週期}
     \label{fig:system-stage}
 \end{figure}
 
     本研究所設計之系統，其流程跟隨會談 ({\it Meeting Session}) 的生命週期，其分為三個階段定義。分別為：
 一、「初始化會談 (Initialize {\it Meeting Session})」；二、「進行會談 (Running {\it Meeting Session})」；
-三、「解封 ({\it Unseal})」；如圖 \ref{fig:system-stage}。
+三、「「解封會談錄音」({\it Unsealing Session Record})」；如圖 \ref{fig:system-stage}。
 
-    第一階段作為 {\it Meeting Session} 的起始點，各階段依序執行，於第三階段結束一次系統生命週期的循環。
-系統可以同時存在多個{\it Meeting Session}循環，彼此互相互不干擾影響，獨立執行。
-本章節將介召個系統生命週期階段的流程步驟，且逐步說明定義系統的關鍵參數。流程步驟將分為兩種情境說明：
-一、「{\it Single Owner Meeting Session}」；二、「{\it Multi Owner Meeting Session}」
+    本章節將介召會談生命週期各階段的流程步驟。
+第一階段為會談的起始點，各階段依序執行，於第三階段結束，完成一次系統生命週期的循環。
+透過解封伺服器與多個會談終端配合，系統可以同時存在多個會談生命週期，彼此互不干擾，獨立執行。
+依據會談主持者的數量，將分為兩種情境說明討論：
+一、「單一會談主持者情境 ({\it Single Owner Meeting Session})」；
+二、「多會談主持者情境 ({\it Multi Owner Meeting Session})」；
+當會談參與者裡僅有一位會談主持者，為單一會談主持者情境，若會談中多於一個會談主持者時，則為多會談主持者情境。
 
-    MeetingBox 於 {\it Meeting Session} 開始前，已經預先設定時間長度為 \DEFtimeMAX 的 \DEFrecN。
-且於第二階段 Running {\it Meeting Session} 中所紀錄的聲音內容之長度，須小於  \DEFtimeMAX。
-{\it Meeting Session} 生命週期開始前，MeetingBox 根據此次 {\it Meeting Session} 的 \DEFseed，
-預先使用 MeetingBox 內的超音波麥克風干擾器與麥克風，預先錄製產生 \DEFrecN。於 {\it Meeting Session} 結束後，
-重新配置與產生 \DEFseed 與 \DEFrecN。
+    會談終端(MeetingBox) 於談生命週期開始之前，會預先設定時間長度為 \DEFtimeMAX 的噪音 \DEFrecN，
+於會談第二階段進行會談中所紀錄的聲音內容之長度，須小於  \DEFtimeMAX。
+此噪音 \DEFrecN 為純超音波麥克風干擾器於麥克風的響應輸出，產生方法為選定一隨機種子 \DEFseed 作為參數，
+輸入並開啟超音波麥克風干擾器，透過麥克風錄製產生。
+於每次會談生命週期結束後，重複此步驟重新選定 \DEFseed 與產生 \DEFrecN。
+
+    接續章節將說明，於單一會談主持者情境中的流程與步驟。
 
 
 \subsection{初始化會談}
