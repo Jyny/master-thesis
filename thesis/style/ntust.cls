@@ -237,6 +237,13 @@
     align=left,
 }
 
+\newlist{pmsgs}{enumerate}{1}
+\setlist[pmsgs, 1]{
+    label = {$\pmb M_{\arabic*},$},
+    leftmargin=\parindent+\labelwidth+\labelsep,
+    align=left,
+}
+
 \definecolor{whitesmoke}{rgb}{0.9, 0.9, 0.9}
 
 % --------------------------------------------------

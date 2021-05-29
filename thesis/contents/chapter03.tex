@@ -431,7 +431,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
 \section{系統機制}
 
-\subsection{聲音記錄存取控制}
+\subsection{聲音記錄存取控制協定}
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -505,6 +505,16 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \captionof{figure}{初始化會談之協定}\label{fig:protocol-init}
 \setstretch{1.2}\normalsize\end{center}
 
+\begin{pmsgs}
+    \item \DEFmeetingbox $\rightarrow$ \DEFserver：\\
+
+    \item \DEFserver $\rightarrow$ \DEFmeetingbox：\\
+
+    \item \DEFmeetingbox $\rightarrow$ \DEFserver：\\
+
+    \item \DEFserver $\rightarrow$ \DEFmeetingbox：\\
+
+\end{pmsgs}
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -589,6 +599,16 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \captionof{figure}{註冊會談主持者之協定}\label{fig:protocol-init-reg}
 \setstretch{1.2}\normalsize\end{center}
 
+\begin{pmsgs}
+    \item \DEFowner $\rightarrow$ \DEFmeetingbox：\\
+
+    \item \DEFmeetingbox $\rightarrow$ \DEFowner：\\
+
+    \item \DEFowner $\rightarrow$ \DEFserver：\\
+
+    \item \DEFserver $\rightarrow$ \DEFowner：\\
+
+\end{pmsgs}
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -680,6 +700,16 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \captionof{figure}{進行會談之協定}\label{fig:protocol-sessioning}
 \setstretch{1.2}\normalsize\end{center}
 
+\begin{pmsgs}
+    \item \DEFmeetingbox $\rightarrow$ \DEFserver：\\
+
+    \item \DEFserver $\rightarrow$ \DEFmeetingbox：\\
+
+    \item \DEFmeetingbox $\rightarrow$ \DEFserver：\\
+
+    \item \DEFserver $\rightarrow$ \DEFmeetingbox：\\
+
+\end{pmsgs}
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -763,6 +793,16 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \captionof{figure}{會談主持者授權解封伺服器之協定}\label{fig:protocol-auth}
 \setstretch{1.2}\normalsize\end{center}
 
+\begin{pmsgs}
+    \item \DEFowner $\rightarrow$ \DEFserver：\\
+
+    \item \DEFserver $\rightarrow$ \DEFowner：\\
+
+    \item \DEFowner $\rightarrow$ \DEFserver：\\
+
+    \item \DEFserver $\rightarrow$ \DEFowner：\\
+
+\end{pmsgs}
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -823,6 +863,13 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \end{tabularx}
 \captionof{figure}{解封會談聲音記錄之協定}\label{fig:protocol-unseal}
 \setstretch{1.2}\normalsize\end{center}
+
+\begin{pmsgs}
+    \item \DEFowner $\rightarrow$ \DEFserver：\\
+
+    \item \DEFserver $\rightarrow$ \DEFowner：\\
+
+\end{pmsgs}
 
 \begin{figure}[H]
     \centering
