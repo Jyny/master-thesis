@@ -1,0 +1,31 @@
+{
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "xelatex",
+            "tools": [
+                "xelatex-pre",
+                "xelatex-pre",
+                "xelatex"
+            ]
+        }
+    ],
+    "latex-workshop.latex.tools": [
+        {
+            "name": "xelatex-pre",
+            "command": "xelatex",
+            "args": [
+                "-interaction=nonstopmode",
+                "-no-pdf",
+                "%DOCFILE%"
+            ],
+        },
+        {
+            "name": "xelatex",
+            "command": "xelatex",
+            "args": [
+                "-interaction=nonstopmode",
+                "%DOCFILE%"
+            ],
+        }
+    ]
+}
