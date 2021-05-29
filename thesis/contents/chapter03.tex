@@ -438,10 +438,14 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 以及於生命週期解封會談錄音中，如何應用自適應噪音消除，以還原出有效的會談錄音。
 最後說明如何推估聲音樣本的離散時間誤差值，用於自適應噪音消除時對齊聲音樣本。
 
+
 \subsection{聲音記錄存取控制協定}
 
     本節基於前章節 \ref{sec:system-flow} \nameref{sec:system-flow}，發展出一套聲音記錄存取控制協定。
 其中包括創建會談、註冊會談主持者、進行會談、會談主持者授權解封伺服器、取得會談聲音記錄。
+
+
+\subsubsection*{創建會談機制之協定}
 
     在會談生命週期中初始化會談階段(圖\ref{fig:m-o-init})，當會談參與者透過與會談終端的物理控制介面執行創建會談，
 會談終端獲得外部事件而觸發「\nameref{fig:protocol-init-create}」。
@@ -516,7 +520,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \multicolumn{5}{|c|}{} \\
     \hline
 \end{tabularx}
-\captionof{figure}{初始化會談之一：創建會談之協定}\label{fig:protocol-init-create}
+\captionof{figure}{創建會談機制之協定}\label{fig:protocol-init-create}
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
@@ -549,6 +553,9 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     會談終端 \DEFmeetingbox 收到來自解封伺服器 \DEFserver 的上傳成功回覆後，
     銷毀於會談終端上的 \DEFrecN 與 \DEFunsealKey。
 \end{pmsgs}
+
+
+\subsubsection*{註冊會談主持者機制之協定}
 
     於會談生命週期同一階段初始化會談中，當談終端 \DEFmeetingbox 獲得產自解封伺服器的 \DEFsessionID 後，
 會談終端上的人機互動介面提示，可以進行「\nameref{fig:protocol-init-reg}」。
@@ -637,7 +644,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \multicolumn{7}{|c|}{} \\
     \hline
 \end{tabularx}
-\captionof{figure}{初始化會談之二：註冊會談主持者之協定}\label{fig:protocol-init-reg}
+\captionof{figure}{註冊會談主持者機制之協定}\label{fig:protocol-init-reg}
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
@@ -671,6 +678,9 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     會談主持者為會談參與者中的特權角色，其特權來源為會傳訊息內的 \DEFprivateKey，
     因此會談主持者須妥善保管 \DEFprivateKey，維持其機密性。
 \end{pmsgs}
+
+
+\subsubsection*{進行會談機制之協定}
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -759,7 +769,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \multicolumn{5}{|c|}{} \\
     \hline
 \end{tabularx}
-\captionof{figure}{進行會談之協定}\label{fig:protocol-sessioning}
+\captionof{figure}{進行會談機制之協定}\label{fig:protocol-sessioning}
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
@@ -772,6 +782,9 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \item \DEFserver $\rightarrow$ \DEFmeetingbox：
 
 \end{pmsgs}
+
+
+\subsubsection*{會談主持者授權解封伺服器機制之協定}
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -852,7 +865,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \multicolumn{5}{|c|}{} \\
     \hline
 \end{tabularx}
-\captionof{figure}{解封會談聲音記錄之一：會談主持者授權解封伺服器之協定}\label{fig:protocol-unseal-auth}
+\captionof{figure}{會談主持者授權解封伺服器機制之協定}\label{fig:protocol-unseal-auth}
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
@@ -865,6 +878,9 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \item \DEFserver $\rightarrow$ \DEFowner：
 
 \end{pmsgs}
+
+
+\subsubsection*{取得會談聲音記錄機制之協定}
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -923,7 +939,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \multicolumn{5}{|c|}{} \\
     \hline
 \end{tabularx}
-\captionof{figure}{解封會談聲音記錄之二：取得會談聲音記錄之協定}\label{fig:protocol-unseal-access}
+\captionof{figure}{取得會談聲音記錄機制之協定}\label{fig:protocol-unseal-access}
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
