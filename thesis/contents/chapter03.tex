@@ -529,7 +529,9 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
         解封伺服器 \DEFserver 收到訊息後，執行 \DEFfuncIDgen{} 與 \DEFfuncKgen{}，
     分別產生此次會談的唯一識別碼 \DEFsessionID，與此次會談的解封金鑰 \DEFunsealKey。
-    接著將 \DEFunsealKey 關聯綁定屬於 \DEFsessionID 後，回傳 \DEFsessionID 與 \DEFunsealKey。
+    接著將 \DEFunsealKey 關聯綁定屬於 \DEFsessionID。
+    接著建立一變數 \DEFowreg 定義為此會談的會談主持者於解封伺服器 \DEFserver 的註冊人數，初始值為 $0$。
+    最後回傳 \DEFsessionID 與 \DEFunsealKey。
 
         其中 \DEFfuncKgen{} 為對稱式加密法的金鑰產生函數。
     \DEFfuncIDgen{} 為唯一識別碼產生函數，唯一識別碼的產生須滿足唯一性，隨機性，不可預測性。
@@ -540,13 +542,20 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     使用回傳的 \DEFunsealKey 透過對稱式加密函數 \DEFfuncEncEK{} 加密預先配置好的噪音 \DEFrecN，
     產生 \DEFrecP，接著向解封伺服器發出請求，訊息內容為 \DEFsessionID 與 \DEFrecP。
 
-    \item  $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
+    \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
         解封伺服器 \DEFserver 收到訊息後，將 \DEFrecP 關聯綁定屬於 \DEFsessionID。
     隨後回覆會談終端 \DEFmeetingbox 上傳成功，訊息內容為空。
     會談終端 \DEFmeetingbox 收到來自解封伺服器 \DEFserver 的上傳成功回覆後，
     銷毀於會談終端上的 \DEFrecN 與 \DEFunsealKey。
 \end{pmsgs}
+
+    於會談生命週期同一階段初始化會談中，當談終端 \DEFmeetingbox 獲得產自解封伺服器的 \DEFsessionID 後，
+會談終端上的人機互動介面提示，可以進行「\nameref{fig:protocol-init-reg}」。
+
+    此協定需要所有的會談主持者 \DEFownerAll 執行，各會談主持者 \DEFowner 可以同時獨立執行，
+每個會談主持者 \DEFowner 的執行結果不受其他會談主持者影響。
+此協定為初始化會談中的 Step. 4\textasciitilde5，其運作細節如圖\ref{fig:protocol-init-reg}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -632,14 +641,35 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
-    \item \DEFowner $\rightarrow$ \DEFmeetingbox：
+    \item $\{\}$ $,~$ \DEFowner $\rightarrow$ \DEFmeetingbox：
 
-    \item \DEFmeetingbox $\rightarrow$ \DEFowner：
+        當會談主持者 \DEFowner 觀察到於會談終端 \DEFmeetingbox 上的人機互動介面提示，
+    向發會談終端送此請求，已獲得會談的元資料，請求訊息內容為空。
 
-    \item \DEFowner $\rightarrow$ \DEFserver：
+    \item $\{$\DEFsessionID$\}$ $,~$ \DEFmeetingbox $\rightarrow$ \DEFowner：
 
-    \item \DEFserver $\rightarrow$ \DEFowner：
+        會談終端 \DEFmeetingbox 收到請求後，回覆 \DEFsessionID，傳遞此次會談的元資料給會談主持者 \DEFowner。
 
+    \item $\{$\DEFsessionID$\}$ $,~$ \DEFowner $\rightarrow$ \DEFserver：
+
+        會談主持者 \DEFowner 獲得此次會談的元資料 \DEFsessionID 後，便可向解封伺服器 \DEFserver 傳送註冊請求，
+    訊息內容為 \DEFsessionID。
+
+        解封伺服器 \DEFserver 收到註冊請求後，執行 \DEFfuncPKgen{} 與 \DEFfuncIDgen{}，
+    分別產生一組屬於會談主持者 \DEFowner 的公開私密金鑰對 $($\DEFpublicKey$,~$ \DEFprivateKey$)$，
+    與此會談主持者 \DEFowner 的唯一識別碼 \DEFownerID。
+    會談主持者的唯一識別碼 \DEFownerID，其產生須滿足唯一性，隨機性，不可預測性。
+    \DEFfuncPKgen{} 為非對稱加密演算法的公開私密金鑰對產生函數。
+
+        接著將此次會談的會談主持者註冊人數 \DEFowreg 遞增 $1$，
+    並將 \DEFownerID 關聯綁定屬於 \DEFsessionID，\DEFpublicKey 關聯綁定屬於 \DEFownerID 並儲存。
+    隨後回傳 \DEFownerID 與其私鑰 \DEFprivateKey，並銷毀 \DEFprivateKey。
+
+    \item $\{$\DEFownerID, \DEFprivateKey$\}$ $,~$ \DEFserver $\rightarrow$ \DEFowner：
+
+        會談主持者收到解封伺服器 \DEFserver 的回傳即註冊成功。
+    會談主持者為會談參與者中的特權角色，其特權來源為會傳訊息內的 \DEFprivateKey，
+    因此會談主持者須妥善保管 \DEFprivateKey，維持其機密性。
 \end{pmsgs}
 
 \begin{center}\scriptsize\setstretch{1}
