@@ -1,5 +1,5 @@
 % !TeX root = ../main.tex
-\chapter{系統架構與實作}
+\chapter{系統架構與方法}
 
     本研究所設計之系統系利用超音波對麥克風造成的非線性響應輸出與自適應噪音消除高關聯度噪音等特性。
 來嘗試解決在部署麥克風干擾器的場域裡無法取得有效聲學紀錄的問題。
@@ -443,6 +443,10 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     本節基於前章節 \ref{sec:system-flow} \nameref{sec:system-flow}，發展出一套聲音記錄存取控制協定。
 其中包括創建會談、註冊會談主持者、進行會談、會談主持者授權解封伺服器、取得會談聲音記錄。
 
+    在會談生命週期中初始化會談階段(圖\ref{fig:m-o-init})，當會談參與者透過與會談終端的物理控制介面執行創建會談，
+會談終端獲得外部事件而觸發「\nameref{fig:protocol-init-create}」。
+此協定為初始化會談中的 Step. 2\textasciitilde3，其運作細節如圖\ref{fig:protocol-init-create}與說明：
+
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
         |c
@@ -516,14 +520,32 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
-    \item \DEFmeetingbox $\rightarrow$ \DEFserver：\\
+    \item $\{\}$ $,~$ \DEFmeetingbox $\rightarrow$ \DEFserver：
 
-    \item \DEFserver $\rightarrow$ \DEFmeetingbox：\\
+        當會談終端 \DEFmeetingbox 獲得外部事件，
+    觸發會談終端向解封伺服器 \DEFserver 發送此請求，請求訊息內容為空。
 
-    \item \DEFmeetingbox $\rightarrow$ \DEFserver：\\
+    \item $\{$\DEFsessionID, \DEFunsealKey$\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
-    \item \DEFserver $\rightarrow$ \DEFmeetingbox：\\
+        解封伺服器 \DEFserver 收到訊息後，執行 \DEFfuncIDgen{} 與 \DEFfuncKgen{}，
+    分別產生此次會談的唯一識別碼 \DEFsessionID，與此次會談的解封金鑰 \DEFunsealKey。
+    接著將 \DEFunsealKey 關聯綁定屬於 \DEFsessionID 後，回傳 \DEFsessionID 與 \DEFunsealKey。
 
+        其中 \DEFfuncKgen{} 為對稱式加密法的金鑰產生函數。
+    \DEFfuncIDgen{} 為唯一識別碼產生函數，唯一識別碼的產生須滿足唯一性，隨機性，不可預測性。
+
+    \item $\{$\DEFsessionID, \DEFrecP$\}$ $,~$ \DEFmeetingbox $\rightarrow$ \DEFserver：
+
+        會談終端 \DEFmeetingbox 收到來自 \DEFserver 的回傳後，
+    使用回傳的 \DEFunsealKey 透過對稱式加密函數 \DEFfuncEncEK{} 加密預先配置好的噪音 \DEFrecN，
+    產生 \DEFrecP，接著向解封伺服器發出請求，訊息內容為 \DEFsessionID 與 \DEFrecP。
+
+    \item  $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
+
+        解封伺服器 \DEFserver 收到訊息後，將 \DEFrecP 關聯綁定屬於 \DEFsessionID。
+    隨後回覆會談終端 \DEFmeetingbox 上傳成功，訊息內容為空。
+    會談終端 \DEFmeetingbox 收到來自解封伺服器 \DEFserver 的上傳成功回覆後，
+    銷毀於會談終端上的 \DEFrecN 與 \DEFunsealKey。
 \end{pmsgs}
 
 \begin{center}\scriptsize\setstretch{1}
@@ -610,13 +632,13 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
-    \item \DEFowner $\rightarrow$ \DEFmeetingbox：\\
+    \item \DEFowner $\rightarrow$ \DEFmeetingbox：
 
-    \item \DEFmeetingbox $\rightarrow$ \DEFowner：\\
+    \item \DEFmeetingbox $\rightarrow$ \DEFowner：
 
-    \item \DEFowner $\rightarrow$ \DEFserver：\\
+    \item \DEFowner $\rightarrow$ \DEFserver：
 
-    \item \DEFserver $\rightarrow$ \DEFowner：\\
+    \item \DEFserver $\rightarrow$ \DEFowner：
 
 \end{pmsgs}
 
@@ -711,13 +733,13 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
-    \item \DEFmeetingbox $\rightarrow$ \DEFserver：\\
+    \item \DEFmeetingbox $\rightarrow$ \DEFserver：
 
-    \item \DEFserver $\rightarrow$ \DEFmeetingbox：\\
+    \item \DEFserver $\rightarrow$ \DEFmeetingbox：
 
-    \item \DEFmeetingbox $\rightarrow$ \DEFserver：\\
+    \item \DEFmeetingbox $\rightarrow$ \DEFserver：
 
-    \item \DEFserver $\rightarrow$ \DEFmeetingbox：\\
+    \item \DEFserver $\rightarrow$ \DEFmeetingbox：
 
 \end{pmsgs}
 
@@ -804,13 +826,13 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
-    \item \DEFowner $\rightarrow$ \DEFserver：\\
+    \item \DEFowner $\rightarrow$ \DEFserver：
 
-    \item \DEFserver $\rightarrow$ \DEFowner：\\
+    \item \DEFserver $\rightarrow$ \DEFowner：
 
-    \item \DEFowner $\rightarrow$ \DEFserver：\\
+    \item \DEFowner $\rightarrow$ \DEFserver：
 
-    \item \DEFserver $\rightarrow$ \DEFowner：\\
+    \item \DEFserver $\rightarrow$ \DEFowner：
 
 \end{pmsgs}
 
@@ -875,9 +897,9 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
-    \item \DEFowner $\rightarrow$ \DEFserver：\\
+    \item \DEFowner $\rightarrow$ \DEFserver：
 
-    \item \DEFserver $\rightarrow$ \DEFowner：\\
+    \item \DEFserver $\rightarrow$ \DEFowner：
 
 \end{pmsgs}
 
