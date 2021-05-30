@@ -246,51 +246,31 @@
 \end{figure}
 
 \begin{steps}
-    \item Start Session (Push Button)：
+    \item Start Session：
 
-            進入到此階段代表 Owner 已經完成系統機制 Register Owner，MeetingBox 也已初始化完成。
-        此時 \DEFattender 即可透過 MeetingBox 的物理控制介面，使 MeetingBox 獲得外部事件，
-        觸發 Start Session。
-
-            本研究實驗以按鈕為例，當 \DEFattender 按下 MeetingBox 上的按鈕後，
-        觸發 MeetingBox 執行 Start Session。
+            會談參與者透過控制會談終端上的物理控制介面，
+        使會談終端 \DEFmeetingbox 獲得外部事件，觸發 Start Session。
 
     \item End Owner Registration：
 
-            MeetingBox 觸發 Start Session 後，接續觸發 Server 執行 End Owner Registration，
-        其運作細節如下：一、MeetingBox 對 Server 傳送 End Owner Registration 請求；
-        二、Server 透過限制無法在同 \DEFsessionID 綁定新的\DEFprivateKey，
-        來終止此 {\it Meeting Session} 註冊產生新的 Owner；
-        三、透過 \DEFunsealKey 派生出 \DEFowner 的代理金鑰，定義為 \DEFagentKey。當 \DEFagentKey 產生完即銷毀 \DEFunsealKey 。
-        在 {\it Single Owner Meeting Session} 情境中，\DEFagentKey 的值即等於 \DEFunsealKey。
-        四、Server 使用此情境中唯一 \DEFowner 的公開金鑰 \DEFpublicKey，透過非對稱式金鑰演算法加密將 \DEFagentKey 加密，
-        並銷毀 \DEFagentKey；Server 即完成此系統步驟。
+            會談終端 \DEFmeetingbox 向解封伺服器 \DEFserver 發起請求，
+        通知解封伺服器 \DEFserver，會談主持者的註冊已完成。
 
-            前述非對稱式金鑰加密演算法，本研究所設計之系統 RSA PKCS \#1 為例。 本文中定義為 \DEFfuncEncPK，
-        其輸入為欲加密明文資料，輸出為已加密的密文。加密後的 \DEFagentKey 定義為 \DEFowner 的 \DEFakEnc，
-        待 \DEFowner 將其解密方可還原 \DEFagentKey。
-        意即，在此情境中，唯一 \DEFowner 的 \DEFakEnc 即為透過 \DEFfuncEncPK 加密的 \DEFunsealKey。
+            隨後開啟會談終端上的麥克風與麥克風超音波干擾器，並透過人機互動介面提示系統已經開始錄音。
+        因超音波麥克風干擾器的干擾，任何場域內的錄音將成為非有效之聲音記錄。
+        此時會談參與者即可進行私密會談，不用擔心存在其他麥克風或聲音記錄裝置可以取得有效之聲音記錄。
 
-            隨後 MeetingBox 開啟麥克風與超音波麥克風干擾器，並透過 MeetingBox 上的人機互動介面提示系統已經開始錄音。
-        麥克風錄製的聲音內容結果 \DEFrecJ，此為超音波麥克風干擾器與會談聲音內容的疊加，屬非有效之聲音記錄。
-        此時 Attender 即可進行私密會談，不用擔心有其他麥克風或聲音記錄裝置可以取得有效之聲音記錄。
-        前述人機互動介面，本研究實驗以錄音指示燈與螢幕為例，當開始錄音時，將會提示當下系統狀態。
+    \item End Session：
 
-    \item End Session (Push Button)：
-ㄑ
-            當會談對話結束時時 \DEFattender 即可透過 MeetingBox 的物理控制介面，使 MeetingBox 獲得外部事件，
-        觸發 End Session。MeetingBox 在此時會關閉麥克風與超音波麥克風干擾器，並產生 \DEFrecJ。
-        MeetingBox 上的人機互動介面同時提示系統已結束錄音。
+            當會談對話結束時，會談參與者即可透過會談終端 \DEFmeetingbox 的物理控制介面，
+        使會談終端獲得外部事件，觸發 End Session。
+        會談終端此時關閉麥克風與超音波麥克風干擾器，人機互動介面同時提示系統已結束錄音。
+        此階段所錄製的聲音記錄內容為音波麥克風干擾器與會談聲音內容的疊加，同為非有效之聲音記錄。
 
-            本研究實驗以按鈕為例，當 \DEFattender 再次按下 MeetingBox 上的按鈕後，
-        觸發 MeetingBox 執行 End Session。人機互動介面則以錄音指示燈與螢幕為例，
-        當錄音已結束時，前述兩者人機互動介面將會提示當下系統狀態為 End Session。
+    \item Upload Session Record：
 
-    \item Upload \DEFrecJ：
-
-            當 Attender 透過 MeetingBox 上的物理控制介面觸發 End Session 後，
-        接續觸發 MeetingBox 值行此步驟。此時 MeetingBox 將 End Seesion 步驟結束所產生的 \DEFrecJ，
-        上傳至 Server。上傳成功後，即完成進入下一階段。
+            隨後會談終端 \DEFmeetingbox 將為受干擾的會談聲音記錄上傳至解封伺服器 \DEFserver。
+        此時會談參與者即可離開會談場域，不再需要與會談終端 \DEFmeetingbox 實體接觸。
 \end{steps}
 
 
