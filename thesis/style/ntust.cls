@@ -31,6 +31,7 @@
 % --------------------------------------------------
 % 06 載入套件 (Include Packages)
 % --------------------------------------------------
+\RequirePackage{etex}
 \RequirePackage{xparse}
 \RequirePackage{xeCJK}
 \RequirePackage{indentfirst}
@@ -67,7 +68,7 @@
 \RequirePackage{ulem, CJKulem}
 \RequirePackage{lipsum}
 \RequirePackage{zhlipsum}
-\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
 \RequirePackage{algorithm2e}
 \RequirePackage{cryptocode}
 
