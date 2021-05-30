@@ -239,8 +239,17 @@
 
 \newlist{pmsgs}{enumerate}{1}
 \setlist[pmsgs, 1]{
-    label = {$\pmb M_{\arabic*},$},
-    leftmargin=\parindent+\labelwidth+\labelsep,
+    label = {$\pmb M_{\arabic*}:$},
+    labelsep = 0em,
+    leftmargin=\parindent+\labelwidth,
+    align=left,
+}
+
+\newlist{pmsgsi}{enumerate}{1}
+\setlist[pmsgsi, 1]{
+    label = {$\pmb M_{\arabic*}^{i}:$},
+    labelsep = 0em,
+    leftmargin=\parindent+\labelwidth,
     align=left,
 }
 
