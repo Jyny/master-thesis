@@ -244,6 +244,13 @@
     align=left,
 }
 
+\newlist{pmsgsi}{enumerate}{1}
+\setlist[pmsgsi, 1]{
+    label = {$\pmb M_{\arabic*}^{i},$},
+    leftmargin=\parindent+\labelwidth+\labelsep,
+    align=left,
+}
+
 \definecolor{whitesmoke}{rgb}{0.9, 0.9, 0.9}
 
 % --------------------------------------------------

@@ -522,7 +522,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \item $\{\}$ $,~$ \DEFmeetingbox $\rightarrow$ \DEFserver：
 
         當會談終端 \DEFmeetingbox 獲得外部事件，
-    觸發會談終端向解封伺服器 \DEFserver 發送此請求，請求訊息內容為空。
+    觸發會談終端向解封伺服器 \DEFserver 發送請求創建新的會談。
 
     \item $\{$\DEFsessionID, \DEFunsealKey$\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
@@ -544,7 +544,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
         解封伺服器 \DEFserver 收到訊息後，將 \DEFrecP 關聯綁定屬於 \DEFsessionID。
-    隨後回覆會談終端 \DEFmeetingbox 上傳成功，訊息內容為空。
+    隨後回覆會談終端 \DEFmeetingbox 上傳成功。
     會談終端 \DEFmeetingbox 收到來自解封伺服器 \DEFserver 的上傳成功回覆後，
     銷毀於會談終端上的 \DEFrecN 與 \DEFunsealKey。
 \end{pmsgs}
@@ -642,11 +642,11 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \captionof{figure}{註冊會談主持者機制之協定}\label{fig:protocol-init-reg}
 \setstretch{1.2}\normalsize\end{center}
 
-\begin{pmsgs}
+\begin{pmsgsi}
     \item $\{\}$ $,~$ \DEFowner $\rightarrow$ \DEFmeetingbox：
 
         當會談主持者 \DEFowner 觀察到於會談終端 \DEFmeetingbox 上的人機互動介面提示，
-    向發會談終端送此請求，已獲得會談的元資料，請求訊息內容為空。
+    向發會談終端送此請求，以獲得會談的元資料。
 
     \item $\{$\DEFsessionID$\}$ $,~$ \DEFmeetingbox $\rightarrow$ \DEFowner：
 
@@ -673,7 +673,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     會談主持者為會談參與者中的特權角色，其特權來源為會傳訊息內的 \DEFprivateKey，
     因此會談主持者須妥善保管 \DEFprivateKey，維持其機密性。
     待所有的會談主持者 \DEFownerAll 執行成功此機制後，即完成會談初始化。
-\end{pmsgs}
+\end{pmsgsi}
 
 
 \subsection{進行會談機制之協定}
@@ -780,13 +780,13 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
-    \item \DEFmeetingbox $\rightarrow$ \DEFserver：
+    \item $\{$\DEFsessionID$\}$ $,~$ \DEFmeetingbox $\rightarrow$ \DEFserver：
 
         會談參與者透過與會談終端的物理控制介面，
     使會談終端 \DEFmeetingbox 獲得外部事件而觸發向解封伺服器 \DEFserver 發出此請求，
     通知 \DEFserver，會談主持者註冊已完成。請求內容為此次會談唯一識別碼 \DEFsessionID。
 
-    \item \DEFserver $\rightarrow$ \DEFmeetingbox：
+    \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
         解封伺服器收到會談終端的請求後，即終止此會談不再有新的會談擁有者註冊。
     因此會談唯一識別 \DEFsessionID 限制不再新增關聯綁定。
@@ -809,14 +809,14 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     會談終端 \DEFmeetingbox 收到解封伺服器的回覆後，終止註冊完成。
     此時開起會談終端上的超音波麥克風干擾器與麥克風，開始錄製受干擾的會談聲音 \DEFrecJ
 
-    \item \DEFmeetingbox $\rightarrow$ \DEFserver：
+    \item $\{$\DEFsessionID, \DEFrecJ$\}$ $,~$ \DEFmeetingbox $\rightarrow$ \DEFserver：
 
         當會談參與者再次透過與會談終端的物理控制介面，
     使會談終端 \DEFmeetingbox 獲得外部事件，此時觸發會談錄音終止，受干擾的會談聲音紀錄 \DEFrecJ 產生完成。
     會談終端 \DEFmeetingbox 向解封伺服器 \DEFserver 發出請求上傳，
     內容為此次會談唯一識別碼 \DEFsessionID 與受干擾的會談聲音紀錄 \DEFrecJ。
 
-    \item \DEFserver $\rightarrow$ \DEFmeetingbox：
+    \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
         解封伺服器收到會談終端的請求後，
     將受干擾的會談聲音紀錄 \DEFrecJ 關聯綁定屬於 \DEFsessionID 且儲存，隨後回覆上傳成功。
@@ -908,8 +908,10 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \captionof{figure}{會談主持者授權解封伺服器機制之協定}\label{fig:protocol-unseal-auth}
 \setstretch{1.2}\normalsize\end{center}
 
-\begin{pmsgs}
+\begin{pmsgsi}
     \item \DEFowner $\rightarrow$ \DEFserver：
+
+
 
     \item \DEFserver $\rightarrow$ \DEFowner：
 
@@ -917,7 +919,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
     \item \DEFserver $\rightarrow$ \DEFowner：
 
-\end{pmsgs}
+\end{pmsgsi}
 
 
 \subsection{取得會談聲音記錄機制之協定}
