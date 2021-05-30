@@ -206,57 +206,31 @@
 \end{figure}
 
 \begin{steps}
-    \item Initialize Session (Push Button)：
-
-            Attender 在欲進行會談 MeetingBox 的周圍準備開始會談，\DEFattender 透過 MeetingBox 的物理控制介面，
-        使 MeetingBox 獲得外部事件，觸發 Initialize Session。本研究實驗以按鈕為例，
-        當 \DEFattender 按下 MeetingBox 上的按鈕後，觸發 MeetingBox 執行 Initialize Session。
-
     \item Create Meeting Session：
 
-            MeetingBox 觸發 Initialize Session 後，首先對 Server 傳送請求 Create Meeting Session。
-        Server 收到請求後產生 (\DEFsessionID, \DEFunsealKey) 並回傳至 MeetingBox。
+            會談參與者在欲進行會談會談終端 \DEFmeetingbox 的周圍準備開始會談，
+        會談參與者透過控制會談終端上的物理控制介面，使會談終端獲得外部事件，觸發 Create Meeting Session。
 
-            其中 \DEFsessionID 為此次 {\it Meeting Session} 的唯一識別碼；\DEFunsealKey 是對稱式加密金鑰，
-        定義為此次 {\it Meeting Session} 的解封金鑰 (Unsealing Key)。
-        \DEFsessionID 的產生必須滿足唯一性、隨機性、不可預測性，本研究實作 \DEFsessionID 以 UUID v4 為例。
-        \DEFunsealKey 為對稱式加密的金鑰，其產生方式，本研究所設計之系統以 AES CFB mode 為例。
+    \item Initialize Meeting Session：
 
-    \item Upload Encrypted \DEFrecN：
+            會談終端觸發 Create Meeting Session 後，
+        首先對解封伺服器 \DEFserver 傳送請求 Initialize Meeting Session。
+        會談終端透過解封伺服器的回覆獲取本次會談的元資料與加密金鑰。
 
-            MeetingBox 收到產生自 Server 的回傳訊息 (\DEFsessionID, \DEFunsealKey)後，使用對稱式加密演算法與金鑰 \DEFunsealKey 加密 \DEFrecN，
-        在將加密後的 \DEFrecN 上傳至 Server，並銷毀於 MeetingBox 中的 \DEFunsealKey。
+    \item Upload Encrypted Noise：
 
-            前述對稱式密鑰演算法，本研究所設計之系統以 AES CFB mode 為例。本文中定義為 \DEFfuncEncEK，
-        其輸入為欲加密明文資料，輸出為已加密的密文。
+            使用加密金鑰加密預先配置存在於會談終端 \DEFmeetingbox 的純噪音之聲音記錄，
+        並上傳至解封伺服器 \DEFserver。
 
-    \item Get Session URI (Scan QR Code)：
+    \item Get Session URI：
 
-            MeetingBox 收到產生自 Server 的回傳訊息 (\DEFsessionID, \DEFunsealKey)後，
-        將 \DEFsessionID 資訊封裝為此次 {\it Meeting Session} 專用的 URI (Uniform Resource Identifier)，
-        並傳送給 Owner。URI 的封裝方法為，將 \DEFsessionID 填入系統已知包含 Server 網址的字串。
-
-            前述 MeetingBox 將資訊傳遞給 Owner 的方法，本研究以 MeetingBox 搭配螢幕顯示 QR Code 為例。
-        \DEFowner 持智慧裝置，掃描 MeetingBox 螢幕顯示的 QR Code，以獲得 \DEFsessionID 封裝後的 URI 。
+            會談主持者透過會談終端 \DEFmeetingbox 上的人機互動介面，
+        取得此次會談的元資料與封伺服器的資源位置 URI (Uniform Resource Identifier)。
 
     \item Register Owner：
 
-            \DEFowner 收到 MeetingBox 產生的 URI 後，
-        使用此 URI 向 Server 進行系統機制「註冊會談主持者」 (Register Owner)。運作細節如下：
-        一、\DEFowner 對 Server 發送 Register Owner 請求；
-        二、Server 收到 Register Owner 請求後，隨即產生一組公私金鑰對 (\DEFpublicKey, \DEFprivateKey)
-        與 \DEFowner 的唯一識別碼 \DEFownerID，
-        並將請求來源 URI 中的 \DEFsessionID 與公開金鑰 \DEFpublicKey 和 \DEFownerID 做關聯綁定；
-        三、回傳私密金鑰 \DEFprivateKey 與 \DEFownerID 給 \DEFowner，且銷毀於 Server 中的\DEFprivateKey；
-
-            在 {\it Single Owner Meeting Session} 情境中，只存在一個 Owner，
-        因此當唯一 Owner 執行成功後，即完成此系統步驟，進入下一階段。
-        Onwer 為 Attender 中的特權角色，其特權來源為 \DEFowner 的 \DEFprivateKey，
-        因此 Owner 須妥善保管 \DEFprivateKey，維持其機密性。
-
-            \DEFownerID 的產生必須滿足唯一性，隨機性，
-        不可預測性，本研究實作 \DEFownerID 以 UUID v4 為例。
-        前述公私金鑰對的產生方法，本研究所設計之系統以 RSA PKCS \#1 為例。
+            會談主持者透過取得的會談元資料與資源位置，向解封伺服器 \DEFserver 請求註冊。
+        註冊成功則成為此次會談的會談主持者，並取得代表會談主持者身份的私密金鑰。
 \end{steps}
 
 \subsection{進行會談}\label{subsec:sessioning}
@@ -802,12 +776,12 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     透過限制會談唯一識別 \DEFsessionID 不再新增關聯綁定新的會談主持者，來終止會談主持者註冊。
     接著判斷會談主持者註冊人數 \DEFowreg 是否為一或多人。
 
-        若為一人，則為單一會談主持者情境。此時將屬於此會議的解封金鑰 \DEFunsealKey，
+        若為一人，則為單一會談主持者情境。此時將屬於此會談的解封金鑰 \DEFunsealKey，
     透過唯一會談主持者 \DEFowner 的非對稱式公開金鑰 \DEFpublicKey，
     使用非對稱式金鑰演算法加密函數 \DEFfuncEncPK{} 加密。因僅有單一會談主持者，
     加密後的解封金鑰 \DEFunsealKey，則視為唯一會談主持者 \DEFowner 的受加密保護的授權金鑰 \DEFakEnc。
 
-        若為多人，則為多會談主持者情境。此時將屬於此會議的解封金鑰 \DEFunsealKey，
+        若為多人，則為多會談主持者情境。此時將屬於此會談的解封金鑰 \DEFunsealKey，
     透過金鑰分割函數 \DEFfuncSSS{}，根據會談主持者註冊人數 \DEFowreg，
     分割成 \DEFowreg 份分割秘密 \DEFsharesAll。
     再將每個分割秘密 \DEFshares，透過每個會談主持者 \DEFowner 的公開金鑰 \DEFpublicKey，
