@@ -57,8 +57,10 @@
     \DEFfuncVerfPK{·} & 使用公開金鑰 $pk$ 的數位簽章演算法之驗證函數 \\
     \DEFfuncEncPK{·}  & 使用公開金鑰 $pk$ 的非對稱式加密演算法之加密函數 \\
     \DEFfuncDecSK{·}  & 使用私密金鑰 $sk$ 的非對稱式加密演算法之解密函數 \\
-    \DEFfuncSSS{·}    & 金鑰分割函數，$p$ 為分割數，$t$ 為還原閾值 \\
+    \DEFfuncSSS{·}    & 金鑰分割函數，$c$ 為分割數，$t$ 為還原閾值 \\
     \DEFfuncSSC{·}    & 金鑰分割合併函數 \\
+    \DEFsharesAll     & 金鑰分割函數 \DEFfuncSSS{} 所產生的 $c$ 份分割秘密 \\
+    \DEFshares        & 分割秘密中，第 $i$ 個分割秘密 \\
     \DEFrecJ          & 於開啟音波麥克風干擾器場域裡的會談聲音記錄 \\
     \DEFrecN          & 純超音波麥克風干擾器於麥克風的響應輸出之聲音記錄 \\
     \DEFrecP          & 受加密保護的聲音記錄 \DEFrecN \\
@@ -727,7 +729,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \pcind\pcind \DEFakEnc $\in$ \DEFownerID \newline
 
     {\bf if~} \DEFowreg $>1${\bf:} \newline
-    \pcind $p$ $\leftarrow$ \DEFowreg \newline
+    \pcind $c$ $\leftarrow$ \DEFowreg \newline
     \pcind $t$ $\leftarrow$ \DEFowreg \newline
     \pcind $[s_{i}]$ $\leftarrow$ \DEFfuncSSS{\DEFunsealKey} \newline
     \pcind {\bf for each~} $s_{i} \in [s_{i}]$~ {\bf where~} $i=1~...$\DEFowreg {\bf:} \newline
@@ -796,13 +798,14 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     加密後的解封金鑰 \DEFunsealKey，則視為唯一會談主持者 \DEFowner 的受加密保護的授權金鑰 \DEFakEnc。
 
         若為多人，則為多會談主持者情境。此時將屬於此會議的解封金鑰 \DEFunsealKey，
-    透過金鑰分割函數 \DEFfuncSSS{}，根據會談主持者註冊人數 \DEFowreg，分割成 \DEFowreg 份分割秘密。
-    再將每個分割秘密，根據每個會談主持者 \DEFowner 的公司私鑰 \DEFpublicKey，
+    透過金鑰分割函數 \DEFfuncSSS{}，根據會談主持者註冊人數 \DEFowreg，
+    分割成 \DEFowreg 份分割秘密 \DEFsharesAll。
+    再將每個分割秘密 \DEFshares，透過每個會談主持者 \DEFowner 的公開金鑰 \DEFpublicKey，
     使用非對稱式金鑰演算法加密函數 \DEFfuncEncPK{} 加密，並銷毀該分割秘密。
     受加密保護的分割秘密，即定義為該會談主持者 \DEFowner 的受加密保護的授權金鑰 \DEFakEnc。
 
         當所有會談主持者 \DEFowner 的受加密保護的授權金鑰 \DEFakEnc 產生完畢。
-    隨即銷毀該會談的解封金鑰 \DEFunsealKey 並回覆，訊息內容為空。
+    隨即銷毀該會談的解封金鑰 \DEFunsealKey，並回覆註冊終止成功。
     會談終端 \DEFmeetingbox 收到解封伺服器的回覆後，終止註冊完成。
     此時開起會談終端上的超音波麥克風干擾器與麥克風，開始錄製受干擾的會談聲音 \DEFrecJ
 
