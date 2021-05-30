@@ -177,15 +177,17 @@
 \end{figure}
 
     本研究所設計之系統，其流程跟隨會談 ({\it Meeting Session}) 的生命週期，其分為三個階段定義。分別為：
-一、「初始化會談 (Initialize {\it Meeting Session})」；二、「進行會談 (Running {\it Meeting Session})」；
-三、「「解封會談聲音記錄」({\it Unsealing Session Record})」；如圖 \ref{fig:system-stage}。
+一、「初始化會談 (Initialize Meeting Session)」；
+二、「進行會談 (Running Meeting Session)」；
+三、「解封會談聲音記錄」(Unsealing Session Record)」；
+如圖 \ref{fig:system-stage}。
 
     本章節將介召會談生命週期各階段的流程步驟。
 第一階段為會談的起始點，各階段依序執行，於第三階段結束，完成一次系統生命週期的循環。
 透過解封伺服器與多個會談終端配合，系統可以同時存在多個會談生命週期，彼此互不干擾，獨立執行。
 依據會談主持者的數量，將分為兩種情境說明討論：
-一、「單一會談主持者情境 ({\it Single Owner Meeting Session})」；
-二、「多會談主持者情境 ({\it Multi Owner Meeting Session})」；
+一、「單一會談主持者情境 ({\it Single Owner})」；
+二、「多會談主持者情境 ({\it Multi Owner})」；
 當會談參與者裡僅有一位會談主持者，為單一會談主持者情境，若會談中多於一個會談主持者時，則為多會談主持者情境。
 
     會談終端(MeetingBox) 於談生命週期開始之前，會預先設定時間長度為 \DEFtimeMAX 的純噪音 \DEFrecN，
@@ -199,8 +201,8 @@
 
 \subsection{初始化會談}\label{subsec:initialize}
 
-    此章節將說明 {\it Single Owner Meeting Session} 情境中，
-{\it Meeting Session} 生命週期第一個階段：Initialize {\it Meeting Session} 的系統流程。
+    此章節將說明於單一會談主持者 ({\it Single Owner}) 情境中，
+會談生命週期第一個階段「初始化會談 (Initialize Meeting Session)」的系統流程。
 如圖 \ref{fig:s-o-init} 所示。
 
 \begin{figure}[H]
@@ -265,8 +267,8 @@
 
 \subsection{進行會談}\label{subsec:sessioning}
 
-    此章節將說明 {\it Single Owner Meeting Session} 情境中，
-{\it Meeting Session} 生命週期第二個階段：Running {\it Meeting Session} 的系統流程。
+    此章節將說明於單一會談主持者 ({\it Single Owner}) 情境中，
+會談生命週期第二個階段「進行會談 (Running Meeting Session)」的系統流程。
 如圖 \ref{fig:s-o-sessioning} 所示。
 
 \begin{figure}[H]
@@ -326,9 +328,11 @@
 
 \subsection{解封會談聲音記錄}\label{subsec:unseal}
 
-    此章節將說明 {\it Single Owner Meeting Session} 情境中，
-{\it Meeting Session} 生命週期第三個階段：{\it Unseal} 的系統流程。
-如圖 \ref{fig:s-o-unseal} 所示。此階段執行於 Running {\it Meeting Session} 之後，
+    此章節將說明於單一會談主持者 ({\it Single Owner}) 情境中，
+會談生命週期第三個階段「解封會談聲音記錄」(Unsealing Session Record)」的系統流程。
+如圖 \ref{fig:s-o-unseal} 所示。
+
+    此階段執行於 Running {\it Meeting Session} 之後，
 Attender 間的談話已結束，Attender 可以離開會談的場域，且不再需要與 MeetingBox 實體接觸。
 此階段僅 Owner 與 Server 互動，透過此階段機制，最終可取得有效之會談聲音記錄 (\DEFrecREV)。
 本研究所設計之系統可以確保 Server 在 Running {\it Meeting Session}結束後，
