@@ -58,7 +58,7 @@
     \DEFfuncEncPK{·}  & 使用公開金鑰 $pk$ 的非對稱式加密演算法之加密函數 \\
     \DEFfuncDecSK{·}  & 使用私密金鑰 $sk$ 的非對稱式加密演算法之解密函數 \\
     \DEFfuncSSS{·}    & 金鑰分割函數，$c$ 為分割數，$t$ 為還原閾值 \\
-    \DEFfuncSSC{·}    & 金鑰分割合併函數 \\
+    \DEFfuncSSC{·}    & 金鑰分割演算法合併函數 \\
     \DEFsharesAll     & 金鑰分割函數 \DEFfuncSSS{} 所產生的 $c$ 份分割秘密 \\
     \DEFshares        & 分割秘密中，第 $i$ 個分割秘密 \\
     \DEFrecJ          & 於開啟音波麥克風干擾器場域裡的會談聲音記錄 \\
@@ -501,6 +501,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \multicolumn{5}{|c|}{} \\
     \hline
 \end{tabularx}
+\captionsetup{hypcap=false}
 \captionof{figure}{創建會談機制之協定}\label{fig:protocol-init-create}
 \setstretch{1.2}\normalsize\end{center}
 
@@ -518,7 +519,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     定義為此會談的會談主持者於解封伺服器 \DEFserver 的註冊人數，初始值為 $0$。
     隨後回覆會談終端 \DEFmeetingbox，會談創建成功，訊息內容為 \DEFsessionID 與 \DEFunsealKey。
 
-        其中 \DEFfuncKgen{} 為對稱式加密法的金鑰產生函數。
+        其中 \DEFfuncKgen{} 為對稱式加密演算法的金鑰產生函數。
     \DEFfuncIDgen{} 為唯一識別碼產生函數，唯一識別碼的產生須滿足唯一性，隨機性，不可預測性。
 
     \item $\{$\DEFsessionID, \DEFrecP$\}$ $,~$ \DEFmeetingbox $\rightarrow$ \DEFserver：
@@ -625,6 +626,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \multicolumn{7}{|c|}{} \\
     \hline
 \end{tabularx}
+\captionsetup{hypcap=false}
 \captionof{figure}{註冊會談主持者機制之協定}\label{fig:protocol-init-reg}
 \setstretch{1.2}\normalsize\end{center}
 
@@ -763,6 +765,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \multicolumn{5}{|c|}{} \\
     \hline
 \end{tabularx}
+\captionsetup{hypcap=false}
 \captionof{figure}{進行會談機制之協定}\label{fig:protocol-sessioning}
 \setstretch{1.2}\normalsize\end{center}
 
@@ -777,7 +780,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
         解封伺服器收到會談終端的請求後，即終止此會談不再有新的會談主持者註冊。
     因此會談唯一識別 \DEFsessionID 限制不再新增關聯綁定。
-    接著判斷會談主持者註冊人數 \DEFowner 是否為一或多人。
+    接著判斷會談主持者註冊人數 \DEFowreg 是否為一或多人。
 
         若為一人，則為單一會談主持者情境。此時將屬於此會議的解封金鑰 \DEFunsealKey，
     透過唯一會談主持者 \DEFowner 的非對稱是公開金鑰 \DEFpublicKey，
@@ -819,7 +822,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
     此協定需要所有的會談主持者 \DEFownerAll 執行，各會談主持者 \DEFowner 可以同時獨立執行，
 每位會談主持者 \DEFowner 的執行成功後，即完成授權。
-其運作細節如圖\ref{fig:protocol-unseal-access}與說明：
+其運作細節如圖\ref{fig:protocol-unseal-auth}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -900,6 +903,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \multicolumn{5}{|c|}{} \\
     \hline
 \end{tabularx}
+\captionsetup{hypcap=false}
 \captionof{figure}{會談主持者授權解封伺服器機制之協定}\label{fig:protocol-unseal-auth}
 \setstretch{1.2}\normalsize\end{center}
 
@@ -943,6 +947,14 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
 
 \subsection{取得會談聲音記錄機制之協定}
+
+    本章描述之協定為會談生命週期解封會談錄音階段(圖\ref{fig:m-o-unseal})中的 Step. 2，
+當解封伺服器 \DEFserver 獲得所有會談主持者 \DEFownerAll 的授權後，欲取得當時會談的聲音記錄，則執行此機制。
+
+    目標為透過談主持者 \DEFowner 於解封伺服器 \DEFserver 的授權金鑰 \DEFagentKey，
+還原出屬於此次會談的解封金鑰 \DEFunsealKey。
+並透過接續章節所描述其他系統機制如\ref{sec:anc}\nameref{sec:anc}，
+最終取得有效的有效的談聲音記錄 \DEFrecREV。其運作細節如圖\ref{fig:protocol-unseal-access}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -1001,14 +1013,37 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \multicolumn{5}{|c|}{} \\
     \hline
 \end{tabularx}
+\captionsetup{hypcap=false}
 \captionof{figure}{取得會談聲音記錄機制之協定}\label{fig:protocol-unseal-access}
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
-    \item \DEFowner $\rightarrow$ \DEFserver：
+    \item $\{$\DEFsessionID$\}$ $,~$ \DEFowner $\rightarrow$ \DEFserver：
 
-    \item \DEFserver $\rightarrow$ \DEFowner：
+        當解封伺服器 \DEFserver 獲得授權後，會談主持者 \DEFowner 欲取得當時會談的聲音記錄，
+    向解封伺服器 \DEFserver 傳送取得會談聲音記錄請求。訊息內容為此次會談的唯一識別碼 \DEFsessionID
 
+    \item $\{$\DEFsessionID,\DEFrecREV$\}$ $,~$\DEFserver $\rightarrow$ \DEFowner：
+
+        當解封伺服器 \DEFserver 收到得會談聲音記錄請求後，
+    首先判斷會談主持者註冊人數 \DEFowreg 是否為一或多人。
+
+        若為一人，則屬於此次會談的解封金鑰 \DEFunsealKey 則為唯一會談主持者的授權金鑰 \DEFagentKey。
+    若為多人，則關聯查詢所有屬於此次會談 \DEFownerAll 的所有授權金鑰 \DEFagentKey，
+    組合成所有的分割秘密 \DEFsharesAll。
+    接著將其透過金鑰分割演算法合併函數 \DEFfuncSSC{}，合併還原為則屬於此次會談的解封金鑰 \DEFunsealKey。
+
+        得到解封金鑰 \DEFunsealKey 後，透過對稱式加密演算法之解密函數 \DEFfuncDecEK{}，
+    將屬於此次會談的受加密保護的聲音記錄 \DEFrecP 解密，
+    得到純超音波麥克風干擾器於麥克風的響應輸出之聲音記錄(噪音) \DEFrecN。
+
+        得到干擾器於麥克風的響應輸出之聲音記錄(噪音) \DEFrecN 後，將其與受干擾器干擾的會談聲音記錄 \DEFrecJ，
+    透過聲音樣本的離散時間誤差推估函數 \DEFfuncEstm{}，得到兩個聲音樣本的離散時間對齊誤差值 \DEFshift。
+    再將受干擾器干擾的會談聲音記錄 \DEFrecJ、純干擾器於麥克風的響應輸出之聲音記錄(噪音) \DEFrecN
+    與對齊誤差值 \DEFshift，透過自適應噪音消除 \DEFfuncAnc{}，還原獲得有效的會談聲音記錄 \DEFrecREV。
+
+        隨後回覆來自會談擁有者 \DEFowner 的會談聲音記錄請求，
+    訊息內容為會談唯一識別碼 \DEFsessionID 與 有效的會談聲音記錄 \DEFrecREV。
 \end{pmsgs}
 
 
