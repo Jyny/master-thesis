@@ -526,18 +526,18 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
     \item $\{$\DEFsessionID, \DEFunsealKey$\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
-        解封伺服器 \DEFserver 收到訊息後，執行 \DEFfuncIDgen{} 與 \DEFfuncKgen{}，
+        解封伺服器 \DEFserver 收到請求後，執行 \DEFfuncIDgen{} 與 \DEFfuncKgen{}，
     分別產生此次會談的唯一識別碼 \DEFsessionID，與此次會談的解封金鑰 \DEFunsealKey。
-    接著將 \DEFunsealKey 關聯綁定屬於 \DEFsessionID。
-    接著建立一變數 \DEFowreg 定義為此會談的會談主持者於解封伺服器 \DEFserver 的註冊人數，初始值為 $0$。
-    最後回傳 \DEFsessionID 與 \DEFunsealKey。
+    首先將 \DEFunsealKey 關聯綁定屬於 \DEFsessionID。接著建立變數 \DEFowreg，
+    定義為此會談的會談主持者於解封伺服器 \DEFserver 的註冊人數，初始值為 $0$。
+    隨後回覆會談終端 \DEFmeetingbox，會談創建成功，訊息內容為 \DEFsessionID 與 \DEFunsealKey。
 
         其中 \DEFfuncKgen{} 為對稱式加密法的金鑰產生函數。
     \DEFfuncIDgen{} 為唯一識別碼產生函數，唯一識別碼的產生須滿足唯一性，隨機性，不可預測性。
 
     \item $\{$\DEFsessionID, \DEFrecP$\}$ $,~$ \DEFmeetingbox $\rightarrow$ \DEFserver：
 
-        會談終端 \DEFmeetingbox 收到來自 \DEFserver 的回傳後，
+        會談終端 \DEFmeetingbox 收到來自 \DEFserver 的回覆後，
     使用回傳的 \DEFunsealKey 透過對稱式加密函數 \DEFfuncEncEK{} 加密預先配置好的噪音 \DEFrecN，
     產生 \DEFrecP，接著向解封伺服器發出請求，訊息內容為 \DEFsessionID 與 \DEFrecP。
 
