@@ -320,9 +320,15 @@
     \caption{初始化會談於多會談主持者情境}\label{fig:m-o-init}
 \end{figure}
 
-    {\it Multi Owner Meeting Session} 情境中，
-{\it Meeting Session} 生命週期第一個階段：Initialize {\it Meeting Session} 的系統流程。
-如圖 \ref{fig:s-o-init} 所示。
+    於多會談主持者 ({\it Multi Owner}) 情境中，
+會談生命週期第三個階段「解封會談聲音記錄」(Unsealing Session Record)」的系統流程。
+如圖 \ref{fig:m-o-init} 所示。
+
+    其中 Step. 1\textasciitilde3，與 \ref{subsec:initialize} \nameref{fig:s-o-init} 相同。
+
+    Step. 4\textasciitilde5，需要所有的會談主持者 \DEFownerAll 中的每一位會談主持者 \DEFowner 執行完成。
+各會談主持者 \DEFowner 可以同時獨立執行，每個會談主持者 \DEFowner 的執行結果不受其他會談主持者影響。
+待所有 \DEFowner 執行成功，即完成此階段。
 
 \begin{figure}[H]
     \centering
@@ -330,11 +336,30 @@
     \caption{進行會談於多會談主持者情境}\label{fig:m-o-sessioning}
 \end{figure}
 
+    於多會談主持者 ({\it Multi Owner}) 情境中，
+會談生命週期第二個階段「進行會談 (Running Meeting Session)」的系統流程。
+如圖 \ref{fig:m-o-sessioning} 所示。
+
+    Step. 1\textasciitilde4 流程步驟與
+\ref{subsec:sessioning} \nameref{fig:s-o-sessioning} 相同。
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{multi-owner-sequence-diagram-unseal}
     \caption{解封會談聲音記錄於多會談主持者情境}\label{fig:m-o-unseal}
 \end{figure}
+
+    於多會談主持者 ({\it Multi Owner}) 情境中，
+會談生命週期第三個階段「解封會談聲音記錄」(Unsealing Session Record)」的系統流程。
+如圖 \ref{fig:m-o-unseal} 所示。
+
+    Step. 1\textasciitilde4 流程步驟分別與 \ref{subsec:unseal} \nameref{fig:s-o-unseal} 相同。
+
+    其中 Step. 1\textasciitilde2 需要所有的會談主持者 \DEFownerAll 執行，
+各會談主持者 \DEFowner 可以同時獨立執行，待每位會談主持者 \DEFowner 執行成功後，即完成授權。
+若有任何一位會談主持者 \DEFowner 執行失敗，即授權失敗。
+
+    最後 Step. 3\textasciitilde4 為各會談主持者 \DEFowner 自行選擇執行與否，以取得此有效之會談聲音記錄。
 
 
 \section{系統機制之一：聲音記錄存取控制協定}\label{sec:protocol}
