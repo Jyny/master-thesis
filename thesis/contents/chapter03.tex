@@ -254,23 +254,24 @@
     \item End Owner Registration：
 
             會談終端 \DEFmeetingbox 向解封伺服器 \DEFserver 發起請求，
-        通知解封伺服器 \DEFserver，會談主持者的註冊已完成。
+        通知解封伺服器，會談主持者的註冊已完成。
 
             隨後開啟會談終端上的麥克風與麥克風超音波干擾器，並透過人機互動介面提示系統已經開始錄音。
-        因超音波麥克風干擾器的干擾，任何場域內的錄音將成為非有效之聲音記錄。
+        因超音波麥克風干擾器的干擾，場域內的任何錄音將成為非有效之聲音記錄。
         此時會談參與者即可進行私密會談，不用擔心存在其他麥克風或聲音記錄裝置可以取得有效之聲音記錄。
 
     \item End Session：
 
             當會談對話結束時，會談參與者即可透過會談終端 \DEFmeetingbox 的物理控制介面，
         使會談終端獲得外部事件，觸發 End Session。
-        會談終端此時關閉麥克風與超音波麥克風干擾器，人機互動介面同時提示系統已結束錄音。
+
+            會談終端此時關閉麥克風與超音波麥克風干擾器，人機互動介面同時提示系統已結束錄音。
         此階段所錄製的聲音記錄內容為音波麥克風干擾器與會談聲音內容的疊加，同為非有效之聲音記錄。
 
     \item Upload Session Record：
 
             隨後會談終端 \DEFmeetingbox 將為受干擾的會談聲音記錄上傳至解封伺服器 \DEFserver。
-        此時會談參與者即可離開會談場域，不再需要與會談終端 \DEFmeetingbox 實體接觸。
+        此時會談參與者即可離開會談場域，不再需要與會談終端實體接觸。
 \end{steps}
 
 
@@ -280,12 +281,6 @@
 會談生命週期第三個階段「解封會談聲音記錄」(Unsealing Session Record)」的系統流程。
 如圖 \ref{fig:s-o-unseal} 所示。
 
-    此階段執行於 Running {\it Meeting Session} 之後，
-Attender 間的談話已結束，Attender 可以離開會談的場域，且不再需要與 MeetingBox 實體接觸。
-此階段僅 Owner 與 Server 互動，透過此階段機制，最終可取得有效之會談聲音記錄 (\DEFrecREV)。
-本研究所設計之系統可以確保 Server 在 Running {\it Meeting Session}結束後，
-直到成功解封 ({\it Unseal})之前，\DEFrecREV 保有機密性。
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{single-owner-sequence-diagram-unseal}
@@ -293,51 +288,20 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \end{figure}
 
 \begin{steps}
-    \item Unseal Session Record Request：
+    \item Authorize Unsealing Service：
 
-            在會談對話結束後，Owner 欲取得當時的有效聲音紀錄，則執行此機制。
-        \DEFowner 向 Server 傳送 Unseal Session Record Request，
-        Server 則回傳 \DEFowner 的 \DEFakEnc。
-        {\it Single Owner Meeting Session} 情境中，只有單一個 Owner，
-        因此傳送至 \DEFowner 的 \DEFakEnc 其內容，即為使用 \DEFfuncEncPK 加密的 \DEFunsealKey。
+            在會談對話結束後，會談主持者欲取得當時會談的有效聲音紀錄，須先授權解封伺服器 \DEFserver。
 
-    \item Solve Challenge：
-
-            \DEFowner 收到 Server 回傳的 \DEFakEnc 後，因 \DEFowner 持有 \DEFprivateKey，
-        因此 \DEFowner 有能力透過相同的非對稱式加密演算法透過其解密。
-        而 \DEFakEnc 解密後的明文，本文將其定義為 \DEFakEncDec。
-
-            得到 \DEFakEncDec 後，\DEFowner 再將其透過 \DEFprivateKey 使用數位簽章演算法簽名，
-        所產生之簽章，本文定義為 \DEFakEncDecSig。
-
-            \DEFowner 成功產生 \DEFakEncDec 與 \DEFakEncDecSig 後，
-        將兩者作為參數向 Server 請求 Solve Challenge。
-        Server 收到來自\DEFowner 的 \DEFakEncDec 與 \DEFakEncDecSig 之後，驗證 \DEFakEncDecSig 是否正確。
-        透過 Server 的 \DEFpublicKey 利用數位簽章演算法驗證 \DEFakEncDecSig 是否為合法的簽章。
-        若簽章合法，依據其不可否認性，Server 得以信任 \DEFakEncDec 的是產生自 \DEFowner。
-
-            於 {\it Single Owner Meeting Session} 情境中，
-        \DEFakEnc 的內容為使用 \DEFfuncEncPK 加密的 \DEFunsealKey。
-        而 \DEFakEncDec 為解密後的 \DEFakEnc ，即為 \DEFunsealKey，即完成此步驟。
-        前述非對稱式金鑰加密演算法，本研究所設計之系統以 RSA PKCS \#1 為例。其解密方法，
-        本文定義為 \DEFfuncDecSK，輸入為 \DEFfuncEncPK 輸出的密文，輸出為 \DEFfuncEncPK 的明文輸入。
-
-            前述數位簽章演算法，本研究以 RSA PKCS \#1 與 SHA256 為例。其簽名方法，本文定義為 \DEFfuncSignSK，
-        輸入為欲簽名的資料，輸出為資料的簽章。驗證簽章方法，本文定義為 \DEFfuncVerfPK，
-        輸入為欲驗證簽名的資料與簽章，輸出為合法與否。
+            此時會談主持者向解封伺服器發起授權請求，
+        並透過代表會談主持者身份的私密金鑰，證明會談主持者的身份與授權解封伺服器。
 
     \item Access Session Record：
 
-            Owner 在前一步驟 Solve Challenge 成功之後，即可再向 Server 發出 Access Session Record 請求。
-        若於 Solve Challenge 成功，代表 Server 已獲得此 {\it Meeting Session} 的 \DEFunsealKey。
-        此時即可將 \DEFrecN 透過 \DEFunsealKey 輸入對稱式加密演算法的解密函數還原獲得 \DEFrecN。
-        前述對稱式加密演算法的解密函數，本研究以 AES CFB mode 為例。本文中定義為 \DEFfuncDecEK，
-        其輸入為欲解密的密文資料，輸出解密後的明文。
+            在會談主持者成功授權解封伺服器 \DEFserver 後，向解封伺服器發起請求取得有效之會談聲音記錄。
 
-            Server 上儲存的 \DEFrecJ 為非有效聲音紀錄，其原因為含有高信噪比的噪音。
-        此噪音由 MeetingBox 的 超音波麥克風干擾器所產生，與 \DEFrecN 有高相似度與關聯度。
-        因此透過 \DEFrecN 與 \DEFrecJ 輸入 「自適應噪音消除」(ANC)，即可獲得有效會談聲音記錄。
-        透過 ANC 還原的有效會談聲音記錄，本文定義為 \DEFrecREV。
+            此時封伺服器將受加密保護的純噪音之聲音記錄解密，
+        與含有噪音的受干擾會談聲音記錄透過自適應噪音消除，還原出有效之會談聲音記錄。
+        最終使會談主持者取得此有效之會談聲音記錄。
 \end{steps}
 
 
@@ -1081,3 +1045,6 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \includegraphics[width=1.0\textwidth]{system-data-flow}
     \caption{系統資料流程圖}\label{fig:system-data-flow}
 \end{figure}
+
+本研究所設計之系統可以確保 Server 在 Running {\it Meeting Session}結束後，
+直到成功解封 ({\it Unseal})之前，\DEFrecREV 保有機密性。
