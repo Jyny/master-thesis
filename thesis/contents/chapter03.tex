@@ -200,7 +200,7 @@
 
 
 \subsection{初始化會談}
-\label{subsec.initialize}
+\label{subsec:initialize}
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
 {\it Meeting Session} 生命週期第一個階段：Initialize {\it Meeting Session} 的系統流程。
@@ -268,7 +268,7 @@
 \end{steps}
 
 \subsection{進行會談}
-\label{subsec.sessioning}
+\label{subsec:sessioning}
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
 {\it Meeting Session} 生命週期第二個階段：Running {\it Meeting Session} 的系統流程。
@@ -331,7 +331,7 @@
 
 
 \subsection{解封會談錄音}
-\label{subsec.unseal}
+\label{subsec:unseal}
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
 {\it Meeting Session} 生命週期第三個階段：{\it Unseal} 的系統流程。
@@ -431,21 +431,14 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \end{figure}
 
 
-\section{系統機制}
+\section{系統機制之一：聲音記錄存取控制協定}
+\label{sec:protocol}
 
-    本章節將詳細說明各項系統機制，
-包含基於前章節 \ref{sec:system-flow} \nameref{sec:system-flow} 所提出的聲音記錄存取控制協定。
-以及於生命週期解封會談錄音中，如何應用自適應噪音消除，以還原出有效的會談錄音。
-最後說明如何推估聲音樣本的離散時間誤差值，用於自適應噪音消除時對齊聲音樣本。
-
-
-\subsection{聲音記錄存取控制協定}
-
-    本節基於前章節 \ref{sec:system-flow} \nameref{sec:system-flow}，發展出一套聲音記錄存取控制協定。
+    本節基於前章節 \ref{sec:system-flow} \nameref{sec:system-flow}，延伸出一套聲音記錄存取控制協定。
 其中包括創建會談、註冊會談主持者、進行會談、會談主持者授權解封伺服器、取得會談聲音記錄。
 
 
-\subsubsection*{創建會談機制之協定}
+\subsection{創建會談機制之協定}
 
     在會談生命週期中初始化會談階段(圖\ref{fig:m-o-init})，當會談參與者透過與會談終端的物理控制介面執行創建會談，
 會談終端獲得外部事件而觸發「\nameref{fig:protocol-init-create}」。
@@ -555,7 +548,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \end{pmsgs}
 
 
-\subsubsection*{註冊會談主持者機制之協定}
+\subsection{註冊會談主持者機制之協定}
 
     於會談生命週期同一階段初始化會談中，當談終端 \DEFmeetingbox 獲得產自解封伺服器的 \DEFsessionID 後，
 會談終端上的人機互動介面提示，可以進行「\nameref{fig:protocol-init-reg}」。
@@ -681,7 +674,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \end{pmsgs}
 
 
-\subsubsection*{進行會談機制之協定}
+\subsection{進行會談機制之協定}
 
     在會談生命週期中進行會談階段(圖\ref{fig:m-o-sessioning})，
 會談參與者透過與會談終端的物理控制介面(Step. 1、3)，
@@ -828,7 +821,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \end{pmsgs}
 
 
-\subsubsection*{會談主持者授權解封伺服器機制之協定}
+\subsection{會談主持者授權解封伺服器機制之協定}
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -924,7 +917,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \end{pmsgs}
 
 
-\subsubsection*{取得會談聲音記錄機制之協定}
+\subsection{取得會談聲音記錄機制之協定}
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -993,14 +986,11 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
 \end{pmsgs}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1.0\textwidth]{system-data-flow}
-    \caption{系統資料流程圖}
-    \label{fig:system-data-flow}
-\end{figure}
 
-\subsection{自適應噪音消除}
+\section{系統機制之二：自適應噪音消除}
+\label{sec:anc}
+
+    本節將說明於生命週期解封會談錄音中，如何應用自適應噪音消除，以還原出有效的會談錄音。
 
 \begin{figure}[H]
     \centering
@@ -1010,7 +1000,10 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \end{figure}
 
 
-\subsection{聲音樣本的離散時間誤差推估}
+\section{系統機制之三：聲音樣本的離散時間誤差推估}
+\label{sec:estimate}
+
+    本節將說明如何推估聲音樣本的離散時間誤差值，用於自適應噪音消除時對齊聲音樣本。
 
 \begin{figure}[H]
     \centering
@@ -1024,4 +1017,15 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \includegraphics[width=0.95\textwidth]{estimate-shift-power}
     \caption{干涉抵銷後之總能量計算演算法}
     \label{fig:estimate-power}
+\end{figure}
+
+
+\section{系統理論與假設}
+\label{sec:theory}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{system-data-flow}
+    \caption{系統資料流程圖}
+    \label{fig:system-data-flow}
 \end{figure}
