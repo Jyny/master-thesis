@@ -190,7 +190,7 @@
 二、「多會談主持者情境 ({\it Multi Owner})」；
 當會談參與者裡僅有一位會談主持者，為單一會談主持者情境，若會談中多於一個會談主持者時，則為多會談主持者情境。
 
-    接續章節將說明，於單一會談主持者情境中的流程與步驟。
+    接續章節將首先說明，於單一會談主持者情境中的流程與步驟。
 
 
 \subsection{初始化會談}\label{subsec:initialize}
@@ -257,7 +257,8 @@
         通知解封伺服器，會談主持者的註冊已完成。
 
             隨後開啟會談終端上的麥克風與麥克風超音波干擾器，並透過人機互動介面提示系統已經開始錄音。
-        因超音波麥克風干擾器的干擾，場域內的任何錄音將成為非有效之聲音記錄。
+
+            因超音波麥克風干擾器的干擾，場域內的任何錄音將成為非有效之聲音記錄。
         此時會談參與者即可進行私密會談，不用擔心存在其他麥克風或聲音記錄裝置可以取得有效之聲音記錄。
 
     \item End Session：
@@ -307,11 +308,11 @@
 
 \subsection{多會談主持者情境}
 
-此章節將說明 Multi Owner Meeting Session 情境中，系統生命週期階段的流程步驟。
-當存在 {\it Meeting Session} 中 Owner 數量為二人以上，即定義為 Multi Owner Meeting Session 之情境。
-於此情境中，{\it Meeting Session} 生命週期的三個階段與前篇 Single Owner Meeting Session 情境相似。
-其差異之處在於 Owner 數量大於二人。基於前篇 Single Owner Meeting Session 情境，
-僅需小幅度的系統改動與引入 Shamir's Secret Sharing，即可達成 Multi Owner Meeting Session 情境。
+    此章節將說明於多會談主持者 ({\it Multi Owner}) 情境中，系統生命週期階段的流程步驟。
+當存在會談中會談主持者數量為二人以上，即定義為多會談主持者情境。
+
+    於此情境中，會談生命週期與前篇單一會談主持者 ({\it Single Owner}) 情境相似。
+其差異之處在於會談主持者數量大於二人。基於單一會談主持者情境，僅需小幅度的系統改動，即可達成多會談主持者情境。
 
 \begin{figure}[H]
     \centering
