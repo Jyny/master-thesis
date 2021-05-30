@@ -14,7 +14,7 @@
 \rowcolors{1}{white}{whitesmoke}
 \begin{longtable}{c l}
     \hiderowcolors
-    \caption{符號定義表} \label{table:symbol} \\
+    \caption{符號定義表}\label{table:symbol} \\
 
     \hiderowcolors
     \hline
@@ -83,8 +83,7 @@
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{single-owner-architecture}
-    \caption{單一會談主持者情境圖}
-    \label{fig:s-o-arch}
+    \caption{單一會談主持者情境圖}\label{fig:s-o-arch}
 \end{figure}
 
     本系統由會談終端(MeetingBox)、會談參與者(Attender)以解封伺服器(Unsealing Service Provider)所組成。
@@ -114,8 +113,7 @@
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{multi-owner-architecture}
-    \caption{多會談主持者情境圖}
-    \label{fig:m-o-arch}
+    \caption{多會談主持者情境圖}\label{fig:m-o-arch}
 \end{figure}
 
     會談主持者(Owner)，屬於會談參與者(Attender)，為會談參與者的子集合，定義為會談參與者中的特權角色。
@@ -170,14 +168,12 @@
 解封伺服器之設計能與多個會談終端(MeetingBox)配合，同時間處理一場以上的會談 ({\it Meeting Session}) 的進行。
 
 
-\section{系統流程}
-\label{sec:system-flow}
+\section{系統流程}\label{sec:system-flow}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{system-stage}
-    \caption{會談生命週期}
-    \label{fig:system-stage}
+    \caption{會談生命週期}\label{fig:system-stage}
 \end{figure}
 
     本研究所設計之系統，其流程跟隨會談 ({\it Meeting Session}) 的生命週期，其分為三個階段定義。分別為：
@@ -201,8 +197,7 @@
     接續章節將說明，於單一會談主持者情境中的流程與步驟。
 
 
-\subsection{初始化會談}
-\label{subsec:initialize}
+\subsection{初始化會談}\label{subsec:initialize}
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
 {\it Meeting Session} 生命週期第一個階段：Initialize {\it Meeting Session} 的系統流程。
@@ -211,8 +206,7 @@
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{single-owner-sequence-diagram-init}
-    \caption{Single Owner Initialize {\it Meeting Session}}
-    \label{fig:s-o-init}
+    \caption{Single Owner Initialize {\it Meeting Session}}\label{fig:s-o-init}
 \end{figure}
 
 \begin{steps}
@@ -269,8 +263,7 @@
         前述公私金鑰對的產生方法，本研究所設計之系統以 RSA PKCS \#1 為例。
 \end{steps}
 
-\subsection{進行會談}
-\label{subsec:sessioning}
+\subsection{進行會談}\label{subsec:sessioning}
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
 {\it Meeting Session} 生命週期第二個階段：Running {\it Meeting Session} 的系統流程。
@@ -279,8 +272,7 @@
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{single-owner-sequence-diagram-sessioning}
-    \caption{Single Owner Running {\it Meeting Session}}
-    \label{fig:s-o-sessioning}
+    \caption{Single Owner Running {\it Meeting Session}}\label{fig:s-o-sessioning}
 \end{figure}
 
 \begin{steps}
@@ -332,8 +324,7 @@
 \end{steps}
 
 
-\subsection{解封會談錄音}
-\label{subsec:unseal}
+\subsection{解封會談錄音}\label{subsec:unseal}
 
     此章節將說明 {\it Single Owner Meeting Session} 情境中，
 {\it Meeting Session} 生命週期第三個階段：{\it Unseal} 的系統流程。
@@ -346,8 +337,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{single-owner-sequence-diagram-unseal}
-    \caption{Single Owner {\it Unseal}}
-    \label{fig:s-o-unseal}
+    \caption{Single Owner {\it Unseal}}\label{fig:s-o-unseal}
 \end{figure}
 
 \begin{steps}
@@ -410,8 +400,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{multi-owner-sequence-diagram-init}
-    \caption{Multi Owner Initialize {\it Meeting Session}}
-    \label{fig:m-o-init}
+    \caption{Multi Owner Initialize {\it Meeting Session}}\label{fig:m-o-init}
 \end{figure}
 
     {\it Multi Owner Meeting Session} 情境中，
@@ -421,20 +410,17 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{multi-owner-sequence-diagram-sessioning}
-    \caption{Multi Owner Running {\it Meeting Session}}
-    \label{fig:m-o-sessioning}
+    \caption{Multi Owner Running {\it Meeting Session}}\label{fig:m-o-sessioning}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{multi-owner-sequence-diagram-unseal}
-    \caption{Multi Owner {\it Unseal}}
-    \label{fig:m-o-unseal}
+    \caption{Multi Owner {\it Unseal}}\label{fig:m-o-unseal}
 \end{figure}
 
 
-\section{系統機制之一：聲音記錄存取控制協定}
-\label{sec:protocol}
+\section{系統機制之一：聲音記錄存取控制協定}\label{sec:protocol}
 
     本節基於前章節 \ref{sec:system-flow} \nameref{sec:system-flow}，延伸出一套聲音記錄存取控制協定。
 其中包括創建會談、註冊會談主持者、進行會談、會談主持者授權解封伺服器、取得會談聲音記錄。
@@ -1026,45 +1012,38 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \end{pmsgs}
 
 
-\section{系統機制之二：自適應噪音消除}
-\label{sec:anc}
+\section{系統機制之二：自適應噪音消除}\label{sec:anc}
 
     本節將說明於生命週期解封會談錄音中，如何應用自適應噪音消除，以還原出有效的會談錄音。
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{anc}
-    \caption{自適應噪音消除}
-    \label{fig:anc}
+    \caption{自適應噪音消除}\label{fig:anc}
 \end{figure}
 
 
-\section{系統機制之三：聲音樣本的離散時間誤差推估}
-\label{sec:estimate}
+\section{系統機制之三：聲音樣本的離散時間誤差推估}\label{sec:estimate}
 
     本節將說明如何推估聲音樣本的離散時間誤差值，用於自適應噪音消除時對齊聲音樣本。
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{estimate-shift-shift}
-    \caption{聲音樣本之離散時間誤差推估演算法}
-    \label{fig:estimate-shift}
+    \caption{聲音樣本之離散時間誤差推估演算法}\label{fig:estimate-shift}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.95\textwidth]{estimate-shift-power}
-    \caption{干涉抵銷後之總能量計算演算法}
-    \label{fig:estimate-power}
+    \caption{干涉抵銷後之總能量計算演算法}\label{fig:estimate-power}
 \end{figure}
 
 
-\section{系統理論與假設}
-\label{sec:theory}
+\section{系統理論與假設}\label{sec:theory}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{system-data-flow}
-    \caption{系統資料流程圖}
-    \label{fig:system-data-flow}
+    \caption{系統資料流程圖}\label{fig:system-data-flow}
 \end{figure}
