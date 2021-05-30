@@ -62,7 +62,7 @@
     \DEFsharesAll     & 金鑰分割函數 \DEFfuncSSS{} 所產生的 $c$ 份分割秘密 \\
     \DEFshares        & 分割秘密中，第 $i$ 個分割秘密 \\
     \DEFrecJ          & 於開啟音波麥克風干擾器場域裡的會談聲音記錄 \\
-    \DEFrecN          & 超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄 \\
+    \DEFrecN          & 純超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄 \\
     \DEFrecP          & 受加密保護的聲音記錄 \DEFrecN \\
     \DEFrecREV        & 執行系統機制 {\it Unseal} 所產生之有效會談聲音記錄 \\
     \DEFtimeREC       & 會談聲音記錄 \DEFrecJ 的時間長度 \\
@@ -189,12 +189,6 @@
 一、「單一會談主持者情境 ({\it Single Owner})」；
 二、「多會談主持者情境 ({\it Multi Owner})」；
 當會談參與者裡僅有一位會談主持者，為單一會談主持者情境，若會談中多於一個會談主持者時，則為多會談主持者情境。
-
-    會談終端(MeetingBox) 於談生命週期開始之前，會預先設定時間長度為 \DEFtimeMAX 的純噪音 \DEFrecN，
-於會談第二階段進行會談中所紀錄的聲音內容之長度，須小於  \DEFtimeMAX。
-此純噪音 \DEFrecN 為純超音波麥克風干擾器於麥克風的響應輸出之聲音記錄，
-產生方法為選定一隨機種子 \DEFseed 作為參數，輸入並開啟超音波麥克風干擾器，透過麥克風錄製產生。
-於每次會談生命週期結束後，重複此步驟重新選定 \DEFseed 與產生 \DEFrecN。
 
     接續章節將說明，於單一會談主持者情境中的流程與步驟。
 
@@ -428,6 +422,14 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
     本節基於前章節 \ref{sec:system-flow} \nameref{sec:system-flow}，延伸出一套聲音記錄存取控制協定。
 其中包括創建會談、註冊會談主持者、進行會談、會談主持者授權解封伺服器、取得會談聲音記錄。
+
+    會談終端 \DEFmeetingbox 於談生命週期開始之前，
+會預先設定時間長度為 \DEFtimeMAX 的純噪音之聲音記錄 \DEFrecN，
+受干擾的會談聲音記錄 \DEFrecJ 之內容長度，須小於 \DEFtimeMAX。
+此純噪音之聲音記錄 \DEFrecN 為純超音波麥克風干擾器於麥克風的響應輸出之聲音記錄，
+產生方法為選定一隨機種子 \DEFseed 作為參數，輸入並開啟超音波麥克風干擾器，透過麥克風錄製產生。
+每次選定的隨機種子 \DEFseed 皆不同，因此每次配置產生 \DEFrecN 也不同。
+於每次會談生命週期結束後，重複執行此步驟重新選定隨機種子 \DEFseed 與產生純噪音之聲音記錄 \DEFrecN。
 
 
 \subsection{創建會談機制之協定}\label{subsec:protocol-init-create}
