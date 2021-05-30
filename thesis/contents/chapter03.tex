@@ -677,10 +677,22 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
         會談主持者收到解封伺服器 \DEFserver 的回傳即註冊成功。
     會談主持者為會談參與者中的特權角色，其特權來源為會傳訊息內的 \DEFprivateKey，
     因此會談主持者須妥善保管 \DEFprivateKey，維持其機密性。
+    待所有的會談主持者 \DEFownerAll 執行成功此機制後，即完成會談初始化。
 \end{pmsgs}
 
 
 \subsubsection*{進行會談機制之協定}
+
+    在會談生命週期中進行會談階段(圖\ref{fig:m-o-sessioning})，
+會談參與者透過與會談終端的物理控制介面(Step. 1、3)，
+使會談終端獲得外部事件而觸發「\nameref{fig:protocol-init-create}」。
+
+    在此機制中，會談已完成會談生命週期第一階段初始化會談。此時會談終端應已獲得此次會談唯一識別碼 \DEFsessionID。
+解封伺服器 \DEFserver 中也應存在資料包含會談主持者註冊人數 \DEFowreg、
+屬於此次會談唯一識別碼的所有會談主持者唯一識別碼 \DEFownerID 與其 \DEFpublicKey。
+
+    此機制完成後系統將產生被干擾的會談聲音記錄 \DEFrecJ 與受加密保護的授權金鑰 \DEFakEnc。
+其運作細節如圖\ref{fig:protocol-sessioning}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -775,12 +787,44 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \begin{pmsgs}
     \item \DEFmeetingbox $\rightarrow$ \DEFserver：
 
+        會談參與者透過與會談終端的物理控制介面，
+    使會談終端 \DEFmeetingbox 獲得外部事件而觸發向解封伺服器 \DEFserver 發出此請求，
+    通知 \DEFserver，會談主持者註冊已完成。請求內容為此次會談唯一識別碼 \DEFsessionID。
+
     \item \DEFserver $\rightarrow$ \DEFmeetingbox：
+
+        解封伺服器收到會談終端的請求後，即終止此會談不再有新的會談擁有者註冊。
+    因此會談唯一識別 \DEFsessionID 限制不再新增關聯綁定。
+    接著判斷會談主持者註冊人數 \DEFowner 是否為一或多人。
+
+        若為一人，則為單一會談主持者情境。此時將屬於此會議的解封金鑰 \DEFunsealKey，
+    透過唯一會談主持者 \DEFowner 的非對稱是公開金鑰 \DEFpublicKey，
+    使用非對稱式金鑰演算法加密函數 \DEFfuncEncPK{} 加密。因僅有單一會談主持者，
+    加密後的解封金鑰 \DEFunsealKey，則視為唯一會談主持者 \DEFowner 的受加密保護的授權金鑰 \DEFakEnc。
+
+        若為多人，則為多會談主持者情境。此時將屬於此會議的解封金鑰 \DEFunsealKey，
+    透過金鑰分割函數 \DEFfuncSSS{}，根據會談主持者註冊人數 \DEFowreg，分割成 \DEFowreg 份分割秘密。
+    再將每個分割秘密，根據每個會談主持者 \DEFowner 的公司私鑰 \DEFpublicKey，
+    使用非對稱式金鑰演算法加密函數 \DEFfuncEncPK{} 加密，並銷毀該分割秘密。
+    受加密保護的分割秘密，即定義為該會談主持者 \DEFowner 的受加密保護的授權金鑰 \DEFakEnc。
+
+        當所有會談主持者 \DEFowner 的受加密保護的授權金鑰 \DEFakEnc 產生完畢。
+    隨即銷毀該會談的解封金鑰 \DEFunsealKey 並回覆，訊息內容為空。
+    會談終端 \DEFmeetingbox 收到解封伺服器的回覆後，終止註冊完成。
+    此時開起會談終端上的超音波麥克風干擾器與麥克風，開始錄製受干擾的會談聲音 \DEFrecJ
 
     \item \DEFmeetingbox $\rightarrow$ \DEFserver：
 
+        當會談參與者再次透過與會談終端的物理控制介面，
+    使會談終端 \DEFmeetingbox 獲得外部事件，此時觸發會談錄音終止，受干擾的會談聲音紀錄 \DEFrecJ 產生完成。
+    會談終端 \DEFmeetingbox 向解封伺服器 \DEFserver 發出請求上傳，
+    內容為此次會談唯一識別碼 \DEFsessionID 與受干擾的會談聲音紀錄 \DEFrecJ。
+
     \item \DEFserver $\rightarrow$ \DEFmeetingbox：
 
+        解封伺服器收到會談終端的請求後，
+    將受干擾的會談聲音紀錄 \DEFrecJ 關聯綁定屬於 \DEFsessionID 且儲存，隨後回覆上傳成功。
+    此時會談參與者即可離開會談場域，會談終端開始為未來新的會談生命週期重新配置。
 \end{pmsgs}
 
 
