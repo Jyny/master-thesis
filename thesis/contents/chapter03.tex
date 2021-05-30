@@ -660,7 +660,8 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
         解封伺服器 \DEFserver 收到註冊請求後，執行 \DEFfuncPKgen{} 與 \DEFfuncIDgen{}，
     分別產生一組屬於會談主持者 \DEFowner 的公開私密金鑰對 $($\DEFpublicKey$,~$ \DEFprivateKey$)$，
     與此會談主持者 \DEFowner 的唯一識別碼 \DEFownerID。
-    會談主持者的唯一識別碼 \DEFownerID，其產生須滿足唯一性，隨機性，不可預測性。
+
+        會談主持者的唯一識別碼 \DEFownerID，其產生須滿足唯一性，隨機性，不可預測性。
     \DEFfuncPKgen{} 為非對稱加密演算法的公開私密金鑰對產生函數。
 
         接著將此次會談的會談主持者註冊人數 \DEFowreg 遞增 $1$，
@@ -788,7 +789,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
     \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
-        解封伺服器收到會談終端的請求後，即終止此會談不再有新的會談擁有者註冊。
+        解封伺服器收到會談終端的請求後，即終止此會談不再有新的會談主持者註冊。
     因此會談唯一識別 \DEFsessionID 限制不再新增關聯綁定。
     接著判斷會談主持者註冊人數 \DEFowner 是否為一或多人。
 
@@ -825,6 +826,14 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 
 
 \subsection{會談主持者授權解封伺服器機制之協定}
+
+    本章描述之協定為會談生命週期解封會談錄音階段(圖\ref{fig:m-o-unseal})中的 Step. 1，
+當會談主持者 \DEFowner 欲取得當時會談的聲音記錄，則執行此機制。
+目標為使會談主持者 \DEFowner 授權解封伺服器 \DEFserver，使其有權限可以執行後續機制。
+
+    此協定需要所有的會談主持者 \DEFownerAll 執行，各會談主持者 \DEFowner 可以同時獨立執行，
+每位會談主持者 \DEFowner 的執行成功後，即完成授權。
+其運作細節如圖\ref{fig:protocol-unseal-access}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -876,7 +885,7 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
     \pcind\pcind $sk$ $\leftarrow$ \DEFprivateKey \\
     \pcind\pcind $m_{3}$ $\leftarrow$ \DEFfuncDecSK{\DEFakEnc} \\
     \pcind\pcind $m_{3}.sig$ $\leftarrow$ \DEFfuncSignSK{$m_{3}$} \\
-    \pcind\pcind $M_{3}^{i}$ $\leftarrow$ $\{m_{3}, ~m_{3}.sig\}$
+    \pcind\pcind $M_{3}^{i}$ $\leftarrow$ $\{$\DEFownerID$, m_{3}, ~m_{3}.sig\}$
     }} & & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} &
@@ -909,16 +918,41 @@ Attender 間的談話已結束，Attender 可以離開會談的場域，且不�
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgsi}
-    \item \DEFowner $\rightarrow$ \DEFserver：
+    \item $\{$\DEFsessionID, \DEFownerID$\}$ $,~$  \DEFowner $\rightarrow$ \DEFserver：
+
+        當會談主持者 \DEFowner 欲取得當時會談的聲音記錄時，
+    向解封伺服器 \DEFserver 傳送授權解封聲音會談記錄請求，
+    訊息內容為此次會談的唯一識別碼 \DEFsessionID 與當會談主持者的唯一識別碼 \DEFownerID。
+
+    \item $\{$\DEFownerID, \DEFakEnc$\}$ $,~$  \DEFserver $\rightarrow$ \DEFowner：
+
+        解封伺服器 \DEFserver 收到授權解封聲音會談記錄請求後，即依據會談主持者的唯一識別碼 \DEFownerID，
+    查找關聯屬於會談主持者的受加密保護的授權金鑰 \DEFakEnc。隨後回覆請會談主持者簽署授權，
+    訊息內容為會談主持者的唯一識別碼 \DEFownerID 與受加密保護的授權金鑰 \DEFakEnc。
+
+    \item $\{$\DEFownerID$, m_{3}, ~m_{3}.sig\}$ $,~$  \DEFowner $\rightarrow$ \DEFserver：
+
+        會談主持者 \DEFowner 收到解封伺服器 \DEFserver 的回覆後。
+    接著使用會談主持者的私密金鑰 \DEFprivateKey，透過非對稱是加密演算法之解密函數 \DEFfuncDecSK{}，
+    將受加密保護的授權金鑰 \DEFakEnc 解密，定義為 $m_{3}$。
+
+        接著使用同一會談主持者的私密金鑰 \DEFprivateKey，透過數位簽章演算法簽之簽名函數 \DEFfuncSignSK{}，
+    將解密後的授權金鑰 $m_{3}$ 簽名，定義為 $m_{3}.sig$。
+
+        接著再向解封伺服器 \DEFserver 發出請求，
+    訊息內容為會談主持者的唯一識別碼 \DEFownerID、解密後的授權金鑰 $m_{3}$，與其簽名 $m_{3}.sig$。
 
 
+    \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFowner：
 
-    \item \DEFserver $\rightarrow$ \DEFowner：
+        解封伺服器 \DEFserver 收到會談主持者 \DEFowner 的請求後，依據會談主持者的唯一識別碼 \DEFownerID，
+    查找關聯屬於會談主持者的公開金鑰 \DEFpublicKey。
 
-    \item \DEFowner $\rightarrow$ \DEFserver：
+        接著使用會談主持者的公開金鑰 \DEFpublicKey，透過數位簽章演算法簽之驗證函數 \DEFfuncVerfPK{}，
+    驗證解密後的授權金鑰 $m_{3}$，與其簽名 $m_{3}.sig$。
 
-    \item \DEFserver $\rightarrow$ \DEFowner：
-
+        為非真，則授權失敗，會話終止。若為真，則會談主持者的授權金鑰 \DEFagentKey 其值等於$m_{3}$，
+    並且將其關聯綁定屬於會談主持者的唯一識別碼 \DEFownerID。並回覆會談主持者 \DEFowner 執行成功。
 \end{pmsgsi}
 
 
