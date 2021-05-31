@@ -379,7 +379,7 @@
 於每次會談生命週期結束後，重複執行此步驟重新選定隨機種子 \DEFseed 與產生純噪音之聲音記錄 \DEFrecN。
 
 
-\subsection{創建會談機制之協定}\label{subsec:protocol-init-create}
+\subsection{創建會談階段}\label{subsec:protocol-init-create}
 
     在會談生命週期中初始化會談階段(圖\ref{fig:m-o-init})，當會談參與者透過與會談終端的物理控制介面執行創建會談，
 會談終端獲得外部事件而觸發「\nameref{fig:protocol-init-create}」。
@@ -460,7 +460,7 @@
     \hline
 \end{tabularx}
 \captionsetup{hypcap=false}
-\captionof{figure}{創建會談機制之協定}\label{fig:protocol-init-create}
+\captionof{figure}{創建會談階段}\label{fig:protocol-init-create}
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
@@ -497,7 +497,7 @@
 \end{pmsgs}
 
 
-\subsection{註冊會談主持者機制之協定}\label{subsec:protocol-init-reg}
+\subsection{註冊會談主持者階段}\label{subsec:protocol-init-reg}
 
     於會談生命週期同一階段初始化會談中，當談終端 \DEFmeetingbox 獲得產自解封伺服器的元資料後，
 會談終端上的人機互動介面提示予所有會談主持者 \DEFownerAll，可以進行「\nameref{fig:protocol-init-reg}」。
@@ -591,7 +591,7 @@
     \hline
 \end{tabularx}
 \captionsetup{hypcap=false}
-\captionof{figure}{註冊會談主持者機制之協定}\label{fig:protocol-init-reg}
+\captionof{figure}{註冊會談主持者階段}\label{fig:protocol-init-reg}
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgsi}
@@ -630,7 +630,7 @@
 \end{pmsgsi}
 
 
-\subsection{進行會談機制之協定}\label{subsec:protocol-sessioning}
+\subsection{進行會談階段}\label{subsec:protocol-sessioning}
 
     在會談生命週期中進行會談階段(圖\ref{fig:m-o-sessioning})，
 會談參與者透過與會談終端的物理控制介面(步驟 1、3)，
@@ -732,7 +732,7 @@
     \hline
 \end{tabularx}
 \captionsetup{hypcap=false}
-\captionof{figure}{進行會談機制之協定}\label{fig:protocol-sessioning}
+\captionof{figure}{進行會談階段}\label{fig:protocol-sessioning}
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
@@ -789,7 +789,7 @@
 \end{pmsgs}
 
 
-\subsection{會談主持者授權解封伺服器機制之協定}\label{subsec:protocol-unseal-auth}
+\subsection{會談主持者授權解封伺服器階段}\label{subsec:protocol-unseal-auth}
 
     本章描述之協定為會談生命週期解封會談聲音記錄階段(圖\ref{fig:m-o-unseal})中的步驟 1，
 當會談主持者 \DEFowner 欲取得當時會談的聲音記錄，則執行此機制。
@@ -886,7 +886,7 @@
     \hline
 \end{tabularx}
 \captionsetup{hypcap=false}
-\captionof{figure}{會談主持者授權解封伺服器機制之協定}\label{fig:protocol-unseal-auth}
+\captionof{figure}{會談主持者授權解封伺服器階段}\label{fig:protocol-unseal-auth}
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgsi}
@@ -931,7 +931,7 @@
 \end{pmsgsi}
 
 
-\subsection{取得會談聲音記錄機制之協定}
+\subsection{取得會談聲音記錄階段}
 
     本章描述之協定為會談生命週期解封會談聲音記錄階段(圖\ref{fig:m-o-unseal})中的步驟 2，
 當解封伺服器 \DEFserver 獲得所有會談主持者 \DEFownerAll 的授權後，欲取得當時會談的聲音記錄，則執行此機制。
@@ -1006,7 +1006,7 @@
     \hline
 \end{tabularx}
 \captionsetup{hypcap=false}
-\captionof{figure}{取得會談聲音記錄機制之協定}\label{fig:protocol-unseal-access}
+\captionof{figure}{取得會談聲音記錄階段}\label{fig:protocol-unseal-access}
 \setstretch{1.2}\normalsize\end{center}
 
 \begin{pmsgs}
