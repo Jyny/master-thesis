@@ -80,23 +80,24 @@
 
 \section{系統架構}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{single-owner-architecture}
-    \caption{單一會談主持者情境圖}\label{fig:s-o-arch}
-\end{figure}
-
     本系統由會談終端(MeetingBox)、會談參與者(Attender)以解封伺服器(Unsealing Service Provider)所組成。
 各會談({\it Meeting Session})的會談參與者僅定義於當次會談，每次參與會談的會談參與者可為不同群體。
 會談參與者於會談終端的周圍進行會談，如圖 \ref{fig:s-o-arch}。
 會談終端於會談進行間開啟超音波麥克風干擾器，因此鄰近的麥克風或周邊的聲音記錄裝置，
 都將因受到其干擾而失效，會談參與者無法自行有效記錄會談的聲音內容。
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{single-owner-architecture}
+    \caption{單一會談主持者情境圖}\label{fig:s-o-arch}
+\end{figure}
+
     會談終端於會談進行中持續紀錄聲音，內容為受到超音波麥克風干擾器干擾的會談聲音記錄 (\DEFrecJ)。
 於會談結束後，受干擾的會談聲音記錄 (\DEFrecJ)，
 將透過系統機制「解封會談聲音記錄」({\it Unsealing Session Record})，
 使會談參與者中的會談主持者(Owner)，獲得前述機制所產生的有效會談聲音記錄 (\DEFrecREV)。
 
+\subsection{系統假設}
 
 \subsection{會談參與者}
 
