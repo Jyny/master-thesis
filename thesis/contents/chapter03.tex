@@ -97,7 +97,9 @@
 將透過系統機制「解封會談聲音記錄」({\it Unsealing Session Record})，
 使會談參與者中的會談主持者(Owner)，獲得前述機制所產生的有效會談聲音記錄 (\DEFrecREV)。
 
+
 \subsection{系統假設}
+
 
 \subsection{會談參與者}
 
@@ -111,12 +113,6 @@
 
 \subsection{會談主持者}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{multi-owner-architecture}
-    \caption{多會談主持者情境圖}\label{fig:m-o-arch}
-\end{figure}
-
     會談主持者(Owner)，屬於會談參與者(Attender)，為會談參與者的子集合，定義為會談參與者中的特權角色。
 會談主持者如未執行本研究所設計的系統機制「註冊會談主持者」 (Register Owner)，則視為一般參與者。
 於會談 ({\it Meeting Session}) 結束後，
@@ -129,6 +125,12 @@
 
     會談主持者持有智慧型裝置，且透過 App 與會談終端互動，獲取會談終端上的資訊。
 並同樣有能力於會談進行中、談結束後，與解封伺服器進行通訊。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{multi-owner-architecture}
+    \caption{多會談主持者情境圖}\label{fig:m-o-arch}
+\end{figure}
 
 
 \subsection{會談終端}
@@ -171,17 +173,17 @@
 
 \section{系統流程}\label{sec:system-flow}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{system-stage}
-    \caption{會談生命週期}\label{fig:system-stage}
-\end{figure}
-
     本研究所設計之系統，其流程跟隨會談 ({\it Meeting Session}) 的生命週期，其分為三個階段定義。分別為：
 一、「初始化會談 (Initialize Meeting Session)」；
 二、「進行會談 (Running Meeting Session)」；
 三、「解封會談聲音記錄」(Unsealing Session Record)」；
 如圖 \ref{fig:system-stage}。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{system-stage}
+    \caption{會談生命週期}\label{fig:system-stage}
+\end{figure}
 
     本章節將介召會談生命週期各階段的流程步驟。
 第一階段為會談的起始點，各階段依序執行，於第三階段結束，完成一次系統生命週期的循環。
