@@ -381,14 +381,16 @@
 
 \subsection{創建會談階段}\label{subsec:protocol-init-create}
 
-    在會談生命週期中初始化會談階段(圖\ref{fig:m-o-init})，當會談參與者透過與會談終端的物理控制介面執行創建會談，
+    在會談生命週期中的\nameref{subsec:initialize}階段(圖\ref{fig:m-o-init})，
+當會談參與者透過與會談終端的物理控制介面執行創建會談，
 會談終端獲得外部事件而觸發「\nameref{fig:protocol-init-create}」。
 
     每次會談生命週期結束後，會談終端 \DEFmeetingbox 皆會為未來新的會談生命週期重新配置產生
 純超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄 \DEFrecN，
 此時會談終端 \DEFmeetingbox 應存在純噪音之聲音記錄 \DEFrecN。
 
-    此協定為初始化會談中的步驟 2\textasciitilde3，其運作細節如圖\ref{fig:protocol-init-create}與說明：
+    此階段為\ref{subsec:initialize}\nameref{subsec:initialize}中的步驟 2\textasciitilde3，
+其運作細節如圖\ref{fig:protocol-init-create}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.8\textwidth} {
@@ -499,16 +501,19 @@
 
 \subsection{註冊會談主持者階段}\label{subsec:protocol-init-reg}
 
-    於會談生命週期同一階段初始化會談中，當談終端 \DEFmeetingbox 獲得產自解封伺服器的元資料後，
+    於會談生命週期同一階段\nameref{subsec:initialize}中，
+當談終端 \DEFmeetingbox 獲得產自解封伺服器的元資料後，
 會談終端上的人機互動介面提示予所有會談主持者 \DEFownerAll，可以進行「\nameref{fig:protocol-init-reg}」。
 
-    在此機制協定中，會談已執行完成前篇\nameref{subsec:protocol-init-create}。
+    在此階段中，會談已執行完成前篇\nameref{subsec:protocol-init-create}。
 此時會談終端 \DEFmeetingbox 應已獲得此次會談唯一識別碼 \DEFsessionID。
 解封伺服器 \DEFserver 中也應存在資料包含會談主持者註冊人數 \DEFowreg 及此次會談唯一識別碼 \DEFsessionID。
 
-    此協定需要所有的會談主持者 \DEFownerAll 執行，各會談主持者 \DEFowner 可以同時獨立執行，
+    此階段需要所有的會談主持者 \DEFownerAll 執行，各會談主持者 \DEFowner 可以同時獨立執行，
 每個會談主持者 \DEFowner 的執行結果不受其他會談主持者影響。
-此協定為初始化會談中的步驟 4\textasciitilde5，其運作細節如圖\ref{fig:protocol-init-reg}與說明：
+
+    此階段為\ref{subsec:initialize}\nameref{subsec:initialize}中的步驟 4\textasciitilde5，
+其運作細節如圖\ref{fig:protocol-init-reg}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -632,16 +637,17 @@
 
 \subsection{進行會談階段}\label{subsec:protocol-sessioning}
 
-    在會談生命週期中進行會談階段(圖\ref{fig:m-o-sessioning})，
+    在會談生命週期中的\nameref{subsec:sessioning}階段(圖\ref{fig:m-o-sessioning})，
 會談參與者透過與會談終端的物理控制介面(步驟 1、3)，
 使會談終端獲得外部事件而觸發「\nameref{fig:protocol-sessioning}」。
 
-    在此機制協定中，會談已完成會談生命週期第一階段初始化會談。
+    在此階段中，會談已完成會談生命週期第一階段\nameref{subsec:initialize}。
 此時會談終端應已獲得此次會談唯一識別碼 \DEFsessionID。
 解封伺服器 \DEFserver 中也應存在資料包含會談主持者註冊人數 \DEFowreg、
 屬於此次會談唯一識別碼的所有會談主持者唯一識別碼 \DEFownerID 與其 \DEFpublicKey。
 
-    此機制完成後系統將產生被干擾的會談聲音記錄 \DEFrecJ 與受加密保護的授權金鑰 \DEFakEnc。
+    此階段為\ref{subsec:sessioning}\nameref{subsec:sessioning}中的步驟 4\textasciitilde5，
+完成後系統將產生被干擾的會談聲音記錄 \DEFrecJ 與受加密保護的授權金鑰 \DEFakEnc。
 其運作細節如圖\ref{fig:protocol-sessioning}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
@@ -791,19 +797,21 @@
 
 \subsection{會談主持者授權解封伺服器階段}\label{subsec:protocol-unseal-auth}
 
-    本章描述之協定為會談生命週期解封會談聲音記錄階段(圖\ref{fig:m-o-unseal})中的步驟 1，
+    本章描述之協定為會談生命週期中的\nameref{subsec:unseal}階段(圖\ref{fig:m-o-unseal})中的步驟 1，
 當會談主持者 \DEFowner 欲取得當時會談的聲音記錄，則執行此機制。
 目標為使會談主持者 \DEFowner 授權解封伺服器 \DEFserver，使其有權限可以執行後續機制。
 
-    在此機制協定中，會談主持者 \DEFowner 已完成前篇機制\nameref{subsec:protocol-init-reg}。
+    在此階段中，會談主持者 \DEFowner 已完成前篇\nameref{subsec:protocol-init-reg}。
 此時會談主持者 \DEFowner 持有包含此次會談唯一識別碼 \DEFsessionID、會談主持者唯一識別碼 \DEFownerID
 與會談主持者私密金鑰 \DEFprivateKey。
 解封伺服器 \DEFserver 也應儲存有包含此次會談唯一識別碼 \DEFsessionID、會談主持者註冊人數 \DEFowreg、
 所有會談主持者的唯一識別碼 \DEFownerID、屬於此會談主持者的公開金鑰 \DEFprivateKey
 與屬於各會談主持者的受加密保護的授權金鑰 \DEFakEnc。
 
-    此協定需要所有的會談主持者 \DEFownerAll 執行，各會談主持者 \DEFowner 可以同時獨立執行，
+    此階段需要所有的會談主持者 \DEFownerAll 執行，各會談主持者 \DEFowner 可以同時獨立執行，
 每位會談主持者 \DEFowner 的執行成功後，即完成授權。
+
+    此階段為\ref{subsec:unseal}\nameref{subsec:unseal}中的步驟 1，
 其運作細節如圖\ref{fig:protocol-unseal-auth}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
@@ -933,19 +941,21 @@
 
 \subsection{取得會談聲音記錄階段}
 
-    本章描述之協定為會談生命週期解封會談聲音記錄階段(圖\ref{fig:m-o-unseal})中的步驟 2，
+    本章描述之協定為會談生命週期中的\nameref{subsec:unseal}階段(圖\ref{fig:m-o-unseal})中的步驟 2，
 當解封伺服器 \DEFserver 獲得所有會談主持者 \DEFownerAll 的授權後，欲取得當時會談的聲音記錄，則執行此機制。
 
-    在此機制協定中，會談主持者 \DEFowner 已完成前篇機制\nameref{subsec:protocol-unseal-auth}。
+    在此階段中，會談主持者 \DEFowner 已完成前篇\nameref{subsec:protocol-unseal-auth}。
 此時會談主持者 \DEFowner 應持有此次會談唯一識別碼 \DEFsessionID。
 解封伺服器 \DEFserver 也應儲存有包含此次會談唯一識別碼 \DEFsessionID、會談主持者註冊人數 \DEFowreg、
 受干擾的會談聲音記錄 \DEFrecJ、受加密保護的噪音 \DEFrecP、
 所有會談主持者的唯一識別碼 \DEFownerID、與屬於各會談主持者的授權金鑰 \DEFagentKey。
 
-    機此機制協定目標為，透過談主持者 \DEFowner 於解封伺服器 \DEFserver 的授權金鑰 \DEFagentKey，
+    此階段目標為，透過談主持者 \DEFowner 於解封伺服器 \DEFserver 的授權金鑰 \DEFagentKey，
 還原出屬於此次會談的解封金鑰 \DEFunsealKey。
 並透過接續章節所描述其他系統機制如 \ref{sec:anc} \nameref{sec:anc}，
 最終取得有效的有效的談聲音記錄 \DEFrecREV。
+
+    此階段為\ref{subsec:unseal}\nameref{subsec:unseal}中的步驟 2，
 其運作細節如圖\ref{fig:protocol-unseal-access}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
