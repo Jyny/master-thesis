@@ -381,9 +381,9 @@
 
 \subsection{創建會談階段}\label{subsec:protocol-init-create}
 
-    在會談生命週期中的\nameref{subsec:initialize}階段，
+    在會談生命週期的\nameref{subsec:initialize}中，
 當會談參與者透過與會談終端的物理控制介面執行建立會談(圖\ref{fig:m-o-init}步驟 1)，
-會談終端獲得外部事件而觸發此協定之\nameref{fig:protocol-init-create}。
+會談終端獲得外部事件而觸發執行此階段。
 
     每次會談生命週期結束後，會談終端 \DEFmeetingbox 皆會為未來新的會談生命週期重新配置產生
 純超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄 \DEFrecN，
@@ -503,7 +503,8 @@
 
     於會談生命週期同一階段\nameref{subsec:initialize}中，
 當談終端 \DEFmeetingbox 獲得產自解封伺服器的元資料後，
-會談終端上的人機互動介面提示予所有會談主持者 \DEFownerAll，可以進行「\nameref{fig:protocol-init-reg}」。
+會談終端上的人機互動介面提示予所有會談主持者 \DEFownerAll，
+可以執行本協定之 \nameref{fig:protocol-init-reg}。
 
     在此階段中，會談已執行完成前篇\nameref{subsec:protocol-init-create}。
 此時會談終端 \DEFmeetingbox 應已獲得此次會談唯一識別碼 \DEFsessionID。
@@ -637,9 +638,9 @@
 
 \subsection{進行會談階段}\label{subsec:protocol-sessioning}
 
-    在會談生命週期中的\nameref{subsec:sessioning}階段，
+    在會談生命週期的\nameref{subsec:sessioning}中，
 會談參與者透過與會談終端的物理控制介面(圖\ref{fig:m-o-sessioning} 步驟 1、3)，
-使會談終端獲得外部事件而觸發此協定之\nameref{fig:protocol-sessioning}。
+使會談終端獲得外部事件而發執行此階段。
 
     在此階段中，會談已完成會談生命週期第一階段\nameref{subsec:initialize}。
 此時會談終端應已獲得此次會談唯一識別碼 \DEFsessionID。
