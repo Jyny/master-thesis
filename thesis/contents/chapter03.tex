@@ -209,28 +209,28 @@
 \end{figure}
 
 \begin{steps}
-    \item Create Meeting Session：
+    \item 建立會談(Create Meeting Session)：
 
             會談參與者在欲進行會談會談終端 \DEFmeetingbox 的周圍準備開始會談，
-        會談參與者透過控制會談終端上的物理控制介面，使會談終端獲得外部事件，觸發 Create Meeting Session。
+        會談參與者透過控制會談終端上的物理控制介面，使會談終端獲得外部事件，觸發建立會談。
 
-    \item Initialize Meeting Session：
+    \item 初始化會談(Initialize Meeting Session)：
 
-            會談終端觸發 Create Meeting Session 後，
-        首先對解封伺服器 \DEFserver 傳送請求 Initialize Meeting Session。
+            會談終端觸發建立會談後，
+        首先對解封伺服器 \DEFserver 傳送請求初始化會談。
         會談終端透過解封伺服器的回覆獲取本次會談的元資料與加密金鑰。
 
-    \item Upload Encrypted Noise：
+    \item 上傳受加密保護的噪音(Upload Encrypted Noise)：
 
             使用加密金鑰加密預先配置存在於會談終端 \DEFmeetingbox 的純噪音之聲音記錄，
         並上傳至解封伺服器 \DEFserver。
 
-    \item Get Session URI：
+    \item 取得會談資源位置(Get Session URI)：
 
             會談主持者透過會談終端 \DEFmeetingbox 上的人機互動介面，
         取得此次會談的元資料與封伺服器的資源位置 URI (Uniform Resource Identifier)。
 
-    \item Register Owner：
+    \item 註冊會談主持者(Register Owner)：
 
             會談主持者透過取得的會談元資料與資源位置，向解封伺服器 \DEFserver 請求註冊。
         註冊成功則成為此次會談的會談主持者，並取得代表會談主持者身份的私密金鑰。
@@ -249,12 +249,12 @@
 \end{figure}
 
 \begin{steps}
-    \item Start Session：
+    \item 開始會談(Start Session)：
 
             會談參與者透過控制會談終端上的物理控制介面，
-        使會談終端 \DEFmeetingbox 獲得外部事件，觸發 Start Session。
+        使會談終端 \DEFmeetingbox 獲得外部事件，觸發開始會談。
 
-    \item End Owner Registration：
+    \item 終止會談主持者註冊(End Owner Registration)：
 
             會談終端 \DEFmeetingbox 向解封伺服器 \DEFserver 發起請求，
         通知解封伺服器，會談主持者的註冊已完成。
@@ -264,15 +264,15 @@
             因超音波麥克風干擾器的干擾，場域內的任何錄音將成為非有效之聲音記錄。
         此時會談參與者即可進行私密會談，不用擔心存在其他麥克風或聲音記錄裝置可以取得有效之聲音記錄。
 
-    \item End Session：
+    \item 結束會談(End Session)：
 
             當會談對話結束時，會談參與者即可透過會談終端 \DEFmeetingbox 的物理控制介面，
-        使會談終端獲得外部事件，觸發 End Session。
+        使會談終端獲得外部事件，觸發結束會談。
 
             會談終端此時關閉麥克風與超音波麥克風干擾器，人機互動介面同時提示系統已結束錄音。
         此階段所錄製的聲音記錄內容為音波麥克風干擾器與會談聲音內容的疊加，同為非有效之聲音記錄。
 
-    \item Upload Session Record：
+    \item 上傳會談聲音紀錄(Upload Session Record)：
 
             隨後會談終端 \DEFmeetingbox 將為受干擾的會談聲音記錄上傳至解封伺服器 \DEFserver。
         此時會談參與者即可離開會談場域，不再需要與會談終端實體接觸。
@@ -292,14 +292,14 @@
 \end{figure}
 
 \begin{steps}
-    \item Authorize Unsealing Service：
+    \item 授權解封伺服器(Authorize Unsealing Service)：
 
             在會談對話結束後，會談主持者欲取得當時會談的有效聲音紀錄，須先授權解封伺服器 \DEFserver。
 
             此時會談主持者向解封伺服器發起授權請求，
         並透過代表會談主持者身份的私密金鑰，證明會談主持者的身份與授權解封伺服器。
 
-    \item Access Session Record：
+    \item 存取會談聲音記錄(Access Session Record)：
 
             在會談主持者成功授權解封伺服器 \DEFserver 後，向解封伺服器發起請求取得有效之會談聲音記錄。
 
