@@ -317,21 +317,24 @@
     於此情境中，會談生命週期與前篇單一會談主持者 ({\it Single Owner}) 情境相似。
 其差異之處在於會談主持者數量大於二人。基於單一會談主持者情境，僅需小幅度的系統改動，即可達成多會談主持者情境。
 
+    多會談主持者 ({\it Multi Owner}) 情境中，
+會談生命週期第三個階段「解封會談聲音記錄」(Unsealing Session Record)」的系統流程。
+如圖 \ref{fig:m-o-init} 所示。
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{multi-owner-sequence-diagram-init}
     \caption{初始化會談於多會談主持者情境}\label{fig:m-o-init}
 \end{figure}
 
-    於多會談主持者 ({\it Multi Owner}) 情境中，
-會談生命週期第三個階段「解封會談聲音記錄」(Unsealing Session Record)」的系統流程。
-如圖 \ref{fig:m-o-init} 所示。
-
-    其中 Step. 1\textasciitilde3，與 \ref{subsec:initialize} \nameref{fig:s-o-init} 相同。
-
-    Step. 4\textasciitilde5，需要所有的會談主持者 \DEFownerAll 中的每一位會談主持者 \DEFowner 執行完成。
+    圖中步驟 1\textasciitilde3 與 \ref{subsec:initialize} \nameref{fig:s-o-init} 中的流程步驟相同。
+其中步驟 4\textasciitilde5 需要所有的會談主持者 \DEFownerAll 中的每一位會談主持者 \DEFowner 執行完成。
 各會談主持者 \DEFowner 可以同時獨立執行，每個會談主持者 \DEFowner 的執行結果不受其他會談主持者影響。
 待所有 \DEFowner 執行成功，即完成此階段。
+
+    於多會談主持者 ({\it Multi Owner}) 情境中，
+會談生命週期第二個階段「進行會談 (Running Meeting Session)」的系統流程。
+如圖 \ref{fig:m-o-sessioning} 所示。
 
 \begin{figure}[H]
     \centering
@@ -339,12 +342,12 @@
     \caption{進行會談於多會談主持者情境}\label{fig:m-o-sessioning}
 \end{figure}
 
-    於多會談主持者 ({\it Multi Owner}) 情境中，
-會談生命週期第二個階段「進行會談 (Running Meeting Session)」的系統流程。
-如圖 \ref{fig:m-o-sessioning} 所示。
+    圖中步驟 1\textasciitilde4 與
+\ref{subsec:sessioning} \nameref{fig:s-o-sessioning} 中的流程步驟相同。
 
-    Step. 1\textasciitilde4 流程步驟與
-\ref{subsec:sessioning} \nameref{fig:s-o-sessioning} 相同。
+    於多會談主持者 ({\it Multi Owner}) 情境中，
+會談生命週期第三個階段「解封會談聲音記錄」(Unsealing Session Record)」的系統流程。
+如圖 \ref{fig:m-o-unseal} 所示。
 
 \begin{figure}[H]
     \centering
@@ -352,17 +355,14 @@
     \caption{解封會談聲音記錄於多會談主持者情境}\label{fig:m-o-unseal}
 \end{figure}
 
-    於多會談主持者 ({\it Multi Owner}) 情境中，
-會談生命週期第三個階段「解封會談聲音記錄」(Unsealing Session Record)」的系統流程。
-如圖 \ref{fig:m-o-unseal} 所示。
+    圖中步驟 1\textasciitilde2 與 3\textasciitilde4
+分別與 \ref{subsec:unseal} \nameref{fig:s-o-unseal} 中的流程步驟相同。
 
-    Step. 1\textasciitilde4 流程步驟分別與 \ref{subsec:unseal} \nameref{fig:s-o-unseal} 相同。
-
-    其中 Step. 1\textasciitilde2 需要所有的會談主持者 \DEFownerAll 執行，
+    其中步驟 1\textasciitilde2 需要所有的會談主持者 \DEFownerAll 執行，
 各會談主持者 \DEFowner 可以同時獨立執行，待每位會談主持者 \DEFowner 執行成功後，即完成授權。
 若有任何一位會談主持者 \DEFowner 執行失敗，即授權失敗。
 
-    最後 Step. 3\textasciitilde4 為各會談主持者 \DEFowner 自行選擇執行與否，以取得此有效之會談聲音記錄。
+    最後步驟 3\textasciitilde4 為各會談主持者 \DEFowner 自行選擇執行與否，以取得此有效之會談聲音記錄。
 
 
 \section{系統機制之一：聲音記錄存取控制協定}\label{sec:protocol}
@@ -388,7 +388,7 @@
 純超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄 \DEFrecN，
 此時會談終端 \DEFmeetingbox 應存在純噪音之聲音記錄 \DEFrecN。
 
-    此協定為初始化會談中的 Step. 2\textasciitilde3，其運作細節如圖\ref{fig:protocol-init-create}與說明：
+    此協定為初始化會談中的步驟 2\textasciitilde3，其運作細節如圖\ref{fig:protocol-init-create}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.8\textwidth} {
@@ -508,7 +508,7 @@
 
     此協定需要所有的會談主持者 \DEFownerAll 執行，各會談主持者 \DEFowner 可以同時獨立執行，
 每個會談主持者 \DEFowner 的執行結果不受其他會談主持者影響。
-此協定為初始化會談中的 Step. 4\textasciitilde5，其運作細節如圖\ref{fig:protocol-init-reg}與說明：
+此協定為初始化會談中的步驟 4\textasciitilde5，其運作細節如圖\ref{fig:protocol-init-reg}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
 \begin{tabularx}{0.95\textwidth} {
@@ -633,7 +633,7 @@
 \subsection{進行會談機制之協定}\label{subsec:protocol-sessioning}
 
     在會談生命週期中進行會談階段(圖\ref{fig:m-o-sessioning})，
-會談參與者透過與會談終端的物理控制介面(Step. 1、3)，
+會談參與者透過與會談終端的物理控制介面(步驟 1、3)，
 使會談終端獲得外部事件而觸發「\nameref{fig:protocol-sessioning}」。
 
     在此機制協定中，會談已完成會談生命週期第一階段初始化會談。
@@ -791,7 +791,7 @@
 
 \subsection{會談主持者授權解封伺服器機制之協定}\label{subsec:protocol-unseal-auth}
 
-    本章描述之協定為會談生命週期解封會談聲音記錄階段(圖\ref{fig:m-o-unseal})中的 Step. 1，
+    本章描述之協定為會談生命週期解封會談聲音記錄階段(圖\ref{fig:m-o-unseal})中的步驟 1，
 當會談主持者 \DEFowner 欲取得當時會談的聲音記錄，則執行此機制。
 目標為使會談主持者 \DEFowner 授權解封伺服器 \DEFserver，使其有權限可以執行後續機制。
 
@@ -933,7 +933,7 @@
 
 \subsection{取得會談聲音記錄機制之協定}
 
-    本章描述之協定為會談生命週期解封會談聲音記錄階段(圖\ref{fig:m-o-unseal})中的 Step. 2，
+    本章描述之協定為會談生命週期解封會談聲音記錄階段(圖\ref{fig:m-o-unseal})中的步驟 2，
 當解封伺服器 \DEFserver 獲得所有會談主持者 \DEFownerAll 的授權後，欲取得當時會談的聲音記錄，則執行此機制。
 
     在此機制協定中，會談主持者 \DEFowner 已完成前篇機制\nameref{subsec:protocol-unseal-auth}。

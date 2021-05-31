@@ -233,7 +233,7 @@
 
 \newlist{steps}{enumerate}{1}
 \setlist[steps, 1]{
-    label = {\bf Step \arabic*},
+    label = {步驟 \arabic*:},
     leftmargin=\parindent+\labelwidth+\labelsep,
     align=left,
 }
