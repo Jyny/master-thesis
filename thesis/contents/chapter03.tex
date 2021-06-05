@@ -74,6 +74,7 @@
     \DEFshift         & 聲音樣本的離散時間誤差值 \\
     \DEFsamplerate    & 聲音樣本的取樣率 \\
     \DEFpause         & 聲音樣本的離散時間序列索引值 \\
+    \DEFtimeP         & 聲音樣本的離散時間長度(樣本數) \\
     \hiderowcolors
 \end{longtable}
 
@@ -1075,20 +1076,20 @@
 \DEFfuncMicConv{\DEFpause} 與 \DEFfuncMicUSJ{\DEFpause} 屬於同一麥克風且同時作用，
 因此紀錄的聲音樣本為兩者輸出的疊加，定義為 \DEFmicRecJ $=$ \DEFmicConv $+$ \DEFmicUSJ。
 且當錄音時間為 \DEFtimeREC 且取樣率為 \DEFsamplerate 時，
-定義此錄音離散時間長度為 $t$ $=$ \DEFsamplerate $\times$ \DEFtimeREC。
-因此定義 \DEFrecJ $=$ $[j_{0}, ~j_{1}, ~ ...,~ j_{t}]$。
+定義此錄音離散時間長度為 \DEFtimeP $=$ \DEFsamplerate $\times$ \DEFtimeREC。
+因此定義 \DEFrecJ $=$ $[j_{1}, ~j_{2}, ~ ...,~ j_{q}]$。
 
     用於產生純噪音聲音記錄 \DEFrecN 的麥克風，
 對於純超聲波麥克風干擾器的響應輸出系統定義為 \DEFfuncMicUSN{\DEFpause}。
 輸入 \DEFpause 為聲音於離散時間的樣本索引，代表此響應輸出系統的離散時間。
 \DEFfuncMicUSN{\DEFpause} 其輸出定義為 \DEFmicUSN ，例如：超音波麥克風干擾器產生的純噪音。
-若噪音聲音記錄 \DEFrecN 的錄音離散時間長度為 $t$，
-則定義 \DEFrecN $=$ $[n_{0}, ~n_{1}, ~ ...,~ n_{t}]$。
+若噪音聲音記錄 \DEFrecN 的錄音離散時間長度為 \DEFtimeP，
+則定義 \DEFrecN $=$ $[n_{1}, ~n_{2}, ~ ...,~ n_{q}]$。
 
     理想上，響應輸出系統 \DEFfuncMicUSN{\DEFpause} 與 \DEFfuncMicUSJ{\DEFpause} 相同，
 皆為音波麥克風干擾器於麥克風的響應輸出函數。因此理想上，我們應可以夠過
-$[$ \DEFmicConv $~|~$ \DEFmicConv $=$ \DEFmicRecJ $-$ \DEFmicUSN $,~  p=1~...t]$，
-獲得消除噪音後的有效會談聲音記錄 $[c_{0}, ~c_{1}, ~ ...,~ c_{t}]$。
+$[$ \DEFmicConv $~|~$ \DEFmicConv $=$ \DEFmicRecJ $-$ \DEFmicUSN $,~  p=1~...q]$，
+獲得消除噪音後的有效會談聲音記錄 $[c_{1}, ~c_{2}, ~ ...,~ c_{q}]$。
 但於實體場域中，可能因錄音時間、麥克風型號、距離與角度等環境因素，兩個響應系統之間存在些微差異，
 導致此無法法有效的還原產生消除噪音後的會談聲音記錄。
 
