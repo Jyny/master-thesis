@@ -1055,6 +1055,9 @@
 
     本章將說明於生命週期解封會談聲音記錄中，如何應用自適應噪音消除，以還原出有效的會談聲音記錄。
 
+
+\subsection{問題定義}\label{subsec:anc-prob-def}
+
     本研究所設計之系統中，有兩個聲音數入分別為 \DEFrecJ 與 \DEFrecN。
 其中 \DEFrecJ 是來自於開啟音波麥克風干擾器場域裡的會談聲音記錄，內容為超音波麥克風干擾器的干擾與會談聲音的疊加。
 會談聲音記錄因受到超音波麥克風干擾器的干擾，而成為非有效之聲音記錄。
@@ -1092,6 +1095,24 @@ $[$ \DEFmicConv $~|~$ \DEFmicConv $=$ \DEFmicRecJ $-$ \DEFmicUSN $,~  p=1~...q]$
 獲得消除噪音後的有效會談聲音記錄 $[c_{1}, ~c_{2}, ~ ...,~ c_{q}]$。
 但於實體場域中，可能因錄音時間、麥克風型號、距離與角度等環境因素，兩個響應系統之間存在些微差異，
 導致此無法法有效的還原產生消除噪音後的會談聲音記錄。
+
+\subsection{方法與應用}\label{subsec:anc-prob-meth}
+
+    為解決前節所描述的問題，我們透過引入兩個機制來嘗試解決。
+（一）、聲音樣本的離散時間誤差對齊；
+（二）、建立遞移函數，轉換純噪音聲音紀錄趨近於目標欲消去噪音；
+如圖 \ref{fig:anc}。
+
+    首先我們透過聲音樣本的離散時間誤差值推估函數 \DEFfuncAnc，獲得聲音樣本的離散時間誤差值 \DEFshift。
+透過消除噪音時，將輸入噪音聲音紀錄的離散時間索引值 \DEFtimeP 加上離散時間誤差值 \DEFshift，
+即可對齊修正輸入噪音聲音紀錄與欲消去噪音的離散時間誤差。
+關於聲音樣本的離散時間誤差值推估函數 \DEFfuncAnc{}
+將於次節 \ref{sec:estimate} \nameref{sec:estimate}中詳細說明。
+
+    在輸入噪音聲音記錄與目標欲消除噪音兩者對齊後，若想提升噪音消除的效果，我們希望使輸入噪音聲音趨近於目標欲消除噪音。
+因此建立一遞移函數，將轉換純噪音聲音響應輸出 \DEFmicUSN 趨近於目標欲消去噪音 \DEFmicRecJ，
+定義此遞移函數為 \DEFfuncMicUSD{\DEFpause}。換句話說，我們希望得到一 \DEFfuncMicUSD{\DEFpause}，
+使得 \DEFfuncUSDHT{\DEFpause} $\cdot$ \DEFfuncMicUSN{\DEFpause} 無限趨近於 \DEFfuncMicUSJ{\DEFpause}。
 
 
 
