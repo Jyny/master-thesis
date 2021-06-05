@@ -1087,7 +1087,7 @@
 
     理想上，響應輸出系統 \DEFfuncMicUSN{\DEFpause} 與 \DEFfuncMicUSJ{\DEFpause} 相同，
 皆為音波麥克風干擾器於麥克風的響應輸出函數。因此理想上，我們應可以夠過
-$\sum\limits_{p=0}^{t}$ \DEFfuncMicUSJ{\DEFpause} - \DEFfuncMicUSN{\DEFpause}，
+$[$ \DEFmicConv $~|~$ \DEFmicConv $=$ \DEFmicRecJ $-$ \DEFmicUSN $,~  p=1~...t]$，
 獲得消除噪音後的有效會談聲音記錄 $[c_{0}, ~c_{1}, ~ ...,~ c_{t}]$。
 但於實體場域中，可能因錄音時間、麥克風型號、距離與角度等環境因素，兩個響應系統之間存在些微差異，
 導致此無法法有效的還原產生消除噪音後的會談聲音記錄。
