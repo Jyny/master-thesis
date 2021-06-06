@@ -4,6 +4,7 @@
             "name": "xelatex",
             "tools": [
                 "xelatex-pre",
+                "bibtex",
                 "xelatex-pre",
                 "xelatex"
             ]
@@ -16,6 +17,13 @@
             "args": [
                 "-interaction=nonstopmode",
                 "-no-pdf",
+                "%DOCFILE%"
+            ],
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": [
                 "%DOCFILE%"
             ],
         },

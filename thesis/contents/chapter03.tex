@@ -1134,7 +1134,8 @@
 換句話說，我們希望得到一遞移函數 \DEFfuncAf{\DEFpause}，透過轉換純超聲波麥克風干擾器的響應輸出
 \DEFfuncAfHT{\DEFpause} $\cdot$ \DEFfuncMicUSN{\DEFpause}，使其趨近於 \DEFfuncMicUSJ{\DEFpause}。
 因此我們將此遞移函數 \DEFfuncAf{\DEFpause} 設計為一自適應濾波器，
-並且應用 Bernard Widrow 與 Marcian Hoff 等人所提出的最小均方濾波器(Least Mean Square Filter)，
+並且應用 Bernard Widrow 與 Marcian Hoff 等人所提出的最小均方濾波器(Least Mean Square Filter)
+\cite{widrow1975adaptive}，
 如圖 \ref{fig:af}。
 
 \begin{figure}[H]
