@@ -1106,7 +1106,7 @@
 （二）、建立遞移函數，轉換純噪音聲音紀錄趨近於目標欲消去噪音；
 如圖 \ref{fig:anc}。
 
-    首先我們透過聲音樣本的離散時間誤差值推估函數 \DEFfuncAnc，獲得聲音樣本的離散時間誤差值 \DEFshift。
+    首先我們透過聲音樣本的離散時間誤差值推估函數 \DEFfuncEstm{}，獲得聲音樣本的離散時間誤差值 \DEFshift。
 透過消除噪音時，將輸入噪音聲音紀錄的離散時間索引值 \DEFtimeP 加上離散時間誤差值 \DEFshift，
 即可對齊修正輸入噪音聲音紀錄與欲消去噪音的離散時間誤差。
 關於聲音樣本的離散時間誤差值推估函數 \DEFfuncAnc{}
@@ -1146,7 +1146,14 @@
 
 \section{聲音樣本的離散時間誤差推估}\label{sec:estimate}
 
-    本節將說明如何推估聲音樣本的離散時間誤差值，用於自適應噪音消除時對齊聲音樣本。
+    本節將說明如何推估聲音樣本的離散時間誤差值 \DEFshift，用於自適應噪音消除時對齊聲音樣本。
+此聲音樣本的離散時間誤差值推估函數定義為 \DEFfuncEstm{}。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{estimate-shift-power}
+    \caption{干涉抵銷後之總能量計算演算法}\label{fig:estimate-power}
+\end{figure}
 
 \begin{figure}[H]
     \centering
@@ -1154,9 +1161,4 @@
     \caption{聲音樣本之離散時間誤差推估演算法}\label{fig:estimate-shift}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{estimate-shift-power}
-    \caption{干涉抵銷後之總能量計算演算法}\label{fig:estimate-power}
-\end{figure}
 
