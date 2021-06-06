@@ -65,14 +65,27 @@
     \DEFrecREV        & 執行系統機制 {\it Unseal} 所產生之有效會談聲音記錄 \\
     \DEFtimeREC       & 會談聲音記錄 \DEFrecJ 的時間長度 \\
     \DEFtimeMAX       & 會談進行時間長度的最大值、\DEFrecN 的時間長度 \\
-    \DEFfuncAnc{·}    & 自適應噪音消除函數\\
     \DEFfuncPRNG{·}   & 偽隨機數產生器演算法函數 \\
     \DEFseed          & 用於當次會談的偽隨機數產生器種子 \\
     \DEFfuncEstm{·}   & 聲音樣本的離散時間誤差值推估函數 \\
     \DEFshift         & 聲音樣本的離散時間誤差值 \\
+    \DEFcandiSFT      & 聲音樣本的離散時間動態平移量 \\
     \DEFsamplerate    & 聲音樣本的取樣率 \\
     \DEFpause         & 聲音樣本的離散時間序列索引值 \\
     \DEFtimeLen       & 聲音樣本的離散時間長度(樣本數) \\
+    \DEFfuncAnc{·}    & 自適應噪音消除函數\\
+    \DEFmicRecREV &
+        降噪後於離散時間 \DEFpause 的單位聲音樣本 \\
+    \DEFfuncMicConv{\DEFpause}、\DEFmicConv &
+        於離散時間 \DEFpause 麥克風對於會談聲音的響應輸出系統與響應輸出 \\
+    \DEFfuncMicUSJ{\DEFpause}、\DEFmicUSJ &
+        於離散時間 \DEFpause 麥克風對於超音波干擾的響應輸出系統與響應輸出 \\
+    \DEFmicRecJ &
+        錄製 \DEFrecJ 的麥克風於超音波干擾器與會談聲音的響應輸出 \\
+    \DEFfuncMicUSN{\DEFpause}、\DEFmicUSN &
+        錄製 \DEFrecN 的麥克風對於超音波干擾的響應輸出系統與響應輸出 \\
+    \DEFfuncAf{\DEFpause}、\DEFmicUSD &
+        轉換 \DEFmicUSN 趨近於 \DEFmicUSJ 的遞移函數與其輸出 \\
     \hiderowcolors
 \end{longtable}
 
@@ -1081,7 +1094,7 @@
 因此定義 \DEFrecJ $=$ $[j_{1}, ~j_{2}, ~ ...,~ j_{L}]$。
 
     用於產生純噪音聲音記錄 \DEFrecN 的麥克風，
-對於純超聲波麥克風干擾器的響應輸出系統定義為 \DEFfuncMicUSN{\DEFpause}。
+對於純超音波麥克風干擾器的響應輸出系統定義為 \DEFfuncMicUSN{\DEFpause}。
 輸入 \DEFpause 為聲音於離散時間的樣本索引，代表此響應輸出系統的離散時間。
 \DEFfuncMicUSN{\DEFpause} 其輸出定義為 \DEFmicUSN ，例如：超音波麥克風干擾器產生的純噪音。
 若噪音聲音記錄 \DEFrecN 的錄音離散時間長度為 \DEFtimeLen，
@@ -1129,7 +1142,7 @@
 \end{tabularx}
 \end{center}
 
-    換句話說，希望得到一遞移函數 \DEFfuncAf{\DEFpause}，透過轉換純超聲波麥克風干擾器的響應輸出
+    換句話說，希望得到一遞移函數 \DEFfuncAf{\DEFpause}，透過轉換純超音波麥克風干擾器的響應輸出
 \DEFfuncAfHT{\DEFpause} $\cdot$ \DEFfuncMicUSN{\DEFpause}，使其趨近於 \DEFfuncMicUSJ{\DEFpause}。
 因此本研究所設計之系統將此遞移函數 \DEFfuncAf{\DEFpause} 設計為一自適應濾波器，
 並且應用 Bernard Widrow 與 Marcian Hoff 等人所提出的最小均方濾波器(Least Mean Square Filter)
@@ -1165,7 +1178,7 @@
 \end{figure}
 
     因此本研究提出，透過累計整個離散時間序列每個樣本相減(兩聲音干涉抵銷)後總能量差的大小，作為是否對齊的參考指標。
-當找到一動態相對平移的量 \DEFcandiSFT ，其干涉抵銷後總能量差為最小值，此時為對齊點。
+當找到一動態相對平移量 \DEFcandiSFT ，其干涉抵銷後總能量差為最小值，此時為對齊點。
 即此時的動態相對平移量 \DEFcandiSFT，即為聲音樣本的離散時間誤差值，定義為 \DEFshift。
 
     兩聲音干涉抵銷後之總能量差計算演算法如圖 \ref{fig:estimate-power} 所示，其步驟如下。
