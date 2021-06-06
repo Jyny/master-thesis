@@ -8,6 +8,9 @@
 % 02 基礎設定（Basic Settings）
 % --------------------------------------------------
 \newcommand{\var@tableofcontents}{目錄}
+\newcommand{\var@listoftables}{表目錄}
+\newcommand{\var@listoffigures}{圖目錄}
+\newcommand{\var@bibliography}{參考文獻}
 
 % --------------------------------------------------
 % 03 編譯檢查（Compile Checking）
@@ -21,18 +24,20 @@
 % 05 選項設定（Options Settings）
 % --------------------------------------------------
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{report}}
-\ProcessOptions\relax
+\ProcessOptions*\relax
 \LoadClass[a4paper, 12pt]{report}
+
 
 
 % --------------------------------------------------
 % 06 載入套件 (Include Packages)
 % --------------------------------------------------
+\RequirePackage{etex}
 \RequirePackage{xparse}
 \RequirePackage{xeCJK}
 \RequirePackage{indentfirst}
 \RequirePackage{fontspec}
-\RequirePackage{xcolor}
+\RequirePackage[table]{xcolor}
 \RequirePackage{titlesec}
 \RequirePackage{titletoc, tocloft}
 \RequirePackage{fancyhdr}
@@ -47,6 +52,7 @@
 \RequirePackage{diagbox}
 \RequirePackage{array}
 \RequirePackage{longtable}
+\RequirePackage{arydshln}
 \RequirePackage{datetime}
 \RequirePackage{CJKnumb}
 \RequirePackage{fp, calc}
@@ -57,10 +63,37 @@
 \RequirePackage[labelformat=simple]{subcaption}
 \RequirePackage{geometry}
 \RequirePackage{float}
+\RequirePackage{enumitem}
+\RequirePackage[sort&compress]{natbib}
+\RequirePackage{amsmath, amsthm, amssymb}
+\RequirePackage{ulem, CJKulem}
+\RequirePackage{lipsum}
+\RequirePackage{zhlipsum}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{algorithm2e}
+\RequirePackage{cryptocode}
+
 
 % --------------------------------------------------
 % 07 套件設定 (Package Settings)
 % --------------------------------------------------
+% [圖表目錄]
+\graphicspath{{./figures/}}
+
+% [文章排版]
+%
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+\setlength{\parskip}{10pt}
+\setlength{\parindent}{2em}
+
+% 設定行距
+% 1.2：1.5 倍行距
+% 1.6：2.0 倍行距
+\setstretch{1.2}
+
+% [字體設定]
+%
 \setmainfont{Times New Roman}[
     Path = fonts/english/,
     Extension = .ttf ,
@@ -68,7 +101,6 @@
     ItalicFont = *-Italic,
     BoldItalicFont = *-BoldItalic
 ]
-
 \setCJKmainfont{BiauKai}[
     AutoFakeBold=true,
     Path = fonts/chinese/,
@@ -77,22 +109,16 @@
 
 % [版面大小]
 %
-\RequirePackage{geometry}
-\geometry{
-  top=3cm,
-  bottom=2cm,
-  left=3cm,               % inner=3cm
-  right=3cm               % outer=3cm
-}
+\geometry{top=3cm, bottom=3cm, left=3cm, right=3cm}
 
 % [連結設定]
 %
 \hypersetup{
-  colorlinks=true,
-  linkcolor=black,
-  filecolor=gray,
-  anchorcolor=blue,
-  citecolor=blue
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=gray,
+    anchorcolor=blue,
+    citecolor=blue
 }
 
 % [目錄格式]
@@ -134,6 +160,7 @@
 % - before: 標題內容前增加文字
 % - after: 標題內容後增加文字
 %
+\titlespacing{\chapter}{0pt}{0pt}{0pt}
 \titleformat{\chapter}                      % 設置 Chapter 格式
 {\centering\Huge\bfseries}                  % 定義 format
 {第\CJKnumber{\thechapter}章}          	     % 定義 label
@@ -148,31 +175,102 @@
 \captionsetup[figure]{position=bottom,belowskip={12bp-\intextsep},aboveskip=6bp}
 \captionsetup[sub]{skip=6bp}
 
+% [列表]
+%
+\setlist*[]{
+    topsep=0pt,
+    partopsep=0pt,
+    listparindent=\parindent,
+}
+
 % --------------------------------------------------
 % 08 自訂命令（Custom Commands）
 % --------------------------------------------------
+
+% [生成目錄]
+% Generate table of contents page.
+%
 \renewcommand{\contentsname}{\centerline{\var@tableofcontents}}
+\newcommand{\maketableofcontents}{
+    \cleardoublepage
+    \pagenumbering{roman}
+    \phantomsection
+    \addcontentsline{toc}{chapter}{\var@tableofcontents}
+    \tableofcontents
+}
+
+\renewcommand{\listtablename}{\centerline{\var@listoftables}}
+\newcommand{\makelistoftables}{
+    \cleardoublepage
+    \phantomsection
+    \addcontentsline{toc}{chapter}{\var@listoftables}
+    \renewcommand{\numberline}{\tablename~\oldnumberline}
+    \listoftables
+}
+
+\let\oldnumberline\numberline
+\renewcommand{\listfigurename}{\centerline{\var@listoffigures}}
+\newcommand{\makelistoffigures}{
+    \cleardoublepage
+    \phantomsection
+    \addcontentsline{toc}{chapter}{\var@listoffigures}
+    \renewcommand{\numberline}{\figurename~\oldnumberline}
+    \listoffigures
+}
+
+% [正文開始]
+% \mainmatter
+%
+\newcommand{\mainmatter}{
+    \cleardoublepage
+    \expandafter\newgeometry\expandafter{top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm}
+    \pagenumbering{arabic}
+    \fontsize{12}{18}\selectfont
+}
+
+% [參考文獻]
+% \refmatter
+%
+\newcommand{\refmatter}{
+  \cleardoublepage
+  \phantomsection
+  \renewcommand{\bibname}{\var@bibliography}
+  \addcontentsline{toc}{chapter}{\var@bibliography}
+}
 
 % --------------------------------------------------
 % 09 自訂環境（Custom Environments）
 % --------------------------------------------------
 
+\newlist{steps}{enumerate}{1}
+\setlist[steps, 1]{
+    label = {步驟 \arabic*:},
+    leftmargin=\parindent+\labelwidth+\labelsep,
+    align=left,
+}
+
+\newlist{pmsgs}{enumerate}{1}
+\setlist[pmsgs, 1]{
+    label = {$\pmb M_{\arabic*}:$},
+    labelsep = 0em,
+    leftmargin=\parindent+\labelwidth,
+    align=left,
+}
+
+\newlist{pmsgsi}{enumerate}{1}
+\setlist[pmsgsi, 1]{
+    label = {$\pmb M_{\arabic*}^{i}:$},
+    labelsep = 0em,
+    leftmargin=\parindent+\labelwidth,
+    align=left,
+}
+
+\definecolor{whitesmoke}{rgb}{0.9, 0.9, 0.9}
+
 % --------------------------------------------------
 % 10 文檔處理（Document Processing）
 % --------------------------------------------------
 
-
-\newcommand{\mainmatter}{
-    \cleardoublepage
-    \expandafter\newgeometry\expandafter{top=3cm, bottom=2cm, left=3cm, right=3cm}
-    \pagenumbering{arabic}
-    \fontsize{12}{18}\selectfont
-    \spacing{1.5}
-}
-
-\newcommand{\maketableofcontents}{
-  \cleardoublepage
-  \phantomsection
-  \addcontentsline{toc}{chapter}{\var@tableofcontents}
-  \tableofcontents
-}
+% 套用翻譯
+\renewcommand{\figurename}{圖}
+\renewcommand{\tablename}{表}
