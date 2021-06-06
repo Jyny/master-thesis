@@ -10,6 +10,7 @@
 \newcommand{\var@tableofcontents}{目錄}
 \newcommand{\var@listoftables}{表目錄}
 \newcommand{\var@listoffigures}{圖目錄}
+\newcommand{\var@bibliography}{參考文獻}
 
 % --------------------------------------------------
 % 03 編譯檢查（Compile Checking）
@@ -225,6 +226,16 @@
     \expandafter\newgeometry\expandafter{top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm}
     \pagenumbering{arabic}
     \fontsize{12}{18}\selectfont
+}
+
+% [參考文獻]
+% \refmatter
+%
+\newcommand{\refmatter}{
+  \cleardoublepage
+  \phantomsection
+  \renewcommand{\bibname}{\var@bibliography}
+  \addcontentsline{toc}{chapter}{\var@bibliography}
 }
 
 % --------------------------------------------------

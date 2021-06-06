@@ -59,7 +59,7 @@
     \DEFfuncSSC{·}    & 金鑰分割演算法合併函數 \\
     \DEFsharesAll     & 金鑰分割函數 \DEFfuncSSS{} 所產生的 $c$ 份分割秘密 \\
     \DEFshares        & 分割秘密中，第 $i$ 個分割秘密 \\
-    \DEFrecJ          & 於開啟音波麥克風干擾器場域裡的會談聲音記錄 \\
+    \DEFrecJ          & 於開啟超音波麥克風干擾器場域裡的會談聲音記錄 \\
     \DEFrecN          & 純超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄 \\
     \DEFrecP          & 受加密保護的聲音記錄 \DEFrecN \\
     \DEFrecREV        & 執行系統機制 {\it Unseal} 所產生之有效會談聲音記錄 \\
@@ -72,6 +72,7 @@
     \DEFshift         & 聲音樣本的離散時間誤差值 \\
     \DEFsamplerate    & 聲音樣本的取樣率 \\
     \DEFpause         & 聲音樣本的離散時間序列索引值 \\
+    \DEFtimeP         & 聲音樣本的離散時間長度(樣本數) \\
     \hiderowcolors
 \end{longtable}
 
@@ -1050,13 +1051,97 @@
 
 \section{自適應噪音消除}\label{sec:anc}
 
-    本節將說明於生命週期解封會談聲音記錄中，如何應用自適應噪音消除，以還原出有效的會談聲音記錄。
+    本章將說明於生命週期解封會談聲音記錄中，如何應用自適應噪音消除，以還原出有效的會談聲音記錄。
+
+
+\subsection{問題定義}\label{subsec:anc-prob-def}
+
+    本研究所設計之系統中，有兩個聲音數入分別為 \DEFrecJ 與 \DEFrecN。
+其中 \DEFrecJ 是來自於開啟音波麥克風干擾器場域裡的會談聲音記錄，內容為超音波麥克風干擾器的干擾與會談聲音的疊加。
+會談聲音記錄因受到超音波麥克風干擾器的干擾，而成為非有效之聲音記錄。
+\DEFrecN 為純超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄，如圖 \ref{fig:anc}。
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{anc}
     \caption{自適應噪音消除}\label{fig:anc}
 \end{figure}
+
+    受干擾的會談紀錄聲音 \DEFrecJ 由一麥克風錄製產生，此麥克風含兩個響應輸出系統，
+分別定義為 \DEFfuncMicConv{\DEFpause} 與 \DEFfuncMicUSJ{\DEFpause}。
+輸入 \DEFpause 為聲音於離散時間的樣本索引，用於表示響應輸出系統所在的離散時間。
+\DEFfuncMicConv{\DEFpause} 為會談內容於麥克風的響應輸出函數，
+其輸出定義為 \DEFmicConv，例如：會談參與者的對話聲音紀錄。
+\DEFfuncMicUSJ{\DEFpause} 為純超音波麥克風干擾器於麥克風的響應輸出函數，
+其輸出定義為 \DEFmicUSJ，例如：超音波麥克風干擾器產生的純噪音。
+\DEFfuncMicConv{\DEFpause} 與 \DEFfuncMicUSJ{\DEFpause} 屬於同一麥克風且同時作用，
+因此紀錄的聲音樣本為兩者輸出的疊加，定義為 \DEFmicRecJ $=$ \DEFmicConv $+$ \DEFmicUSJ。
+且當錄音時間為 \DEFtimeREC 且取樣率為 \DEFsamplerate 時，
+定義此錄音離散時間長度為 \DEFtimeP $=$ \DEFsamplerate $\times$ \DEFtimeREC。
+因此定義 \DEFrecJ $=$ $[j_{1}, ~j_{2}, ~ ...,~ $\DEFmicRecJ$]$。
+
+    用於產生純噪音聲音記錄 \DEFrecN 的麥克風，
+對於純超聲波麥克風干擾器的響應輸出系統定義為 \DEFfuncMicUSN{\DEFpause}。
+輸入 \DEFpause 為聲音於離散時間的樣本索引，代表此響應輸出系統的離散時間。
+\DEFfuncMicUSN{\DEFpause} 其輸出定義為 \DEFmicUSN ，例如：超音波麥克風干擾器產生的純噪音。
+若噪音聲音記錄 \DEFrecN 的錄音離散時間長度為 \DEFtimeP，
+則定義 \DEFrecN $=$ $[n_{1}, ~n_{2}, ~ ...,~ $\DEFmicUSN$]$。
+
+    理想上，響應輸出系統 \DEFfuncMicUSN{\DEFpause} 與 \DEFfuncMicUSJ{\DEFpause} 相同，
+皆為超音波麥克風干擾器於麥克風的響應輸出函數。
+因此理想上，因為 \DEFmicRecJ $=$ \DEFmicConv $+$ \DEFmicUSJ，若 \DEFmicUSJ 與 \DEFmicUSN 相等。
+我們應可以將 \DEFmicRecJ 減去 \DEFmicUSN 產生消除噪音後的樣本定義為 \DEFmicRecREV，且應等於 \DEFmicConv。
+進而獲得消除噪音後的有效會談聲音記錄 $[r_{1}, ~r_{2}, ~ ...,~ $\DEFmicRecREV$]$，
+定義為 $[$ \DEFmicRecREV $~|~$ \DEFmicRecREV $=$ \DEFmicRecJ $-$ \DEFmicUSN $,~  p=1~...q]$。
+
+    但於實體場域中，可能因錄音時間、麥克風型號、距離與角度等環境因素，
+兩個響應輸出系統 \DEFfuncMicUSN{\DEFpause} 與 \DEFfuncMicUSJ{\DEFpause} 之間存在差異。
+根據實驗環境不同，\DEFmicRecREV 與 \DEFmicConv 可能相去甚遠，
+導致此無法有效的還原產生消除噪音後的會談聲音記錄。
+
+\subsection{方法與應用}\label{subsec:anc-prob-meth}
+
+    為解決前節所描述的問題，我們透過引入兩個機制來嘗試解決。
+（一）、聲音樣本的離散時間誤差對齊；
+（二）、建立遞移函數，轉換純噪音聲音紀錄趨近於目標欲消去噪音；
+如圖 \ref{fig:anc}。
+
+    首先我們透過聲音樣本的離散時間誤差值推估函數 \DEFfuncAnc，獲得聲音樣本的離散時間誤差值 \DEFshift。
+透過消除噪音時，將輸入噪音聲音紀錄的離散時間索引值 \DEFtimeP 加上離散時間誤差值 \DEFshift，
+即可對齊修正輸入噪音聲音紀錄與欲消去噪音的離散時間誤差。
+關於聲音樣本的離散時間誤差值推估函數 \DEFfuncAnc{}
+將於次節 \ref{sec:estimate} \nameref{sec:estimate}中詳細說明。
+
+    在輸入噪音聲音記錄與目標欲消除噪音兩者於離散時間數列對齊後，
+若想有效提升噪音消除的效果，我們希望使輸入噪音聲音趨近於目標欲消除噪音。
+因此建立一遞移函數 \DEFfuncAf{\DEFpause}，將純噪音聲音響應輸出 \DEFmicUSN 轉換為 \DEFmicUSD。
+並且重新定義產生消除噪音後的樣本 \DEFmicRecREV 為 \DEFmicRecJ 減去 \DEFmicUSD。
+綜上所述可以推導出，當轉換後的純噪音聲音響應輸出 \DEFmicUSD 與 \DEFmicUSJ 的差異越小時，
+\DEFmicRecREV 與 \DEFmicConv 的差異也越小，即噪音消除的效果越好。
+
+\begin{center}
+\begin{tabularx}{0.55\textwidth} {>{\raggedright\arraybackslash}X}
+    \DEFmicRecJ $~=~$ \DEFmicConv $~+~$ \DEFmicUSJ \\
+    \DEFmicRecREV $~=~$ \DEFmicRecJ $~-~$ \DEFmicUSD $~=~$
+    \DEFmicConv $~+~$ \DEFmicUSJ $~-~$ \DEFmicUSD \\
+    \DEFmicRecREV $~-~$ \DEFmicConv $~=~$ \DEFmicUSJ $~-~$ \DEFmicUSD \\
+    $Min($\DEFmicRecREV $~-~$ \DEFmicConv $)~=~Min($ \DEFmicUSJ $~-~$ \DEFmicUSD $)$ \\
+\end{tabularx}
+\end{center}
+
+換句話說，我們希望得到一遞移函數 \DEFfuncAf{\DEFpause}，透過轉換純超聲波麥克風干擾器的響應輸出
+\DEFfuncAfHT{\DEFpause} $\cdot$ \DEFfuncMicUSN{\DEFpause}，使其趨近於 \DEFfuncMicUSJ{\DEFpause}。
+因此我們將此遞移函數 \DEFfuncAf{\DEFpause} 設計為一自適應濾波器，
+並且應用 Bernard Widrow 與 Marcian Hoff 等人所提出的最小均方濾波器(Least Mean Square Filter)
+\cite{widrow1975adaptive}，
+如圖 \ref{fig:af}。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{af}
+    \caption{自適應濾波器}\label{fig:af}
+\end{figure}
+
 
 
 \section{聲音樣本的離散時間誤差推估}\label{sec:estimate}
