@@ -1131,11 +1131,15 @@
 \end{tabularx}
 \end{center}
 
-換句話說，我們希望得到一響應輸出系統 \DEFfuncAf{\DEFpause}，
-與純超聲波麥克風干擾器的響應輸出系統串連定義為 \DEFfuncAfHT{\DEFpause} $\cdot$ \DEFfuncMicUSN{\DEFpause}，
-因而無限趨近於 \DEFfuncMicUSJ{\DEFpause}。
+換句話說，我們希望得到一遞移函數 \DEFfuncAf{\DEFpause}，透過轉換純超聲波麥克風干擾器的響應輸出
+\DEFfuncAfHT{\DEFpause} $\cdot$ \DEFfuncMicUSN{\DEFpause}，
+使其趨近於 \DEFfuncMicUSJ{\DEFpause}。
 
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{af}
+    \caption{自適應濾波器}\label{fig:af}
+\end{figure}
 
 
 
