@@ -72,7 +72,7 @@
     \DEFshift         & 聲音樣本的離散時間誤差值 \\
     \DEFsamplerate    & 聲音樣本的取樣率 \\
     \DEFpause         & 聲音樣本的離散時間序列索引值 \\
-    \DEFtimeP         & 聲音樣本的離散時間長度(樣本數) \\
+    \DEFtimeLen       & 聲音樣本的離散時間長度(樣本數) \\
     \hiderowcolors
 \end{longtable}
 
@@ -1077,22 +1077,22 @@
 \DEFfuncMicConv{\DEFpause} 與 \DEFfuncMicUSJ{\DEFpause} 屬於同一麥克風且同時作用，
 因此紀錄的聲音樣本為兩者輸出的疊加，定義為 \DEFmicRecJ $=$ \DEFmicConv $+$ \DEFmicUSJ。
 且當錄音時間為 \DEFtimeREC 且取樣率為 \DEFsamplerate 時，
-定義此錄音離散時間長度為 \DEFtimeP $=$ \DEFsamplerate $\times$ \DEFtimeREC。
-因此定義 \DEFrecJ $=$ $[j_{1}, ~j_{2}, ~ ...,~ $\DEFmicRecJ$]$。
+定義此錄音離散時間長度為 \DEFtimeLen $=$ \DEFsamplerate $\times$ \DEFtimeREC。
+因此定義 \DEFrecJ $=$ $[j_{1}, ~j_{2}, ~ ...,~ j_{L}]$。
 
     用於產生純噪音聲音記錄 \DEFrecN 的麥克風，
 對於純超聲波麥克風干擾器的響應輸出系統定義為 \DEFfuncMicUSN{\DEFpause}。
 輸入 \DEFpause 為聲音於離散時間的樣本索引，代表此響應輸出系統的離散時間。
 \DEFfuncMicUSN{\DEFpause} 其輸出定義為 \DEFmicUSN ，例如：超音波麥克風干擾器產生的純噪音。
-若噪音聲音記錄 \DEFrecN 的錄音離散時間長度為 \DEFtimeP，
-則定義 \DEFrecN $=$ $[n_{1}, ~n_{2}, ~ ...,~ $\DEFmicUSN$]$。
+若噪音聲音記錄 \DEFrecN 的錄音離散時間長度為 \DEFtimeLen，
+則定義 \DEFrecN $=$ $[n_{1}, ~n_{2}, ~ ...,~ n_{L}]$。
 
     理想上，響應輸出系統 \DEFfuncMicUSN{\DEFpause} 與 \DEFfuncMicUSJ{\DEFpause} 相同，
 皆為超音波麥克風干擾器於麥克風的響應輸出函數。
 因此理想上，因為 \DEFmicRecJ $=$ \DEFmicConv $+$ \DEFmicUSJ，若 \DEFmicUSJ 與 \DEFmicUSN 相等。
-我們應可以將 \DEFmicRecJ 減去 \DEFmicUSN 產生消除噪音後的樣本定義為 \DEFmicRecREV，且應等於 \DEFmicConv。
-進而獲得消除噪音後的有效會談聲音記錄 $[r_{1}, ~r_{2}, ~ ...,~ $\DEFmicRecREV$]$，
-定義為 $[$ \DEFmicRecREV $~|~$ \DEFmicRecREV $=$ \DEFmicRecJ $-$ \DEFmicUSN $,~  p=1~...q]$。
+應可以將 \DEFmicRecJ 減去 \DEFmicUSN 產生消除噪音後的樣本定義為 \DEFmicRecREV，且應等於 \DEFmicConv。
+進而獲得消除噪音後的有效會談聲音記錄 $[r_{1}, ~r_{2}, ~ ...,~ r_L]$，
+定義為 $[$ \DEFmicRecREV $~|~$ \DEFmicRecREV $=$ \DEFmicRecJ $-$ \DEFmicUSN $,~  p=1~...L]$。
 
     但於實體場域中，可能因錄音時間、麥克風型號、距離與角度等環境因素，
 兩個響應輸出系統 \DEFfuncMicUSN{\DEFpause} 與 \DEFfuncMicUSJ{\DEFpause} 之間存在差異。
@@ -1101,19 +1101,19 @@
 
 \subsection{方法與應用}\label{subsec:anc-prob-meth}
 
-    為解決前節所描述的問題，我們透過引入兩個機制來嘗試解決。
+    為解決前節所描述的問題，透過引入兩個機制來嘗試解決。
 （一）、聲音樣本的離散時間誤差對齊；
 （二）、建立遞移函數，轉換純噪音聲音紀錄趨近於目標欲消去噪音；
 如圖 \ref{fig:anc}。
 
-    首先我們透過聲音樣本的離散時間誤差值推估函數 \DEFfuncAnc，獲得聲音樣本的離散時間誤差值 \DEFshift。
-透過消除噪音時，將輸入噪音聲音紀錄的離散時間索引值 \DEFtimeP 加上離散時間誤差值 \DEFshift，
+    首先透過聲音樣本的離散時間誤差值推估函數 \DEFfuncEstm{}，獲得聲音樣本的離散時間誤差值 \DEFshift。
+透過消除噪音時，將輸入噪音聲音紀錄的離散時間索引值 \DEFtimeLen 加上離散時間誤差值 \DEFshift，
 即可對齊修正輸入噪音聲音紀錄與欲消去噪音的離散時間誤差。
 關於聲音樣本的離散時間誤差值推估函數 \DEFfuncAnc{}
 將於次節 \ref{sec:estimate} \nameref{sec:estimate}中詳細說明。
 
     在輸入噪音聲音記錄與目標欲消除噪音兩者於離散時間數列對齊後，
-若想有效提升噪音消除的效果，我們希望使輸入噪音聲音趨近於目標欲消除噪音。
+若想有效提升噪音消除的效果，需使輸入噪音聲音趨近於目標欲消除噪音。
 因此建立一遞移函數 \DEFfuncAf{\DEFpause}，將純噪音聲音響應輸出 \DEFmicUSN 轉換為 \DEFmicUSD。
 並且重新定義產生消除噪音後的樣本 \DEFmicRecREV 為 \DEFmicRecJ 減去 \DEFmicUSD。
 綜上所述可以推導出，當轉換後的純噪音聲音響應輸出 \DEFmicUSD 與 \DEFmicUSJ 的差異越小時，
@@ -1129,9 +1129,9 @@
 \end{tabularx}
 \end{center}
 
-換句話說，我們希望得到一遞移函數 \DEFfuncAf{\DEFpause}，透過轉換純超聲波麥克風干擾器的響應輸出
+    換句話說，希望得到一遞移函數 \DEFfuncAf{\DEFpause}，透過轉換純超聲波麥克風干擾器的響應輸出
 \DEFfuncAfHT{\DEFpause} $\cdot$ \DEFfuncMicUSN{\DEFpause}，使其趨近於 \DEFfuncMicUSJ{\DEFpause}。
-因此我們將此遞移函數 \DEFfuncAf{\DEFpause} 設計為一自適應濾波器，
+因此本研究所設計之系統將此遞移函數 \DEFfuncAf{\DEFpause} 設計為一自適應濾波器，
 並且應用 Bernard Widrow 與 Marcian Hoff 等人所提出的最小均方濾波器(Least Mean Square Filter)
 \cite{widrow1975adaptive}，
 如圖 \ref{fig:af}。
@@ -1143,10 +1143,63 @@
 \end{figure}
 
 
-
 \section{聲音樣本的離散時間誤差推估}\label{sec:estimate}
 
-    本節將說明如何推估聲音樣本的離散時間誤差值，用於自適應噪音消除時對齊聲音樣本。
+    本章節將說明聲音樣本的離散時間誤差值推估函 \DEFfuncEstm{}
+如何推估聲音樣本的離散時間誤差值 \DEFshift，用於自適應噪音消除時對齊聲音樣本。
+
+    在前章節中提到，本研究消於除噪音時為了提升噪音消除的成效，
+透過將輸入噪音聲音紀錄 \DEFrecN 的離散時間索引值 \DEFtimeLen 加上離散時間誤差值 \DEFshift，
+來對齊修正噪音聲音紀錄 \DEFrecN 與欲消去噪音聲音紀錄 \DEFrecJ 的離散時間誤差。
+已知純噪音聲音紀錄 \DEFrecN 與欲消去噪音聲音紀錄 \DEFrecJ 的取樣率 \DEFsamplerate 相同，
+因此可以透過動態相對平移兩個離散時間序列來評估是否對齊，平移的量定義為 \DEFcandiSFT。
+
+    已知由於純噪音聲音紀錄 \DEFrecN 與受干擾的會談聲音紀錄 \DEFrecJ 中的欲消去噪音，在時域上有著高度關聯性，
+如圖 \ref{fig:estimate-sub} 所示。在已對齊的受干擾的聲音與純噪音，於時域上的波形表現高度相似。
+且在整個離散時間序列每個樣本相減的結果(兩聲音干涉抵銷)，可見能量大幅度衰減。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{sub}
+    \caption{受干擾的聲音(上)與純噪音(中)干涉抵銷結果(下)}\label{fig:estimate-sub}
+\end{figure}
+
+    因此本研究提出，透過累計整個離散時間序列每個樣本相減(兩聲音干涉抵銷)後總能量差的大小，作為是否對齊的參考指標。
+當找到一動態相對平移的量 \DEFcandiSFT ，其干涉抵銷後總能量差為最小值，此時為對齊點。
+即此時的動態相對平移量 \DEFcandiSFT，即為聲音樣本的離散時間誤差值，定義為 \DEFshift。
+
+    兩聲音干涉抵銷後之總能量差計算演算法如圖 \ref{fig:estimate-power} 所示，其步驟如下。
+首先使聲音樣本的離散時間序列索引值 \DEFpause 從零開始，逐步迭代。
+在每次迭代中，將受干擾的會談聲音紀錄 \DEFrecJ 中第 \DEFpause  個樣本，
+與純噪音聲音紀錄 \DEFrecN 中第 \DEFpause $+$ \DEFcandiSFT 個樣本相減，
+得到第 \DEFpause 個樣本下能量差。\DEFpause 於每一次迭代逐步遞增，並累計能量差的絕對值，
+至純噪音聲音紀錄 \DEFrecN 或受干擾的會談聲音紀錄 \DEFrecJ 的長度 \DEFtimeLen 停止。
+最終得到特定動態相對平移量 \DEFcandiSFT 之下的累計能量差。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{estimate-shift-power}
+    \caption{干涉抵銷後之總能量差計算演算法}\label{fig:estimate-power}
+\end{figure}
+
+    透過前述\nameref{fig:estimate-power}，
+可以計算出在特定動態相對平移量 \DEFcandiSFT 之下的累計能量差，
+理想上透過歷遍所有可能的 \DEFcandiSFT，即可以找出最小的累計能量差，因而得知聲音樣本的離散時間誤差值 \DEFshift。
+但若分析歷遍所有可能 \DEFcandiSFT 累計能量差的時間複雜度，會發現歷遍所有可能是沒有效率的。
+分析如下：定義 $n$ 的值為離散時間序列長度 \DEFtimeLen。
+計算一次特定 \DEFcandiSFT 的累計能量差，需要迭代 \DEFtimeLen 次。
+又所有可能的 \DEFcandiSFT 為 $0 ~\leq$ \DEFcandiSFT $~\leq$ \DEFtimeLen。
+因此當 $n$ 的值為離散時間序列長度 \DEFtimeLen 時，其時間複雜度為 $O(n^2)$。
+又離散時間長度定義為 \DEFtimeLen $=$ \DEFsamplerate $\times$ \DEFtimeREC，
+因此歷遍所有可能 \DEFcandiSFT 的累計能量差其時間複雜度，錄音時間長度 \DEFtimeREC 每增加一秒，
+所需時間膨脹增加取樣率 \DEFsamplerate 的平方。即若取樣率 \DEFsamplerate $= 44100$，
+錄音時間長度 \DEFtimeREC 每增加一秒，所需要的時間膨脹增加 $44100^2$。
+故得知，透過歷遍所有可能的動態相對平移量 \DEFcandiSFT 來找出最小的累計能量差，
+其時間複雜度會在錄音時間長度上，以秒為單位快速膨脹。
+
+    為解決前述析歷遍所有可能 \DEFcandiSFT 的累計能量差效率低落的問題，
+本研究提出\nameref{fig:estimate-shift}，如圖\ref{fig:estimate-shift}，
+其中干涉抵銷後之總能量差(Evaluation power after interference)為前述演算法\ref{fig:estimate-power}。
 
 \begin{figure}[H]
     \centering
@@ -1154,9 +1207,12 @@
     \caption{聲音樣本之離散時間誤差推估演算法}\label{fig:estimate-shift}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.95\textwidth]{estimate-shift-power}
-    \caption{干涉抵銷後之總能量計算演算法}\label{fig:estimate-power}
-\end{figure}
-
+    基於前述歷遍所有可能 \DEFcandiSFT 的方法，本研究在此於每次迭代中，引入動態估計樣本標準差與平均數。
+並且於每次找到新的最小累計能量差時，將樣本標準差賦值為$0$，平均數賦值為此最小累計能量差。
+如此在迭代的過程中，目前已知的最小累計能量差會不斷下降，平均數會在最小累計能量差與理論整體平均之間震盪，
+樣本標準差則會在$0$與母體標準差之間震盪。
+迭代的過程中會持續紀錄目前最小累計能量差，與計算出新的最小累計能量差時的動態相對平移量 \DEFcandiSFT。
+若很長的時間都未找到新的最小累計能量差時，此時平均數會逐漸趨近理論整體平均，樣本標準差也逐漸趨近母體標準差。
+此時則定義，若目前最小累計能量差與平均數相差超過 $7$ 樣本標準差，則演算法終止。
+並且認定目前最小累計能量差，為全域最小累計能量差。而計算出目前最小累計能量差時的動態相對平移量 \DEFcandiSFT，
+則為認定聲音樣本的離散時間誤差 \DEFshift，即完成此推估演算法。
