@@ -1155,12 +1155,8 @@
 因此可以透過動態相對平移兩個離散時間序列來評估是否對齊，平移的量定義為 \DEFcandiSFT。
 
     已知由於純噪音聲音紀錄 \DEFrecN 與受干擾的會談聲音紀錄 \DEFrecJ 中的欲消去噪音，在時域上有著高度關聯性，
-如圖 \ref{fig:estimate-sub} 所示。在已對齊的受干擾的聲音(上)與純噪音(中)，於時域上的波形表現高度相似。
-且在整個離散時間序列每個樣本相減的結果(兩聲音干涉抵銷)，可見能量大幅度衰減(下)。
-
-    因此本研究提出，透過累計整個離散時間序列每個樣本相減(兩聲音干涉抵銷)後總能量差的大小，作為是否對齊的參考指標。
-當找到一動態相對平移的量 \DEFcandiSFT ，其干涉抵銷後總能量差為最小值，此時為對齊點。
-即此時的動態相對平移的量 \DEFcandiSFT，即為聲音樣本的離散時間誤差值，定義為 \DEFshift。
+如圖 \ref{fig:estimate-sub} 所示。在已對齊的受干擾的聲音與純噪音，於時域上的波形表現高度相似。
+且在整個離散時間序列每個樣本相減的結果(兩聲音干涉抵銷)，可見能量大幅度衰減。
 
 \begin{figure}[H]
     \centering
@@ -1168,13 +1164,17 @@
     \caption{受干擾的聲音(上)與純噪音(中)干涉抵銷結果(下)}\label{fig:estimate-sub}
 \end{figure}
 
+    因此本研究提出，透過累計整個離散時間序列每個樣本相減(兩聲音干涉抵銷)後總能量差的大小，作為是否對齊的參考指標。
+當找到一動態相對平移的量 \DEFcandiSFT ，其干涉抵銷後總能量差為最小值，此時為對齊點。
+即此時的動態相對平移量 \DEFcandiSFT，即為聲音樣本的離散時間誤差值，定義為 \DEFshift。
+
     兩聲音干涉抵銷後之總能量差計算演算法如圖 \ref{fig:estimate-power} 所示，其步驟如下。
 首先使聲音樣本的離散時間序列索引值 \DEFpause 從零開始，逐步迭代。
 在每次迭代中，將受干擾的會談聲音紀錄 \DEFrecJ 中第 \DEFpause  個樣本，
 與純噪音聲音紀錄 \DEFrecN 中第 \DEFpause $+$ \DEFcandiSFT 個樣本相減，
 得到第 \DEFpause 個樣本下能量差。\DEFpause 於每一次迭代逐步遞增，並累計能量差的絕對值，
 至純噪音聲音紀錄 \DEFrecN 或受干擾的會談聲音紀錄 \DEFrecJ 的長度 \DEFtimeLen 停止。
-最終得到特定動態相對平移的量 \DEFcandiSFT 之下的累計能量差。
+最終得到特定動態相對平移量 \DEFcandiSFT 之下的累計能量差。
 
 \begin{figure}[H]
     \centering
@@ -1183,17 +1183,23 @@
 \end{figure}
 
     透過前述\nameref{fig:estimate-power}，
-我們可以得知在在特定動態相對平移的量 \DEFcandiSFT 之下的累計能量差，
-理想上透過歷遍所有可能的 \DEFcandiSFT，即可以找出最小的累計能量差，因而找到聲音樣本的離散時間誤差值 \DEFshift。
-但若分析歷遍所有可能 \DEFcandiSFT 的累計能量差的時間複雜度，會發現歷遍所有可能是沒有效率的。
-推導如下。定義 $n$ 的值為離散時間序列長度 \DEFtimeLen。
+可以計算出在特定動態相對平移量 \DEFcandiSFT 之下的累計能量差，
+理想上透過歷遍所有可能的 \DEFcandiSFT，即可以找出最小的累計能量差，因而得知聲音樣本的離散時間誤差值 \DEFshift。
+但若分析歷遍所有可能 \DEFcandiSFT 累計能量差的時間複雜度，會發現歷遍所有可能是沒有效率的。
+分析如下：定義 $n$ 的值為離散時間序列長度 \DEFtimeLen。
 計算一次特定 \DEFcandiSFT 的累計能量差，需要迭代 \DEFtimeLen 次。
 又所有可能的 \DEFcandiSFT 為 $0 ~\leq$ \DEFcandiSFT $~\leq$ \DEFtimeLen。
 因此當 $n$ 的值為離散時間序列長度 \DEFtimeLen 時，其時間複雜度為 $O(n^2)$。
 又離散時間長度定義為 \DEFtimeLen $=$ \DEFsamplerate $\times$ \DEFtimeREC，
-因此歷遍所有可能 \DEFcandiSFT 的累計能量差其時間複雜度，每增加一秒，
+因此歷遍所有可能 \DEFcandiSFT 的累計能量差其時間複雜度，錄音時間長度 \DEFtimeREC 每增加一秒，
 所需時間膨脹增加取樣率 \DEFsamplerate 的平方。即若取樣率 \DEFsamplerate $= 44100$，
 錄音時間長度 \DEFtimeREC 每增加一秒，所需要的時間膨脹增加 $44100^2$。
+故得知，透過歷遍所有可能的動態相對平移量 \DEFcandiSFT 來找出最小的累計能量差，
+其時間複雜度會在錄音時間長度上，以秒為單位快速膨脹。
+
+    為解決前述析歷遍所有可能 \DEFcandiSFT 的累計能量差效率低落的問題，
+本研究提出\nameref{fig:estimate-shift}，如圖\ref{fig:estimate-shift}，
+其中干涉抵銷後之總能量差(Evaluation power after interference)為前述演算法\ref{fig:estimate-power}。
 
 \begin{figure}[H]
     \centering
@@ -1201,4 +1207,12 @@
     \caption{聲音樣本之離散時間誤差推估演算法}\label{fig:estimate-shift}
 \end{figure}
 
-
+    基於前述歷遍所有可能 \DEFcandiSFT 的方法，本研究在此於每次迭代中，引入動態估計樣本標準差與平均數。
+並且於每次找到新的最小累計能量差時，將樣本標準差賦值為$0$，平均數賦值為此最小累計能量差。
+如此在迭代的過程中，目前已知的最小累計能量差會不斷下降，平均數會在最小累計能量差與理論整體平均之間震盪，
+樣本標準差則會在$0$與母體標準差之間震盪。
+迭代的過程中會持續紀錄目前最小累計能量差，與計算出新的最小累計能量差時的動態相對平移量 \DEFcandiSFT。
+若很長的時間都未找到新的最小累計能量差時，此時平均數會逐漸趨近理論整體平均，樣本標準差也逐漸趨近母體標準差。
+此時則定義，若目前最小累計能量差與平均數相差超過 $7$ 樣本標準差，則演算法終止。
+並且認定目前最小累計能量差，為全域最小累計能量差。而計算出目前最小累計能量差時的動態相對平移量 \DEFcandiSFT，
+則為認定聲音樣本的離散時間誤差 \DEFshift，即完成此推估演算法。
