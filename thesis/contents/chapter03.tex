@@ -1071,7 +1071,7 @@
 
     受干擾的會談紀錄聲音 \DEFrecJ 由一麥克風錄製產生，此麥克風含兩個響應輸出系統，
 分別定義為 \DEFfuncMicConv{\DEFpause} 與 \DEFfuncMicUSJ{\DEFpause}。
-輸入 \DEFpause 為聲音於離散時間的樣本索引，用於代表此二響應輸出系統的離散時間。
+輸入 \DEFpause 為聲音於離散時間的樣本索引，用於表示響應輸出系統所在的離散時間。
 \DEFfuncMicConv{\DEFpause} 為會談內容於麥克風的響應輸出函數，
 其輸出定義為 \DEFmicConv，例如：會談參與者的對話聲音紀錄。
 \DEFfuncMicUSJ{\DEFpause} 為純超音波麥克風干擾器於麥克風的響應輸出函數，
@@ -1118,8 +1118,8 @@
 若想有效提升噪音消除的效果，我們希望使輸入噪音聲音趨近於目標欲消除噪音。
 因此建立一遞移函數 \DEFfuncAf{\DEFpause}，將純噪音聲音響應輸出 \DEFmicUSN 轉換為 \DEFmicUSD。
 並且重新定義產生消除噪音後的樣本 \DEFmicRecREV 為 \DEFmicRecJ 減去 \DEFmicUSD。
-求得結論，當轉換後的純噪音聲音響應輸出 \DEFmicUSD 與 \DEFmicUSJ 的差異越小時，
-\DEFmicRecREV 與 \DEFmicConv 的差異也越小。
+綜上所述可以推導出，當轉換後的純噪音聲音響應輸出 \DEFmicUSD 與 \DEFmicUSJ 的差異越小時，
+\DEFmicRecREV 與 \DEFmicConv 的差異也越小，即噪音消除的效果越好。
 
 \begin{center}
 \begin{tabularx}{0.55\textwidth} {>{\raggedright\arraybackslash}X}
@@ -1132,8 +1132,10 @@
 \end{center}
 
 換句話說，我們希望得到一遞移函數 \DEFfuncAf{\DEFpause}，透過轉換純超聲波麥克風干擾器的響應輸出
-\DEFfuncAfHT{\DEFpause} $\cdot$ \DEFfuncMicUSN{\DEFpause}，
-使其趨近於 \DEFfuncMicUSJ{\DEFpause}。
+\DEFfuncAfHT{\DEFpause} $\cdot$ \DEFfuncMicUSN{\DEFpause}，使其趨近於 \DEFfuncMicUSJ{\DEFpause}。
+因此我們將此遞移函數 \DEFfuncAf{\DEFpause} 設計為一自適應濾波器，
+並且應用 Bernard Widrow 與 Marcian Hoff 等人所提出的最小均方濾波器(Least Mean Square Filter)，
+如圖 \ref{fig:af}。
 
 \begin{figure}[H]
     \centering
