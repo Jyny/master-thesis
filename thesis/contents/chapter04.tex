@@ -40,12 +40,27 @@
 \paragraph{物理控制介面}
 
     如圖\ref{fig:mbox}\nameref{fig:mbox}中左上紅色虛線圓框所示。
-本研究以按鈕為例，提供會談參與者操作與會談終端互動，獲得外部觸發事件，｀
+本系統實作以按鈕為例，提供會談參與者操作與會談終端互動，獲得外部觸發事件，｀
 用於創建、開始與結束會談。
 
 \paragraph{人機互動介面}
 
-    用於傳遞會談的元資料與系統狀態提示給會談參與者。
+    如圖\ref{fig:mbox}\nameref{fig:mbox}中右上紅色點虛線方框所示。
+本系統實作以電子紙為例，用於傳遞會談的元資料與系統狀態提示給會談主持者與提示系統狀態給會談參與者。
+會談主持者透過掃描電子紙螢幕上的 QRCode 接收來自會談終端傳遞的會談的元資料，如圖\ref{fig:epaper}。
+本系統實作按鈕含有一指示燈兼作人機互動介面，於談開始/結束錄音提示系統狀態，如圖\ref{fig:btn}。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{epaper}
+    \caption{電子紙於會談各階段之狀態顯示}\label{fig:epaper}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{btn}
+    \caption{按鈕於會談開始/結束錄音之狀態指示燈}\label{fig:btn}
+\end{figure}
 
 \paragraph{運算控制核心與網路介面}
 
