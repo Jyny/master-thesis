@@ -22,7 +22,7 @@
 
 \paragraph{超音波麥克風干擾器}
 
-    如圖\ref{fig:mbox}\nameref{fig:mbox}中左下紫色實線多邊形方框所式。
+    如圖\ref{fig:mbox}\nameref{fig:mbox}中左下紫色實線多邊形方框所示。
 此超音波麥克風干擾器為參考Yuxin Chen,  Huiying Li 等人的實作\cite{chen2020wearable}。
 包含一 Arduino Micro 用於產生於$24k\sim26k$之間的偽隨機數與控制周邊裝置。
 包含一波形產生器 AD9833，透過SPI與Arduino Micro溝通取得偽隨機數，產生介於$24khz\sim26khz$之間正弦波。
@@ -32,7 +32,9 @@
 
 \paragraph{錄音麥克風}
 
-    用於錄製受超音波麥克風干擾器干擾的會談對話聲音記錄 (\DEFrecJ)，
+    如圖\ref{fig:mbox}\nameref{fig:mbox}中左上紅色虛線圓框所示。
+包含一USB數位駐極電容式麥克風 Saramonic LavMicro U3A。
+用於錄製受超音波麥克風干擾器干擾的會談對話聲音記錄 (\DEFrecJ)，
 與產生純超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄 (\DEFrecN)。
 
 \paragraph{物理控制介面}
