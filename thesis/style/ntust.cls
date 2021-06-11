@@ -106,6 +106,11 @@
     Path = fonts/chinese/,
     Extension = .ttf
 ]
+\setCJKmonofont{BiauKai}[
+    AutoFakeBold=true,
+    Path = fonts/chinese/,
+    Extension = .ttf
+]
 
 % [版面大小]
 %
