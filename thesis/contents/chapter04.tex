@@ -74,6 +74,18 @@
 
 \subsection{解封伺服器}
 
+    解封伺服器的服務介面 RESTful\cite{fielding2000architectural} API 組成，包含7個 API 端點。
+
+\begin{enumerate}
+    \item \texttt{POST},~ \texttt{/meeting/}
+    \item \texttt{POST},~ \texttt{/meeting/:id/owner}
+    \item \texttt{POST},~ \texttt{/meeting/:id/end}
+    \item \texttt{POST},~ \texttt{/unseal/:id/rec/:kind}
+    \item \texttt{GET},~ \texttt{/unseal/:meetingid/:ownerid}
+    \item \texttt{PUT},~ \texttt{/unseal/:meetingid/:ownerid}
+    \item \texttt{GET},~ \texttt{/unseal/:meetingid/access}
+\end{enumerate}
+
 
 \subsection{行動應用程式}
 
