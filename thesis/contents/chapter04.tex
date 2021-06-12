@@ -11,7 +11,7 @@
 
 \subsection{會談終端}
 
-    會談終端包含多個組件，其概念驗證實作硬體組成如圖\ref{fig:mbox}。
+    會談終端包含多個組件，其概念驗證實作硬體組成如圖 \ref{fig:mbox}。
 
 \begin{figure}[H]
     \centering
@@ -22,7 +22,7 @@
 
 \paragraph{超音波麥克風干擾器}
 
-    如圖\ref{fig:mbox}\nameref{fig:mbox}中左下紫色實線多邊形方框所示。
+    如圖 \ref{fig:mbox} \nameref{fig:mbox}中左下紫色實線多邊形方框所示。
 此超音波麥克風干擾器為參考 Yuxin Chen,  Huiying Li 等人的實作\cite{chen2020wearable}。
 包含一 Arduino Micro 用於產生於$24k\sim26k$之間的偽隨機數與控制周邊裝置。
 包含一波形產生器 AD9833，透過SPI與Arduino Micro溝通取得偽隨機數，產生介於$24khz\sim26khz$之間正弦波。
@@ -32,23 +32,23 @@
 
 \paragraph{錄音麥克風}
 
-    如圖\ref{fig:mbox}\nameref{fig:mbox}中左上黃色實線圓框所示。
+    如圖 \ref{fig:mbox} \nameref{fig:mbox}中左上黃色實線圓框所示。
 包含一USB數位駐極電容式麥克風 Saramonic LavMicro U3A。
 用於錄製受超音波麥克風干擾器干擾的會談對話聲音記錄 (\DEFrecJ)，
 與產生純超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄 (\DEFrecN)。
 
 \paragraph{物理控制介面}
 
-    如圖\ref{fig:mbox}\nameref{fig:mbox}中左上紅色虛線圓框所示。
+    如圖 \ref{fig:mbox} \nameref{fig:mbox}中左上紅色虛線圓框所示。
 本系統實作以按鈕為例，提供會談參與者操作與會談終端互動，獲得外部觸發事件，｀
 用於創建、開始與結束會談。
 
 \paragraph{人機互動介面}
 
-    如圖\ref{fig:mbox}\nameref{fig:mbox}中右上紅色點虛線方框所示。
+    如圖 \ref{fig:mbox} \nameref{fig:mbox}中右上紅色點虛線方框所示。
 本系統實作以電子紙為例，用於傳遞會談的元資料與系統狀態提示給會談主持者與提示系統狀態給會談參與者。
-會談主持者透過掃描電子紙螢幕上的 QRCode 接收來自會談終端傳遞的會談的元資料，如圖\ref{fig:epaper}。
-本系統實作按鈕含有一指示燈兼作人機互動介面，於談開始/結束錄音提示系統狀態，如圖\ref{fig:btn}。
+會談主持者透過掃描電子紙螢幕上的 QRCode 接收來自會談終端傳遞的會談的元資料，如圖 \ref{fig:epaper}。
+本系統實作按鈕含有一指示燈兼作人機互動介面，於談開始/結束錄音提示系統狀態，如圖 \ref{fig:btn}。
 
 \begin{figure}[H]
     \centering
@@ -64,7 +64,7 @@
 
 \paragraph{運算控制核心與網路介面}
 
-    如圖\ref{fig:mbox}\nameref{fig:mbox}中右下綠色點線方框所示。
+    如圖 \ref{fig:mbox} \nameref{fig:mbox}中右下綠色點線方框所示。
 本系統實作以 Raspberry Pi 4B 為例，包含一 Geekworm X728 電池模組用於供電。
 邏輯控制核心使用 Python 實作，控制周邊裝置包含人機互動介面、物理控制介面、超音波麥克風干擾器與錄音麥克風，
 並網路介面與解封伺服器溝通。透過 GPIO 接收來自物理控制介面介面的外部觸發事件；透過 SPI 介面控制人機互動介面；
@@ -83,7 +83,7 @@
 \begin{enumerate}
     \item \texttt{POST},~ \texttt{/meeting/}
 
-        此 API 端點實作章節 \ref{sec:protocol}\nameref{sec:protocol}中，
+        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
     \nameref{subsec:protocol-init-create} 的 $M_{1}$ 、 $M_{2}$。
     當 API 端點收到請求後，會執行 \DEFfuncIDgen{} 與 \DEFfuncKgen{}，
     分別產生此次會談的唯一識別碼 \DEFsessionID，與此次會談的解封金鑰 \DEFunsealKey。
@@ -95,7 +95,7 @@
 
     \item \texttt{POST},~ \texttt{/meeting/:id/owner}
 
-        此 API 端點實作章節 \ref{sec:protocol}\nameref{sec:protocol}中，
+        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
     \nameref{subsec:protocol-init-reg} 的 $M_{3}^{i}$ 、 $M_{4}^{i}$。
     當 API 端點收到請求後，會執行 \DEFfuncPKgen{} 與 \DEFfuncIDgen{}，
     分別產生一組屬於會談主持者 \DEFowner 的公開私密金鑰對 $($\DEFpublicKey$,~$ \DEFprivateKey$)$，
@@ -109,7 +109,7 @@
 
     \item \texttt{POST},~ \texttt{/meeting/:id/end}
 
-        此 API 端點實作章節 \ref{sec:protocol}\nameref{sec:protocol}中，
+        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
     \nameref{subsec:protocol-sessioning} 的 $M_{1}$ 、 $M_{2}$。
     當 API 端點收到請求後，主持者註冊人數 \DEFowreg 是否為一或多人，
     可能執行非對稱式金鑰演算法加密函數 \DEFfuncEncPK{} 或金鑰分割函數 \DEFfuncSSS{}。
@@ -121,9 +121,9 @@
 
     \item \texttt{POST},~ \texttt{/unseal/:id/rec/:kind}
 
-        此 API 端點實作根據路由中變數 \texttt{:kind} 可能為章節 \ref{sec:protocol}\nameref{sec:protocol}中，
+        此 API 端點實作根據路由中變數 \texttt{:kind} 可能為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
     \nameref{subsec:protocol-init-create} 的 $M_{3}$ 、 $M_{4}$，
-    或章節 \ref{sec:protocol}\nameref{sec:protocol}中，
+    或章節 \ref{sec:protocol} \nameref{sec:protocol}中，
     \nameref{subsec:protocol-sessioning} 的 $M_{3}$ 、 $M_{4}$。
     其功能皆為上傳錄音，透過判斷路由中變數 \texttt{:kind} 得知上傳的是何種錄音，
     執行關聯綁定屬於此次會談的唯一識別碼 \DEFsessionID。
@@ -131,14 +131,14 @@
 
     \item \texttt{GET},~ \texttt{/unseal/:meetingid/:ownerid}
 
-        此 API 端點實作章節 \ref{sec:protocol}\nameref{sec:protocol}中，
+        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
     \nameref{subsec:protocol-unseal-auth} 的 $M_{1}^{i}$ 、 $M_{2}^{i}$。
     路由變數 \texttt{:meetingid} 為此次會談的唯一識別碼 \DEFsessionID。
     路由變數 \texttt{:ownerid} 為會談主持者唯一識別碼 \DEFownerID。
 
     \item \texttt{PUT},~ \texttt{/unseal/:meetingid/:ownerid}
 
-        此 API 端點實作章節 \ref{sec:protocol}\nameref{sec:protocol}中，
+        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
     \nameref{subsec:protocol-unseal-auth} 的 $M_{3}^{i}$ 、 $M_{4}^{i}$。
     會談主持者的私密金鑰 \DEFprivateKey，透過非對稱式加密演算法之解密函數 \DEFfuncDecSK{}，
     將受加密保護的授權金鑰 \DEFakEnc 解密，接著使用同一會談主持者的私密金鑰 \DEFprivateKey，
@@ -153,7 +153,7 @@
 
     \item \texttt{GET},~ \texttt{/unseal/:meetingid/access}
 
-        此 API 端點實作章節 \ref{sec:protocol}\nameref{sec:protocol}中，
+        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
     \nameref{subsec:protocol-unseal-access} 的 $M_{1}$ 、 $M_{2}$。
     當 API 端點收到請求後，主持者註冊人數 \DEFowreg 是否為一或多人，
     可能執行對稱式加密演算法之解密函數 \DEFfuncDecEK{} 或金鑰分割演算法合併函數 \DEFfuncSSC{}。
@@ -198,6 +198,7 @@
     \includegraphics[width=0.85\textwidth]{app-3}
     \caption{行動應用程式取得會談聲音記錄使用者介面}\label{fig:app-3}
 \end{figure}
+
 
 \section{系統實驗}
 
