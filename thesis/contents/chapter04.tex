@@ -195,6 +195,19 @@
     \caption{行動應用程式會談初始化使用者介面}\label{fig:app-1}
 \end{figure}
 
+    在會談對話結束後，會談主持者欲取得當時會談的有效聲音紀錄，須先授權解封伺服器 \DEFserver。
+此時會談主持者向解封伺服器 \DEFserver 傳送授權解封聲音會談記錄請求。
+如圖 \ref{fig:app-2} \nameref{fig:app-2}(左一)。
+
+    解封伺服器 \DEFserver 收到授權解封聲音會談記錄請求後，即依據會談主持者的唯一識別碼 \DEFownerID，
+回覆屬於會談主持者的受加密保護的授權金鑰 \DEFakEnc 請會談主持者簽署授權。
+如圖 \ref{fig:app-2} \nameref{fig:app-2}的(中)。
+並透過代表會談主持者身份的私密金鑰，證明會談主持者的身份與授權解封伺服器。
+會談主持者的私密金鑰 \DEFprivateKey，透過非對稱式加密演算法之解密函數 \DEFfuncDecSK{}，
+將受加密保護的授權金鑰 \DEFakEnc 解密，接著使用同一會談主持者的私密金鑰 \DEFprivateKey，
+透過數位簽章演算法簽之簽名函數 \DEFfuncSignSK{}。
+如圖 \ref{fig:app-2} \nameref{fig:app-2}(右一)。
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{app-2}
