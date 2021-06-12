@@ -64,7 +64,7 @@
 \RequirePackage{geometry}
 \RequirePackage{float}
 \RequirePackage{enumitem}
-\RequirePackage[sort&compress]{natbib}
+\RequirePackage[numbers]{natbib}
 \RequirePackage{amsmath, amsthm, amssymb}
 \RequirePackage{ulem, CJKulem}
 \RequirePackage{lipsum}
@@ -86,6 +86,10 @@
 \XeTeXlinebreakskip = 0pt plus 1pt
 \setlength{\parskip}{10pt}
 \setlength{\parindent}{2em}
+
+% [引用格式]
+%
+\bibliographystyle{IEEEtran}
 
 % 設定行距
 % 1.2：1.5 倍行距
@@ -121,6 +125,7 @@
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
+    urlcolor=black,
     filecolor=gray,
     anchorcolor=blue,
     citecolor=blue
