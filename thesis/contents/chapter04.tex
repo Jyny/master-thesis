@@ -181,6 +181,14 @@
 並有能力於各階端包含會談初始化、會談進行中、談結束後，與解封伺服器進行通訊。
 本研究實作以單頁應用(Single-page Application, SPA)為例。
 
+    談主持者透過會談終端 \DEFmeetingbox 上的人機互動介面，
+取得此次會談的元資料與封伺服器的資源位置 URI (Uniform Resource Identifier)，
+本研究實作以描電子紙螢幕上搭配顯示 QRCode 為例。
+會談主持者透過掃描會談終端的電子紙螢幕上顯示的 QRCode 取得資源位置，接著向解封伺服器 \DEFserver 請求註冊，
+註冊成功則成為此次會談的會談主持者，並取得代表會談主持者身份的私密金鑰。
+如圖 \ref{fig:app-1} \nameref{fig:app-1}，
+圖 \ref{fig:app-1} 左圖為掃描 QRCode 使用者介面，右圖為的會談主持者註冊使用者介面。
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{app-1}
