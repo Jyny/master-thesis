@@ -191,7 +191,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{app-1}
+    \includegraphics[width=0.5\textwidth]{app-1}
     \caption{行動應用程式會談初始化使用者介面}\label{fig:app-1}
 \end{figure}
 
@@ -210,7 +210,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{app-2}
+    \includegraphics[width=0.75\textwidth]{app-2}
     \caption{行動應用程式會談主持者授權解封伺服器使用者介面}\label{fig:app-2}
 \end{figure}
 
@@ -218,17 +218,14 @@
 如圖 \ref{fig:app-3} \nameref{fig:app-3}(右一)。
 
     此時封伺服器將受加密保護的純噪音之聲音記錄解密，
-與含有噪音的受干擾會談聲音記錄透過聲音樣本的離散時間誤差推估函數 \DEFfuncEstm{}，
-得到兩聲音樣本的離散時間對齊誤差值 \DEFshift。
-再透過自適應噪音消除 \DEFfuncAnc{}，還原獲得有效的會談聲音記錄 \DEFrecREV。
+與含有噪音的受干擾會談聲音記錄透過聲音樣本的離散時間誤差推估函數與自適應噪音消除，還原獲得有效的會談聲音記錄。
 執行過程中，如圖 \ref{fig:app-3} \nameref{fig:app-3}的(中)。
-
-    執行完成後，最終使會談主持者取得此有效之會談聲音記錄。
+執行完成後，最終使會談主持者取得此有效之會談聲音記錄。
 如圖 \ref{fig:app-3} \nameref{fig:app-3}(右一)。
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{app-3}
+    \includegraphics[width=0.75\textwidth]{app-3}
     \caption{行動應用程式取得會談聲音記錄使用者介面}\label{fig:app-3}
 \end{figure}
 
