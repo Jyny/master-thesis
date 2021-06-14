@@ -1,15 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 
 	"estmanc/pkg/worker"
 )
 
 func main() {
+	start := time.Now()
 	if len(os.Args) < 3 {
 		os.Exit(1)
 	}
@@ -25,6 +28,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	durationEstm := time.Since(start)
+	startANC := time.Now()
 
 	pwd, err := os.Getwd()
 	if err != nil {
@@ -45,4 +51,10 @@ func main() {
 		),
 	}
 	anc.Run()
+
+	durationANC := time.Since(startANC)
+	durationTotal := time.Since(start)
+	fmt.Println("time Estm : ", durationEstm)
+	fmt.Println("time ANC  : ", durationANC)
+	fmt.Println("time Total: ", durationTotal)
 }
