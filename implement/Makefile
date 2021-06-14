@@ -5,6 +5,9 @@ server/main: anc estimat-shift/main
 estimat-shift/main:
 	cd estimat-shift && go build src/main.go
 
+estmanc/main: anc estimat-shift/main
+	cd estmanc && go build src/main.go
+
 .PHONY: anc
 anc:
 	docker build -f anc/Dockerfile -t anc anc
