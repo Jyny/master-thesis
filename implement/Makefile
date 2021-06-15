@@ -28,6 +28,10 @@ client: aes
 pi: aes
 	python3 pi/pi.py
 
+.PHONY: pi-eph
+pi-eph: aes
+	python3 pi/eph.py
+
 aes:
 	cd server && go build aes/main.go
 	cp server/main ./aes
