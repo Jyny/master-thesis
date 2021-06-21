@@ -112,6 +112,25 @@
 
 \subsection{系統假設}
 
+    本研究基於假設如下：
+
+\begin{enumerate}
+    \item 超音波麥克風干擾器產生顯著的干擾效果：
+
+        近期的研究表明，目前的技術發展現狀已經能透過低成本、可穿戴式的裝置，
+    產生有效的超音波麥克風干擾 \cite{chen2020demonstrating}。
+    本論文實作也嘗試復現 Yuxin Chen,  Huiying Li 等人的實作 \cite{chen2020wearable}，
+    並透過復現實作的超音波麥克風干擾器作為為參考，近一步分析評估於不同信噪比時的干擾效果。
+    如系統實驗 \ref{subsec:exp-jammer} \nameref{subsec:exp-jammer}。
+
+    \item 系統各角色之間通訊為加密通道：
+
+        目前的技術發展現狀，已經有成熟的技術可以為網路通訊創造一加密通道，
+    提供通訊安全以保障資料的完整性、機密性。
+    如傳輸層安全性協定(Transport Layer Security，TLS) \cite{rfc5246}，
+    在最新版本 TLS 1.3 中，更可以保障向前安全性 \cite{rfc8446}。
+\end{enumerate}
+
 
 \subsection{會談參與者}
 
