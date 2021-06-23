@@ -1,12 +1,12 @@
 % !TeX root = ../main.tex
 \chapter{系統實驗與結果討論}
 
-    本章將說明本論文研究所提出之系統的實作與實驗。
+    本章將說明本研究研究所提出之系統的實作與實驗。
 首先說明系統各角色之實作細節，並於接續章節說明實驗與結果討論。
 
-\section{系統實作}
+\section{系統實作}\label{sec:impl}
 
-    本章節將說明本論文研究所提出的協定與硬體之實作，包含「會談終端」、「解封伺服器」
+    本章節將說明本研究研究所提出的協定與硬體之實作，包含「會談終端」、「解封伺服器」
 與供會談主持者用於與解封伺服器通訊的「行動應用程式」。
 
 \subsection{會談終端}\label{subsec:impl-mbox}
@@ -232,6 +232,18 @@
 
 \section{系統實驗}
 
+    本章將透過四個實驗來驗證前篇章節 \ref{sec:impl} \nameref{sec:impl}。
+本研究所提出之系統中，當會談結束後本系統會產生兩個聲音紀錄，
+分別為超聲波麥克風干擾器產生之純噪音聲音紀錄 \DEFrecN，與欲消去噪音的受干擾的會談聲音紀錄 \DEFrecJ。
+為得知兩者在不同的信噪比下，超聲波麥克風干擾器的干擾效果與主動式噪音消除的效果。
+分別設計實驗 \ref{subsec:exp-jammer}、「\nameref{subsec:exp-jammer}」，
+與實驗 \ref{subsec:exp-snr-anc}、「\nameref{subsec:exp-snr-anc}」。
+接著實驗 \ref{subsec:exp-estm}，透過觀察\nameref{subsec:exp-estm}的執行過程，
+了解演算法是如何透過最小累計能量差與7個標準差在有效時間內得出對齊點。
+最後實驗 \ref{subsec:exp-perform}、「\nameref{subsec:exp-perform}」，
+透過輸入的不同時間長度的聲音記錄，來評估分析還原會談聲音記錄的時間複雜度性能。
+
+
 \subsection{超音波麥克風干擾器之干擾效果分析}\label{subsec:exp-jammer}
 
     會談終端於會談進行間開啟超音波麥克風干擾器，因此鄰近的麥克風或周邊的聲音記錄裝置，
@@ -283,14 +295,14 @@ $Y$ 軸為參考原始聲音(未干擾的會談聲音紀錄)與被干擾的會�
 當信噪比達到約 $-22~dB$ 時，僅聽得到干擾噪音，無法聽識別出任何其他對話聲音。
 
 
-\subsection{主動式噪音消除效果分析}
+\subsection{主動式噪音消除效果分析}\label{subsec:exp-snr-anc}
 
     當會談主持者欲取得有效的談聲音記錄，除了需要向解封伺服器獲得授權之外，
 還需發送請求使解封伺服器執行聲音樣本離散時間推估演算法與主動式噪音消除來還原產生有效的會談聲音紀錄。
 此實驗為前篇實驗 \ref{subsec:exp-jammer} \nameref{subsec:exp-jammer} 的延續。
 實驗音目的為分析評估超聲波麥克風干擾器產生的干擾噪與音會談聲兩者在不同的信噪比下，執行主動式噪音消除的效果。
 
-    實驗原理為，超聲波麥克風干擾器產生之噪音聲音紀錄 \DEFrecN，
+    實驗原理為，超聲波麥克風干擾器產生之純噪音聲音紀錄 \DEFrecN，
 與欲消去噪音的受干擾的會談聲音紀錄 \DEFrecJ 中的干擾噪音高度關聯。
 因此透過設計一遞移函數，轉換純超音波麥克風干擾器的響應輸出，使其趨近於受干擾的會談聲音紀錄 \DEFrecJ 中的干擾噪音。
 透過將受干擾的會談聲音紀錄 \DEFrecJ 中的干擾噪音，減去遞移函數的轉換輸出，完成主動式噪音消除。
@@ -331,7 +343,7 @@ $Y$ 軸為參考原始聲音(未干擾的會談聲音紀錄)與被干擾的會�
 在噪音消除後，還原的聲音紀錄能清楚識別大部分會談內容。
 
 
-\subsection{聲音樣本離散時間推估演算法}
+\subsection{聲音樣本離散時間推估演算法}\label{subsec:exp-estm}
 
     為提升噪音消除的成效，本研究提出聲音樣本離散時間推估演算法
 透過將輸入噪音聲音紀錄 \DEFrecN 的離散時間索引值 \DEFpause 加上離散時間誤差值 \DEFshift，
@@ -415,7 +427,7 @@ $X$ 軸為總能量差的幅值大小，正比於能量的平方根，$Y$ 軸為
 則演算法終止，完成此聲音樣本離散時間推估演算法。
 
 
-\subsection{還原會談聲音記錄性能分析}
+\subsection{還原會談聲音記錄性能分析}\label{subsec:exp-perform}
 
     當會談主持者欲取得有效的談聲音記錄，除了需要向解封伺服器獲得授權之外，
 還需發送請求使解封伺服器執行聲音樣本離散時間推估演算法與主動式噪音消除來還原產生有效的會談聲音紀錄。
@@ -442,25 +454,28 @@ $X$ 軸為總能量差的幅值大小，正比於能量的平方根，$Y$ 軸為
 並計算兩者時間加總為總實行時間。
 
     實驗結果如表 \ref{table:exp-time} 與圖 \ref{fig:exp-time}。
-圖 \ref{fig:exp-time} 為表 \ref{table:exp-time} 中資料所繪製，
-$Y$軸為聲音紀錄時間長度 \DEFtimeREC，$X$軸為執行時間。
-圖中將聲音樣本離散時間推估演算法 \DEFfuncEstm{} (綠色菱形點線Estm)、
-主動式噪音消除 \DEFfuncAnc{}(藍色方形點線ANC)與兩者時間加總(黃色三角形點線Total)，繪制於三條折線。
 透過觀察實驗結果可已得知，聲音樣本離散時間推估演算法與主動式噪音消除，時間複雜度皆趨近於線性 $O(n)$。
 兩者的執行時間加總，時間複雜度表現也同樣趨近於線性 $O(n)$。
 
 \begin{longtable}{| r | c | c | c |}
     \caption{還原會談聲音記錄執行時間表}\label{table:exp-time} \\
     \hline
-    錄音長度 &
-    \DEFfuncEstm{} 執行時間 & \DEFfuncAnc{} 執行時間 & 總執行時間 (秒) \\
+    \multicolumn{1}{|r|}{錄音長度} &
+    \multicolumn{1}{|c|}{\DEFfuncEstm{} 執行時間} &
+    \multicolumn{1}{|c|}{\DEFfuncAnc{} 執行時間} &
+    \multicolumn{1}{|c|}{總執行時間 (秒)} \\
     \hline
     \endfirsthead
 
-    錄音長度 &q
-    \DEFfuncEstm{} 執行時間 & \DEFfuncAnc{} 執行時間 & 總執行時間 \\
+    \multicolumn{1}{|r|}{錄音長度} &
+    \multicolumn{1}{|c|}{\DEFfuncEstm{} 執行時間} &
+    \multicolumn{1}{|c|}{\DEFfuncAnc{} 執行時間} &
+    \multicolumn{1}{|c|}{總執行時間 (秒)} \\
     \hline
     \endhead
+
+    \hline
+    \endlastfoot
 
     15 秒 & 3.67秒 & 12.63秒 & 16.3秒 \\
 
@@ -479,10 +494,12 @@ $Y$軸為聲音紀錄時間長度 \DEFtimeREC，$X$軸為執行時間。
     30 分鐘 & 356.37 秒 & 1389.75 秒 & 1746.12 秒 \\
 
     1小 時 & 528.22 秒 & 2765.89 秒 & 3294.11 秒 \\
-
-    \hline
-    \endlastfoot
 \end{longtable}
+
+    圖 \ref{fig:exp-time} 為表 \ref{table:exp-time} 中資料所繪製，
+$Y$軸為聲音紀錄時間長度 \DEFtimeREC，$X$軸為執行時間。
+圖中將聲音樣本離散時間推估演算法 \DEFfuncEstm{} (綠色菱形點線Estm)、
+主動式噪音消除 \DEFfuncAnc{}(藍色方形點線ANC)與兩者時間加總(黃色三角形點線Total)，分別繪制於三條折線。
 
 \begin{figure}[H]
     \centering
