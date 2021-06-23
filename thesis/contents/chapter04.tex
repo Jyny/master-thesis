@@ -74,9 +74,9 @@
 
 \subsection{解封伺服器}\label{subsec:impl-psu}
 
-    本研究所設計之系統中解封伺服器的服務介面 RESTful\cite{fielding2000architectural} API 組成，
-包含數個 API 端點，使用 Golang 搭配 Gin 網頁框架實作。
-系統後端組件包含一資料庫 PostgreSQL 13 作為資料關聯綁定以及儲存的媒介；
+    本研究所設計之系統中解封伺服器的服務介面由 RESTful\cite{fielding2000architectural} API 組成。
+解封伺服器 \DEFserver 中包含6個 API 端點，使用 Golang 搭配 Gin 網頁框架實作。
+系統後端解決方案技術架構包含一資料庫 PostgreSQL 13 作為資料關聯綁定以及儲存的媒介；
 包含 Docker 容器化執行引擎，用於封裝主動式噪音消除的 Python3 執行環境；
 各 API 端點說明如下。
 
@@ -192,45 +192,46 @@
 會談主持者透過掃描會談終端的電子紙螢幕上顯示的 QRCode 取得資源位置，接著向解封伺服器 \DEFserver 請求註冊，
 註冊成功則成為此次會談的會談主持者，並取得代表會談主持者身份的私密金鑰。
 如圖 \ref{fig:app-1} \nameref{fig:app-1}，
-圖 \ref{fig:app-1} 左圖為掃描 QRCode 使用者介面，右圖為的會談主持者註冊使用者介面。
+圖 \ref{fig:app-1} (a) 為掃描 QRCode 使用者介面，
+圖 \ref{fig:app-1} (b) 為的會談主持者註冊使用者介面。
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{app-1}
+    \includegraphics[width=0.6\textwidth]{app-1}
     \caption{行動應用程式會談初始化使用者介面}\label{fig:app-1}
 \end{figure}
 
     在會談對話結束後，會談主持者欲取得當時會談的有效聲音紀錄，須先授權解封伺服器 \DEFserver。
 此時會談主持者向解封伺服器 \DEFserver 傳送授權解封聲音會談記錄請求。
-如圖 \ref{fig:app-2} \nameref{fig:app-2}(左一)。
+如圖 \ref{fig:app-2} \nameref{fig:app-2} (a)。
 
     解封伺服器 \DEFserver 收到授權解封聲音會談記錄請求後，即依據會談主持者的唯一識別碼 \DEFownerID，
 回覆屬於會談主持者的受加密保護的授權金鑰 \DEFakEnc 請會談主持者簽署授權。
-如圖 \ref{fig:app-2} \nameref{fig:app-2}的(中)。
+如圖 \ref{fig:app-2} \nameref{fig:app-2} (b)。
 並透過代表會談主持者身份的私密金鑰，證明會談主持者的身份與授權解封伺服器。
 會談主持者的私密金鑰 \DEFprivateKey，透過非對稱式加密演算法之解密函數 \DEFfuncDecSK{}，
 將受加密保護的授權金鑰 \DEFakEnc 解密，接著使用同一會談主持者的私密金鑰 \DEFprivateKey，
 透過數位簽章演算法簽之簽名函數 \DEFfuncSignSK{}。
-如圖 \ref{fig:app-2} \nameref{fig:app-2}(右一)。
+如圖 \ref{fig:app-2} \nameref{fig:app-2} (c)。
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{app-2}
+    \includegraphics[width=0.9\textwidth]{app-2}
     \caption{行動應用程式會談主持者授權解封伺服器使用者介面}\label{fig:app-2}
 \end{figure}
 
     在會談主持者成功授權解封伺服器 \DEFserver 後，向解封伺服器發起請求取得有效之會談聲音記錄。
-如圖 \ref{fig:app-3} \nameref{fig:app-3}(右一)。
+如圖 \ref{fig:app-3} \nameref{fig:app-3} (a)。
 
     此時封伺服器將受加密保護的純噪音之聲音記錄解密，
 與含有噪音的受干擾會談聲音記錄透過聲音樣本的離散時間誤差推估函數與自適應噪音消除，還原獲得有效的會談聲音記錄。
-執行過程中，如圖 \ref{fig:app-3} \nameref{fig:app-3}的(中)。
+執行過程中，如圖 \ref{fig:app-3} \nameref{fig:app-3} (b)。
 執行完成後，最終使會談主持者取得此有效之會談聲音記錄。
-如圖 \ref{fig:app-3} \nameref{fig:app-3}(右一)。
+如圖 \ref{fig:app-3} \nameref{fig:app-3} (c)。
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{app-3}
+    \includegraphics[width=0.9\textwidth]{app-3}
     \caption{行動應用程式取得會談聲音記錄使用者介面}\label{fig:app-3}
 \end{figure}
 
