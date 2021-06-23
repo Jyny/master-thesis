@@ -449,13 +449,8 @@ $Y$軸為聲音紀錄時間長度 \DEFtimeREC，$X$軸為執行時間。
 透過觀察實驗結果可已得知，聲音樣本離散時間推估演算法與主動式噪音消除，時間複雜度皆趨近於線性 $O(n)$。
 兩者的執行時間加總，時間複雜度表現也同樣趨近於線性 $O(n)$。
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{exp-time}
-    \caption{還原會談聲音記錄執行時間圖}\label{fig:exp-time}
-\end{figure}
-
 \begin{longtable}{| r | c | c | c |}
+    \caption{還原會談聲音記錄執行時間表}\label{table:exp-time} \\
     \hline
     錄音長度 &
     \DEFfuncEstm{} 執行時間 & \DEFfuncAnc{} 執行時間 & 總執行時間 (秒) \\
@@ -486,9 +481,14 @@ $Y$軸為聲音紀錄時間長度 \DEFtimeREC，$X$軸為執行時間。
     1小 時 & 528.22 秒 & 2765.89 秒 & 3294.11 秒 \\
 
     \hline
-    \caption{還原會談聲音記錄執行時間表}\label{table:exp-time} \\
     \endlastfoot
 \end{longtable}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{exp-time}
+    \caption{還原會談聲音記錄執行時間圖}\label{fig:exp-time}
+\end{figure}
 
 
 \section{系統安全性分析}
