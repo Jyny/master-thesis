@@ -81,10 +81,11 @@
 各 API 端點說明如下。
 
 \begin{enumerate}
-    \item \texttt{POST},~ \texttt{/meeting/}
+    \item \texttt{/meeting}
 
-        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-init-create} 的 $M_{1}$ 、 $M_{2}$。
+        此 API 端點透過 HTTP 方法 \texttt{POST} 請求，
+    為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-init-create} 的 $M_{1}$ 、 $M_{2}$ 的實作。
     當 API 端點收到請求後，會執行 \DEFfuncIDgen{} 與 \DEFfuncKgen{}，
     分別產生此次會談的唯一識別碼 \DEFsessionID，與此次會談的解封金鑰 \DEFunsealKey。
 
@@ -93,10 +94,11 @@
     \DEFfuncKgen{} 為對稱式加密演算法的金鑰產生函數，
     本研究實作以 AES CFB 模式 \cite{117146}\cite{9171} 為例。
 
-    \item \texttt{POST},~ \texttt{/meeting/:id/owner}
+    \item \texttt{/meeting/:id/owner}
 
-        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-init-reg} 的 $M_{3}^{i}$ 、 $M_{4}^{i}$。
+        此 API 端點透過 HTTP 方法 \texttt{POST} 請求，
+    為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-init-reg} 的 $M_{3}^{i}$ 、 $M_{4}^{i}$ 的實作。
     當 API 端點收到請求後，會執行 \DEFfuncPKgen{} 與 \DEFfuncIDgen{}，
     分別產生一組屬於會談主持者 \DEFowner 的公開私密金鑰對 $($\DEFpublicKey$,~$ \DEFprivateKey$)$，
     與此會談主持者 \DEFowner 的唯一識別碼 \DEFownerID。
@@ -107,10 +109,11 @@
     本研究實作以 RSA PKCS\#1 \cite{rfc8017} 為例。
     路由變數 \texttt{:id} 為此次會談的唯一識別碼 \DEFsessionID。
 
-    \item \texttt{POST},~ \texttt{/meeting/:id/end}
+    \item \texttt{/meeting/:id/end}
 
-        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-sessioning} 的 $M_{1}$ 、 $M_{2}$。
+        此 API 端點透過 HTTP 方法 \texttt{POST} 請求，
+    為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-sessioning} 的 $M_{1}$ 、 $M_{2}$ 的實作。
     當 API 端點收到請求後，主持者註冊人數 \DEFowreg 是否為一或多人，
     可能執行非對稱式金鑰演算法加密函數 \DEFfuncEncPK{} 或金鑰分割函數 \DEFfuncSSS{}。
 
@@ -119,27 +122,28 @@
     本研究實作以 Shamir's Secret Sharing \cite{shamir1979share} 於 $GF(2^8)$ 的實作 \cite{117146} 為例。
     路由變數 \texttt{:id} 為此次會談的唯一識別碼 \DEFsessionID。
 
-    \item \texttt{POST},~ \texttt{/unseal/:id/rec/:kind}
+    \item \texttt{/unseal/:id/rec/:kind}
 
-        此 API 端點實作根據路由中變數 \texttt{:kind} 可能為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-init-create} 的 $M_{3}$ 、 $M_{4}$，
+        此 API 端點透過 HTTP 方法 \texttt{POST} 請求，
+    根據路由中變數 \texttt{:kind} 可能為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-init-create} 的 $M_{3}$ 、 $M_{4}$ 的實作，
     或章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-sessioning} 的 $M_{3}$ 、 $M_{4}$。
-    其功能皆為上傳錄音，透過判斷路由中變數 \texttt{:kind} 得知上傳的是何種錄音，
+    \nameref{subsec:protocol-sessioning} 的 $M_{3}$ 、 $M_{4}$ 的實作。
+    兩者皆為上傳錄音功能，透過判斷路由中變數 \texttt{:kind} 得知上傳的是何種錄音，
     執行關聯綁定屬於此次會談的唯一識別碼 \DEFsessionID。
     路由變數 \texttt{:id} 為此次會談的唯一識別碼 \DEFsessionID。
 
-    \item \texttt{GET},~ \texttt{/unseal/:meetingid/:ownerid}
+    \item \texttt{/unseal/:meetingid/:ownerid}
 
-        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-unseal-auth} 的 $M_{1}^{i}$ 、 $M_{2}^{i}$。
+        當此 API 端點透過 HTTP 方法 \texttt{GET} 請求時，
+    為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-unseal-auth} 的 $M_{1}^{i}$ 、 $M_{2}^{i}$ 的實作。
     路由變數 \texttt{:meetingid} 為此次會談的唯一識別碼 \DEFsessionID。
     路由變數 \texttt{:ownerid} 為會談主持者唯一識別碼 \DEFownerID。
 
-    \item \texttt{PUT},~ \texttt{/unseal/:meetingid/:ownerid}
-
-        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-unseal-auth} 的 $M_{3}^{i}$ 、 $M_{4}^{i}$。
+        當此 API 端點透過 HTTP 方法 \texttt{PUT} 請求時，
+    為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-unseal-auth} 的 $M_{3}^{i}$ 、 $M_{4}^{i}$ 的實作。
     會談主持者的私密金鑰 \DEFprivateKey，透過非對稱式加密演算法之解密函數 \DEFfuncDecSK{}，
     將受加密保護的授權金鑰 \DEFakEnc 解密，接著使用同一會談主持者的私密金鑰 \DEFprivateKey，
     透過數位簽章演算法簽之簽名函數 \DEFfuncSignSK{}。
@@ -151,10 +155,11 @@
     路由變數 \texttt{:meetingid} 為此次會談的唯一識別碼 \DEFsessionID。
     路由變數 \texttt{:ownerid} 為會談主持者唯一識別碼 \DEFownerID。
 
-    \item \texttt{GET},~ \texttt{/unseal/:meetingid/access}
+    \item \texttt{/unseal/:meetingid/access}
 
-        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-unseal-access} 的 $M_{1}$ 、 $M_{2}$。
+        此 API 端點透過 HTTP 方法 \texttt{GET} 請求，
+    為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-unseal-access} 的 $M_{1}$ 、 $M_{2}$ 的實作。
     當 API 端點收到請求後，主持者註冊人數 \DEFowreg 是否為一或多人，
     可能執行對稱式加密演算法之解密函數 \DEFfuncDecEK{} 或金鑰分割演算法合併函數 \DEFfuncSSC{}。
     接著透過聲音樣本的離散時間誤差推估函數 \DEFfuncEstm{}，得到兩聲音樣本的離散時間對齊誤差值 \DEFshift。
