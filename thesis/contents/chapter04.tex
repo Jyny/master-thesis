@@ -23,7 +23,7 @@
 \paragraph{超音波麥克風干擾器}
 
     如圖 \ref{fig:mbox} \nameref{fig:mbox}中左下紫色實線多邊形方框所示。
-此超音波麥克風干擾器為參考 Yuxin Chen,  Huiying Li 等人的實作\cite{chen2020wearable}。
+此超音波麥克風干擾器為參考 Yuxin Chen, Huiying Li 等人的實作\cite{chen2020wearable}。
 包含一 Arduino Micro 用於產生於$24k\sim26k$之間的偽隨機數與控制周邊裝置。
 包含一波形產生器 AD9833，透過SPI與Arduino Micro溝通取得偽隨機數，產生介於$24khz\sim26khz$之間正弦波。
 包含一數位放大器 HW-104，用於放大訊號產生器產生的訊號以驅動超音波發射器。
@@ -169,7 +169,7 @@
         其中 \DEFfuncEstm{} 離散時間誤差推估函數，透過 \texttt{goroutine} 於背景中執行。
     此為 Golang 的輕量執行緒，此函式呼叫為非阻塞式呼叫。
     \DEFfuncAnc{} 為自適應噪音消除函數，
-    本研究實作以引用 M Cejnek 的自適應訊號處理開源函式庫 \cite{cejnek2017padasip} 為例。
+    本研究實作以引用 Matouš Cejnek 的自適應訊號處理開源函式庫 \cite{cejnek2017padasip} 為例。
     透過 Docker 於容器環境 \texttt{jupyter/scipy-notebook} 中執行。
     此呼叫利用 \texttt{goroutine} 於背景中執行，為非阻塞式呼叫。
 \end{enumerate}
