@@ -1,12 +1,12 @@
 % !TeX root = ../main.tex
 \chapter{系統實驗與結果討論}
 
-    本章將說明本論文研究所提出之系統的實作與實驗。
+    本章將說明本研究研究所提出之系統的實作與實驗。
 首先說明系統各角色之實作細節，並於接續章節說明實驗與結果討論。
 
-\section{系統實作}
+\section{系統實作}\label{sec:impl}
 
-    本章節將說明本論文研究所提出的協定與硬體之實作，包含「會談終端」、「解封伺服器」
+    本章節將說明本研究研究所提出的協定與硬體之實作，包含「會談終端」、「解封伺服器」
 與供會談主持者用於與解封伺服器通訊的「行動應用程式」。
 
 \subsection{會談終端}\label{subsec:impl-mbox}
@@ -23,7 +23,7 @@
 \paragraph{超音波麥克風干擾器}
 
     如圖 \ref{fig:mbox} \nameref{fig:mbox}中左下紫色實線多邊形方框所示。
-此超音波麥克風干擾器為參考 Yuxin Chen,  Huiying Li 等人的實作\cite{chen2020wearable}。
+此超音波麥克風干擾器為參考 Yuxin Chen, Huiying Li 等人的實作\cite{chen2020wearable}。
 包含一 Arduino Micro 用於產生於$24k\sim26k$之間的偽隨機數與控制周邊裝置。
 包含一波形產生器 AD9833，透過SPI與Arduino Micro溝通取得偽隨機數，產生介於$24khz\sim26khz$之間正弦波。
 包含一數位放大器 HW-104，用於放大訊號產生器產生的訊號以驅動超音波發射器。
@@ -74,17 +74,18 @@
 
 \subsection{解封伺服器}\label{subsec:impl-psu}
 
-    本研究所設計之系統中解封伺服器的服務介面 RESTful\cite{fielding2000architectural} API 組成，
-包含數個 API 端點，使用 Golang 搭配 Gin 網頁框架實作。
-系統後端組件包含一資料庫 PostgreSQL 13 作為資料關聯綁定以及儲存的媒介；
+    本研究所設計之系統中解封伺服器的服務介面由 RESTful\cite{fielding2000architectural} API 組成。
+解封伺服器 \DEFserver 中包含6個 API 端點，使用 Golang 搭配 Gin 網頁框架實作。
+系統後端解決方案技術架構包含一資料庫 PostgreSQL 13 作為資料關聯綁定以及儲存的媒介；
 包含 Docker 容器化執行引擎，用於封裝主動式噪音消除的 Python3 執行環境；
 各 API 端點說明如下。
 
 \begin{enumerate}
-    \item \texttt{POST},~ \texttt{/meeting/}
+    \item \texttt{/meeting}
 
-        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-init-create} 的 $M_{1}$ 、 $M_{2}$。
+        此 API 端點透過 HTTP 方法 \texttt{POST} 請求，
+    為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-init-create} 的 $M_{1}$ 、 $M_{2}$ 的實作。
     當 API 端點收到請求後，會執行 \DEFfuncIDgen{} 與 \DEFfuncKgen{}，
     分別產生此次會談的唯一識別碼 \DEFsessionID，與此次會談的解封金鑰 \DEFunsealKey。
 
@@ -93,10 +94,11 @@
     \DEFfuncKgen{} 為對稱式加密演算法的金鑰產生函數，
     本研究實作以 AES CFB 模式 \cite{117146}\cite{9171} 為例。
 
-    \item \texttt{POST},~ \texttt{/meeting/:id/owner}
+    \item \texttt{/meeting/:id/owner}
 
-        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-init-reg} 的 $M_{3}^{i}$ 、 $M_{4}^{i}$。
+        此 API 端點透過 HTTP 方法 \texttt{POST} 請求，
+    為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-init-reg} 的 $M_{3}^{i}$ 、 $M_{4}^{i}$ 的實作。
     當 API 端點收到請求後，會執行 \DEFfuncPKgen{} 與 \DEFfuncIDgen{}，
     分別產生一組屬於會談主持者 \DEFowner 的公開私密金鑰對 $($\DEFpublicKey$,~$ \DEFprivateKey$)$，
     與此會談主持者 \DEFowner 的唯一識別碼 \DEFownerID。
@@ -107,10 +109,11 @@
     本研究實作以 RSA PKCS\#1 \cite{rfc8017} 為例。
     路由變數 \texttt{:id} 為此次會談的唯一識別碼 \DEFsessionID。
 
-    \item \texttt{POST},~ \texttt{/meeting/:id/end}
+    \item \texttt{/meeting/:id/end}
 
-        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-sessioning} 的 $M_{1}$ 、 $M_{2}$。
+        此 API 端點透過 HTTP 方法 \texttt{POST} 請求，
+    為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-sessioning} 的 $M_{1}$ 、 $M_{2}$ 的實作。
     當 API 端點收到請求後，主持者註冊人數 \DEFowreg 是否為一或多人，
     可能執行非對稱式金鑰演算法加密函數 \DEFfuncEncPK{} 或金鑰分割函數 \DEFfuncSSS{}。
 
@@ -119,27 +122,28 @@
     本研究實作以 Shamir's Secret Sharing \cite{shamir1979share} 於 $GF(2^8)$ 的實作 \cite{117146} 為例。
     路由變數 \texttt{:id} 為此次會談的唯一識別碼 \DEFsessionID。
 
-    \item \texttt{POST},~ \texttt{/unseal/:id/rec/:kind}
+    \item \texttt{/unseal/:id/rec/:kind}
 
-        此 API 端點實作根據路由中變數 \texttt{:kind} 可能為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-init-create} 的 $M_{3}$ 、 $M_{4}$，
+        此 API 端點透過 HTTP 方法 \texttt{POST} 請求，
+    根據路由中變數 \texttt{:kind} 可能為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-init-create} 的 $M_{3}$ 、 $M_{4}$ 的實作，
     或章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-sessioning} 的 $M_{3}$ 、 $M_{4}$。
-    其功能皆為上傳錄音，透過判斷路由中變數 \texttt{:kind} 得知上傳的是何種錄音，
+    \nameref{subsec:protocol-sessioning} 的 $M_{3}$ 、 $M_{4}$ 的實作。
+    兩者皆為上傳錄音功能，透過判斷路由中變數 \texttt{:kind} 得知上傳的是何種錄音，
     執行關聯綁定屬於此次會談的唯一識別碼 \DEFsessionID。
     路由變數 \texttt{:id} 為此次會談的唯一識別碼 \DEFsessionID。
 
-    \item \texttt{GET},~ \texttt{/unseal/:meetingid/:ownerid}
+    \item \texttt{/unseal/:meetingid/:ownerid}
 
-        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-unseal-auth} 的 $M_{1}^{i}$ 、 $M_{2}^{i}$。
+        當此 API 端點透過 HTTP 方法 \texttt{GET} 請求時，
+    為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-unseal-auth} 的 $M_{1}^{i}$ 、 $M_{2}^{i}$ 的實作。
     路由變數 \texttt{:meetingid} 為此次會談的唯一識別碼 \DEFsessionID。
     路由變數 \texttt{:ownerid} 為會談主持者唯一識別碼 \DEFownerID。
 
-    \item \texttt{PUT},~ \texttt{/unseal/:meetingid/:ownerid}
-
-        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-unseal-auth} 的 $M_{3}^{i}$ 、 $M_{4}^{i}$。
+        當此 API 端點透過 HTTP 方法 \texttt{PUT} 請求時，
+    為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-unseal-auth} 的 $M_{3}^{i}$ 、 $M_{4}^{i}$ 的實作。
     會談主持者的私密金鑰 \DEFprivateKey，透過非對稱式加密演算法之解密函數 \DEFfuncDecSK{}，
     將受加密保護的授權金鑰 \DEFakEnc 解密，接著使用同一會談主持者的私密金鑰 \DEFprivateKey，
     透過數位簽章演算法簽之簽名函數 \DEFfuncSignSK{}。
@@ -151,10 +155,11 @@
     路由變數 \texttt{:meetingid} 為此次會談的唯一識別碼 \DEFsessionID。
     路由變數 \texttt{:ownerid} 為會談主持者唯一識別碼 \DEFownerID。
 
-    \item \texttt{GET},~ \texttt{/unseal/:meetingid/access}
+    \item \texttt{/unseal/:meetingid/access}
 
-        此 API 端點實作章節 \ref{sec:protocol} \nameref{sec:protocol}中，
-    \nameref{subsec:protocol-unseal-access} 的 $M_{1}$ 、 $M_{2}$。
+        此 API 端點透過 HTTP 方法 \texttt{GET} 請求，
+    為章節 \ref{sec:protocol} \nameref{sec:protocol}中，
+    \nameref{subsec:protocol-unseal-access} 的 $M_{1}$ 、 $M_{2}$ 的實作。
     當 API 端點收到請求後，主持者註冊人數 \DEFowreg 是否為一或多人，
     可能執行對稱式加密演算法之解密函數 \DEFfuncDecEK{} 或金鑰分割演算法合併函數 \DEFfuncSSC{}。
     接著透過聲音樣本的離散時間誤差推估函數 \DEFfuncEstm{}，得到兩聲音樣本的離散時間對齊誤差值 \DEFshift。
@@ -169,7 +174,7 @@
         其中 \DEFfuncEstm{} 離散時間誤差推估函數，透過 \texttt{goroutine} 於背景中執行。
     此為 Golang 的輕量執行緒，此函式呼叫為非阻塞式呼叫。
     \DEFfuncAnc{} 為自適應噪音消除函數，
-    本研究實作以引用 M Cejnek 的自適應訊號處理開源函式庫 \cite{cejnek2017padasip} 為例。
+    本研究實作以引用 Matouš Cejnek 的自適應訊號處理開源函式庫 \cite{cejnek2017padasip} 為例。
     透過 Docker 於容器環境 \texttt{jupyter/scipy-notebook} 中執行。
     此呼叫利用 \texttt{goroutine} 於背景中執行，為非阻塞式呼叫。
 \end{enumerate}
@@ -187,50 +192,63 @@
 會談主持者透過掃描會談終端的電子紙螢幕上顯示的 QRCode 取得資源位置，接著向解封伺服器 \DEFserver 請求註冊，
 註冊成功則成為此次會談的會談主持者，並取得代表會談主持者身份的私密金鑰。
 如圖 \ref{fig:app-1} \nameref{fig:app-1}，
-圖 \ref{fig:app-1} 左圖為掃描 QRCode 使用者介面，右圖為的會談主持者註冊使用者介面。
+圖 \ref{fig:app-1} (a) 為掃描 QRCode 使用者介面，
+圖 \ref{fig:app-1} (b) 為的會談主持者註冊使用者介面。
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{app-1}
+    \includegraphics[width=0.6\textwidth]{app-1}
     \caption{行動應用程式會談初始化使用者介面}\label{fig:app-1}
 \end{figure}
 
     在會談對話結束後，會談主持者欲取得當時會談的有效聲音紀錄，須先授權解封伺服器 \DEFserver。
 此時會談主持者向解封伺服器 \DEFserver 傳送授權解封聲音會談記錄請求。
-如圖 \ref{fig:app-2} \nameref{fig:app-2}(左一)。
+如圖 \ref{fig:app-2} \nameref{fig:app-2} (a)。
 
     解封伺服器 \DEFserver 收到授權解封聲音會談記錄請求後，即依據會談主持者的唯一識別碼 \DEFownerID，
 回覆屬於會談主持者的受加密保護的授權金鑰 \DEFakEnc 請會談主持者簽署授權。
-如圖 \ref{fig:app-2} \nameref{fig:app-2}的(中)。
+如圖 \ref{fig:app-2} \nameref{fig:app-2} (b)。
 並透過代表會談主持者身份的私密金鑰，證明會談主持者的身份與授權解封伺服器。
 會談主持者的私密金鑰 \DEFprivateKey，透過非對稱式加密演算法之解密函數 \DEFfuncDecSK{}，
 將受加密保護的授權金鑰 \DEFakEnc 解密，接著使用同一會談主持者的私密金鑰 \DEFprivateKey，
 透過數位簽章演算法簽之簽名函數 \DEFfuncSignSK{}。
-如圖 \ref{fig:app-2} \nameref{fig:app-2}(右一)。
+如圖 \ref{fig:app-2} \nameref{fig:app-2} (c)。
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{app-2}
+    \includegraphics[width=0.9\textwidth]{app-2}
     \caption{行動應用程式會談主持者授權解封伺服器使用者介面}\label{fig:app-2}
 \end{figure}
 
     在會談主持者成功授權解封伺服器 \DEFserver 後，向解封伺服器發起請求取得有效之會談聲音記錄。
-如圖 \ref{fig:app-3} \nameref{fig:app-3}(右一)。
+如圖 \ref{fig:app-3} \nameref{fig:app-3} (a)。
 
     此時封伺服器將受加密保護的純噪音之聲音記錄解密，
 與含有噪音的受干擾會談聲音記錄透過聲音樣本的離散時間誤差推估函數與自適應噪音消除，還原獲得有效的會談聲音記錄。
-執行過程中，如圖 \ref{fig:app-3} \nameref{fig:app-3}的(中)。
+執行過程中，如圖 \ref{fig:app-3} \nameref{fig:app-3} (b)。
 執行完成後，最終使會談主持者取得此有效之會談聲音記錄。
-如圖 \ref{fig:app-3} \nameref{fig:app-3}(右一)。
+如圖 \ref{fig:app-3} \nameref{fig:app-3} (c)。
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{app-3}
+    \includegraphics[width=0.9\textwidth]{app-3}
     \caption{行動應用程式取得會談聲音記錄使用者介面}\label{fig:app-3}
 \end{figure}
 
 
 \section{系統實驗}
+
+    本章將透過四個實驗來驗證前篇章節 \ref{sec:impl} \nameref{sec:impl}。
+本研究所提出之系統中，當會談結束後本系統會產生兩個聲音紀錄，
+分別為超聲波麥克風干擾器產生之純噪音聲音紀錄 \DEFrecN，與欲消去噪音的受干擾的會談聲音紀錄 \DEFrecJ。
+為得知兩者在不同的信噪比下，超聲波麥克風干擾器的干擾效果與主動式噪音消除的效果。
+分別設計實驗 \ref{subsec:exp-jammer}、「\nameref{subsec:exp-jammer}」，
+與實驗 \ref{subsec:exp-snr-anc}、「\nameref{subsec:exp-snr-anc}」。
+接著實驗 \ref{subsec:exp-estm}，透過觀察\nameref{subsec:exp-estm}的執行過程，
+了解演算法是如何透過最小累計能量差與7個標準差在有效時間內得出對齊點。
+最後實驗 \ref{subsec:exp-perform}、「\nameref{subsec:exp-perform}」，
+透過輸入的不同時間長度的聲音記錄，來評估分析還原會談聲音記錄的時間複雜度性能。
+
 
 \subsection{超音波麥克風干擾器之干擾效果分析}\label{subsec:exp-jammer}
 
@@ -283,14 +301,14 @@ $Y$ 軸為參考原始聲音(未干擾的會談聲音紀錄)與被干擾的會�
 當信噪比達到約 $-22~dB$ 時，僅聽得到干擾噪音，無法聽識別出任何其他對話聲音。
 
 
-\subsection{主動式噪音消除效果分析}
+\subsection{主動式噪音消除效果分析}\label{subsec:exp-snr-anc}
 
     當會談主持者欲取得有效的談聲音記錄，除了需要向解封伺服器獲得授權之外，
 還需發送請求使解封伺服器執行聲音樣本離散時間推估演算法與主動式噪音消除來還原產生有效的會談聲音紀錄。
 此實驗為前篇實驗 \ref{subsec:exp-jammer} \nameref{subsec:exp-jammer} 的延續。
 實驗音目的為分析評估超聲波麥克風干擾器產生的干擾噪與音會談聲兩者在不同的信噪比下，執行主動式噪音消除的效果。
 
-    實驗原理為，超聲波麥克風干擾器產生之噪音聲音紀錄 \DEFrecN，
+    實驗原理為，超聲波麥克風干擾器產生之純噪音聲音紀錄 \DEFrecN，
 與欲消去噪音的受干擾的會談聲音紀錄 \DEFrecJ 中的干擾噪音高度關聯。
 因此透過設計一遞移函數，轉換純超音波麥克風干擾器的響應輸出，使其趨近於受干擾的會談聲音紀錄 \DEFrecJ 中的干擾噪音。
 透過將受干擾的會談聲音紀錄 \DEFrecJ 中的干擾噪音，減去遞移函數的轉換輸出，完成主動式噪音消除。
@@ -331,7 +349,7 @@ $Y$ 軸為參考原始聲音(未干擾的會談聲音紀錄)與被干擾的會�
 在噪音消除後，還原的聲音紀錄能清楚識別大部分會談內容。
 
 
-\subsection{聲音樣本離散時間推估演算法}
+\subsection{聲音樣本離散時間推估演算法}\label{subsec:exp-estm}
 
     為提升噪音消除的成效，本研究提出聲音樣本離散時間推估演算法
 透過將輸入噪音聲音紀錄 \DEFrecN 的離散時間索引值 \DEFpause 加上離散時間誤差值 \DEFshift，
@@ -415,7 +433,7 @@ $X$ 軸為總能量差的幅值大小，正比於能量的平方根，$Y$ 軸為
 則演算法終止，完成此聲音樣本離散時間推估演算法。
 
 
-\subsection{還原會談聲音記錄性能分析}
+\subsection{還原會談聲音記錄性能分析}\label{subsec:exp-perform}
 
     當會談主持者欲取得有效的談聲音記錄，除了需要向解封伺服器獲得授權之外，
 還需發送請求使解封伺服器執行聲音樣本離散時間推估演算法與主動式噪音消除來還原產生有效的會談聲音紀錄。
@@ -442,30 +460,28 @@ $X$ 軸為總能量差的幅值大小，正比於能量的平方根，$Y$ 軸為
 並計算兩者時間加總為總實行時間。
 
     實驗結果如表 \ref{table:exp-time} 與圖 \ref{fig:exp-time}。
-圖 \ref{fig:exp-time} 為表 \ref{table:exp-time} 中資料所繪製，
-$Y$軸為聲音紀錄時間長度 \DEFtimeREC，$X$軸為執行時間。
-圖中將聲音樣本離散時間推估演算法 \DEFfuncEstm{} (綠色菱形點線Estm)、
-主動式噪音消除 \DEFfuncAnc{}(藍色方形點線ANC)與兩者時間加總(黃色三角形點線Total)，繪制於三條折線。
 透過觀察實驗結果可已得知，聲音樣本離散時間推估演算法與主動式噪音消除，時間複雜度皆趨近於線性 $O(n)$。
 兩者的執行時間加總，時間複雜度表現也同樣趨近於線性 $O(n)$。
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{exp-time}
-    \caption{還原會談聲音記錄執行時間圖}\label{fig:exp-time}
-\end{figure}
-
 \begin{longtable}{| r | c | c | c |}
+    \caption{還原會談聲音記錄執行時間表}\label{table:exp-time} \\
     \hline
-    錄音長度 &
-    \DEFfuncEstm{} 執行時間 & \DEFfuncAnc{} 執行時間 & 總執行時間 (秒) \\
+    \multicolumn{1}{|r|}{錄音長度} &
+    \multicolumn{1}{|c|}{\DEFfuncEstm{} 執行時間} &
+    \multicolumn{1}{|c|}{\DEFfuncAnc{} 執行時間} &
+    \multicolumn{1}{|c|}{總執行時間 (秒)} \\
     \hline
     \endfirsthead
 
-    錄音長度 &q
-    \DEFfuncEstm{} 執行時間 & \DEFfuncAnc{} 執行時間 & 總執行時間 \\
+    \multicolumn{1}{|r|}{錄音長度} &
+    \multicolumn{1}{|c|}{\DEFfuncEstm{} 執行時間} &
+    \multicolumn{1}{|c|}{\DEFfuncAnc{} 執行時間} &
+    \multicolumn{1}{|c|}{總執行時間 (秒)} \\
     \hline
     \endhead
+
+    \hline
+    \endlastfoot
 
     15 秒 & 3.67秒 & 12.63秒 & 16.3秒 \\
 
@@ -484,14 +500,21 @@ $Y$軸為聲音紀錄時間長度 \DEFtimeREC，$X$軸為執行時間。
     30 分鐘 & 356.37 秒 & 1389.75 秒 & 1746.12 秒 \\
 
     1小 時 & 528.22 秒 & 2765.89 秒 & 3294.11 秒 \\
-
-    \hline
-    \caption{還原會談聲音記錄執行時間表}\label{table:exp-time} \\
-    \endlastfoot
 \end{longtable}
 
+    圖 \ref{fig:exp-time} 為表 \ref{table:exp-time} 中資料所繪製，
+$Y$軸為聲音紀錄時間長度 \DEFtimeREC，$X$軸為執行時間。
+圖中將聲音樣本離散時間推估演算法 \DEFfuncEstm{} (綠色菱形點線Estm)、
+主動式噪音消除 \DEFfuncAnc{}(藍色方形點線ANC)與兩者時間加總(黃色三角形點線Total)，分別繪制於三條折線。
 
-\section{實驗結果與討論}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{exp-time}
+    \caption{還原會談聲音記錄執行時間圖}\label{fig:exp-time}
+\end{figure}
+
+
+\section{系統安全性分析}
 
     本研究所設計之系統可以確保 Server 在 Running {\it Meeting Session}結束後，
 直到成功解封 ({\it Unseal})之前，\DEFrecREV 保有機密性。
