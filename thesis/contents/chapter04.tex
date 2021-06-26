@@ -260,7 +260,7 @@
     實驗原理為，超聲波麥克風干擾器會產生人耳聽不到的干擾聲音。
 但是對於麥克風系統卻產生非線性的響應輸出，使超聲波投影至人耳可聽見頻譜的聲音，而形成干擾噪音
 \cite{chen2019understanding}。
-因此我們透過特別設計的超聲波麥克風干擾器，如系統實作\nameref{subsec:impl-mbox}，
+因此透過特別設計的超聲波麥克風干擾器，如系統實作\nameref{subsec:impl-mbox}，
 並調整其輸出干擾聲音的音量，可獲得不同音量的干擾。
 本實驗為模擬會談參與者之間的談話內容，使用台灣地區漢語語音噪音下聽辨測試資料集(TMHINT) \cite{wong2007development}，
 挑選商務會議中可能出現的詞句，並透過 Google 的文字轉換語音服務(TTS)朗讀挑選出詞句文本。
@@ -518,11 +518,32 @@ $Y$軸為聲音紀錄時間長度 \DEFtimeREC，$X$軸為執行時間。
 
 \section{系統安全性分析}
 
-    本研究所設計之系統可以確保 Server 在 Running {\it Meeting Session}結束後，
-直到成功解封 ({\it Unseal})之前，\DEFrecREV 保有機密性。
+    此章節將針對本研究所設計之系統進行安全性的探討。
+
+    概覽本研究所設計之\nameref{fig:system-data-flow}，如圖 \ref{fig:system-data-flow}。
+透過圖中上半部分可以觀察到，系統透過超聲波麥克風干擾器(Jammer)，將會談參與者(Attender)的對話內容加以保密，
+產生受干擾的會談聲音記錄 \DEFrecJ。並透過同一超聲波麥克風干擾器，產生用於解密的純噪音之聲音記錄 \DEFrecN。
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{system-data-flow}
     \caption{系統資料流程圖}\label{fig:system-data-flow}
 \end{figure}
+
+    本研究假設，目前的技術發展現狀超音波麥克風干擾器可以對麥克風產生顯著的干擾效果\cite{chen2020demonstrating}。
+本研究也透過實作嘗試復現 Yuxin Chen, Huiying Li 等人的成果 \cite{chen2020wearable}，
+並驗證其干擾效果，如實驗 \ref{subsec:exp-jammer}。
+此超音波麥克風干擾機制原理為，將會談聲音內容(如會談對話)利用超聲波麥克風干擾器對於麥克風的非線性響應輸出進行疊加，
+可視為是對會談聲音內容利用干擾噪音進行流加密。
+與流加密不同之處於，傳統流加密的位元深度為 2，而對聲音進行流加密的位元深度取決於取樣時後的量化深度，
+常見 16位元有號整數或 32 位元浮點數。
+因此若對於聲音的流加密原始聲音與干擾聲音的信噪比差不夠，即便受干擾的聲音訊號已失真，
+仍有可能於頻域分析或人耳聽聽感得出與原始聲音的關聯性。
+透過實驗 \ref{subsec:exp-jammer} 結果得知，若信噪比達到約 $-22~dB$，
+無法在沒有純超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄的情境下，有效還原原始聲音。
+即意在會談聲音內容與干擾噪音信噪比達到約 $-22~dB$ 時，透過超聲波噪音干擾對於麥克風產生的聲音紀錄內容進行劉加密，
+可以抵禦唯密文攻擊。
+
+
+    本研究所設計之系統可以確保 Server 在 Running {\it Meeting Session}結束後，
+直到成功解封 ({\it Unseal})之前，\DEFrecREV 保有機密性。
