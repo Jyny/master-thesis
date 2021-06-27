@@ -621,5 +621,21 @@ $Min($\DEFmicRecREV $~-~$ \DEFmicConv $)~=~Min($ \DEFmicUSJ $~-~$ \DEFmicUSD $)$
 導致以明文形式存在的解封金鑰 \DEFunsealKey 洩漏，則透過本研究所提出聲音記錄存取控制協定保護的此次會談的聲音紀錄，
 可能因此而失去機密性。
 
+    透過分析章節 \ref{sec:protocol} \nameref{sec:protocol}
+中的 \ref{subsec:protocol-init-reg} \nameref{subsec:protocol-init-reg}可以得知，
+會談主持者於註冊時會產生一非對稱是加密演算法的公開私密金鑰對。
+並於註冊完成後根據會談主持者註冊人數是否為一或多人，
+來判斷為單一會談主持者情境(\ref{fig:system-data-flow}藍色虛線框上半處)
+或多會談主持者情境(\ref{fig:system-data-flow}藍色虛線框下半處)，
+應用此公開私密金鑰對達到目的將解封金鑰 \DEFunsealKey 的解密權限，轉交給會談主持者，
+如 \ref{subsec:protocol-sessioning} \nameref{subsec:protocol-sessioning}。
+協定中此階段為 Shamir's Secret Sharing \cite{shamir1979share} 與
+RSA PKCS\#1 \cite{rfc8017} 的應用，得以受益於其所提供的安全性保證。
+
+    本研究基於假設，系統各角色之間通訊為加密通道，提供通訊安全以保障資料的完整性、機密性。
+透過引用目前的技術發展現狀的成熟技術，如傳輸層安全性協定(Transport Layer Security，TLS)，
+可以於通訊層防止如竊聽攻擊(Sniffing attack)、中間人攻擊(Man-in-the-middle attack，MITM)、
+重送攻擊(Replay attack)等\cite{rfc5246}\cite{rfc8446}。
+
     綜上所述，本研究所設計之\nameref{sec:protocol}可以確保，在 \nameref{subsec:protocol-sessioning} 結束後，
 直到成功解封 \nameref{subsec:protocol-unseal-access} 前，有效的會談聲音紀錄 \DEFrecREV 保有機密性。
