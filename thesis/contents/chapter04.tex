@@ -519,7 +519,9 @@ $Y$軸為聲音紀錄時間長度 \DEFtimeREC，$X$軸為執行時間。
 \section{系統安全性分析}
 
     此章節將針對本研究所設計之系統分為兩部分進行安全性的探討，
-一、「超音波麥克風干擾器與主動式噪音控制」；二、「聲音紀錄存取控制機制協定的安全性；
+一、「超音波麥克風干擾器與主動式噪音控制」；二、「聲音記錄存取控制協定」；
+
+\subsection{超音波麥克風干擾器與主動式噪音控制}
 
     概覽本研究所設計之\nameref{fig:system-data-flow}，如圖 \ref{fig:system-data-flow}。
 透過圖中上半部分可以觀察到，系統透過超音波麥克風干擾器(Jammer)，將會談參與者(Attender)的對話內容加以保密，
@@ -596,6 +598,28 @@ $Min($\DEFmicRecREV $~-~$ \DEFmicConv $)~=~Min($ \DEFmicUSJ $~-~$ \DEFmicUSD $)$
 此時即無法透過最小累計能量差在對齊點時顯著下降來找到對齊點。
 故目前無已知有效方法可以對其進行選擇密文攻擊(Chosen-Ciphertext Attack，CCA)。
 
+    前篇段落針對超音波麥克風干擾器與主動式噪音控制視為一串流加密系統進行安全性分析，並探討數個針對密碼系統的攻擊向量。
+得出結論，在無純超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄作為解密金鑰時，
+目前無已知有效的方法，可以還原出有效會談聲音紀錄。
 
-    本研究所設計之系統可以確保 Server 在 Running {\it Meeting Session}結束後，
-直到成功解封 ({\it Unseal})之前，\DEFrecREV 保有機密性。
+\subsection{聲音記錄存取控制協定}
+
+    概覽本研究所設計之系統資料流程圖，如圖 \ref{fig:system-data-flow}。
+可以觀察到本研究所設計之系統將純噪音之聲音記錄 \DEFrecN 作為秘密保護，
+透過解封金鑰 \DEFunsealKey 加密純噪音之聲音記錄 \DEFrecN，產生受加密保護的純噪音之聲音記錄 \DEFrecP。
+當執行系統生命週期\nameref{subsec:unseal}時(圖 \ref{fig:system-data-flow} 中綠色虛線框處)，
+需要此解封金鑰 \DEFunsealKey 來解密受加密保護的純噪音之聲音記錄 \DEFrecP，
+還原純噪音之聲音記錄 \DEFrecN 用於執行接續步驟以還原出有效的會談聲音紀錄 \DEFrecREV，
+此時 \DEFunsealKey 為系統生命週期中\nameref{subsec:unseal}的關鍵變數。
+
+    透過分析章節 \ref{sec:protocol} \nameref{sec:protocol}可以發現，
+解封金鑰 \DEFunsealKey 產生於\nameref{sec:protocol}的\nameref{subsec:protocol-init-create}，
+其產生者為系統角色解封伺服器 \DEFserver。
+且於 \nameref{subsec:protocol-init-reg} 後於 \nameref{subsec:protocol-sessioning} 開始前錄音前，
+於封伺服器 \DEFserver 銷毀。此時間區內，由於解封金鑰 \DEFunsealKey 以明文形式存在於解封伺服器 \DEFserver，
+因此系統較為脆弱。例如：此時解封伺服器 \DEFserver 若遭受非預期的資訊安全風險，
+導致以明文形式存在的解封金鑰 \DEFunsealKey 洩漏，則透過本研究所提出聲音記錄存取控制協定保護的此次會談的聲音紀錄，
+可能因此而失去機密性。
+
+    綜上所述，本研究所設計之\nameref{sec:protocol}可以確保，在 \nameref{subsec:protocol-sessioning} 結束後，
+直到成功解封 \nameref{subsec:protocol-unseal-access} 前，有效的會談聲音紀錄 \DEFrecREV 保有機密性。
