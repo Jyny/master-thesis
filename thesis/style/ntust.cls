@@ -72,6 +72,10 @@
 \RequirePackage[T1]{fontenc}
 \RequirePackage{algorithm2e}
 \RequirePackage{cryptocode}
+\RequirePackage[
+    scale=0.13,
+    angle=0,
+]{background}
 
 
 % --------------------------------------------------

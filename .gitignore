@@ -33,3 +33,4 @@ thesis/*.blg
 thesis/*.out
 thesis/*.gz
 thesis/*.xdv
+thesis/*.xwm

@@ -1,10 +1,11 @@
 % !TeX root = ../main.tex
 \chapter{系統架構與方法}
 
-    本研究所設計之系統系利用超音波對麥克風造成的非線性響應輸出與自適應噪音消除高關聯度噪音等特性。
-來嘗試解決在部署麥克風干擾器的場域裡無法取得有效聲學紀錄的問題。
-同時藉由密碼系統的機密性與不可否認性，發展一套以其為基礎的會談聲音記錄存取控制機制。
-透過上述機制的結合，能夠使在部署超音波麥克風干擾器的會談情境中，於會談結束後，允許特定參與者得以取得有效之聲音記錄。
+    本研究利用超音波對麥克風造成的非線性響應輸出與自適應噪音消除高關聯度噪音等特性，
+嘗試解決部署有麥克風干擾器的場域裡，無法取得有效聲學紀錄的問題\cite{chen2020wearable}。
+同時藉由密碼系統的機密性與不可否認性，發展一套以其為基礎的會談聲音記錄存取機制。
+透過上述技術的結合，使在部署超音波麥克風干擾器的會談情境中，
+於會談結束後，允許特定參與者得以取得有效之聲音記錄。
 
 
 \section{符號定義}
@@ -100,7 +101,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{single-owner-architecture}
+    \includegraphics[width=0.7\textwidth]{single-owner-architecture}
     \caption{單一會談主持者情境圖}\label{fig:s-o-arch}
 \end{figure}
 
@@ -111,6 +112,25 @@
 
 
 \subsection{系統假設}
+
+    本研究基於假設如下：
+
+\begin{enumerate}
+    \item 超音波麥克風干擾器產生顯著的干擾效果：
+
+        近期的研究表明，目前的技術發展現狀已經能透過低成本、可穿戴式的裝置，
+    產生有效的超音波麥克風干擾 \cite{chen2020demonstrating}。
+    本研究實作嘗試復現 Yuxin Chen, Huiying Li 等人的實作 \cite{chen2020wearable}，
+    並透過復現實作的超音波麥克風干擾器作為為參考，近一步分析評估於不同信噪比時的干擾效果。
+    如系統實驗 \ref{subsec:exp-jammer} \nameref{subsec:exp-jammer}。
+
+    \item 系統各角色之間通訊為加密通道：
+
+        目前的技術發展現狀，已經有成熟的技術可以為網路通訊創造一加密通道，
+    提供通訊安全以保障資料的完整性、機密性。
+    如傳輸層安全性協定(Transport Layer Security，TLS) \cite{rfc5246}，
+    在最新版本 TLS 1.3 中，更可以保障向前安全性 \cite{rfc8446}。
+\end{enumerate}
 
 
 \subsection{會談參與者}
@@ -140,7 +160,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{multi-owner-architecture}
+    \includegraphics[width=0.8\textwidth]{multi-owner-architecture}
     \caption{多會談主持者情境圖}\label{fig:m-o-arch}
 \end{figure}
 
@@ -193,7 +213,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{system-stage}
+    \includegraphics[width=0.7\textwidth]{system-stage}
     \caption{會談生命週期}\label{fig:system-stage}
 \end{figure}
 
@@ -216,7 +236,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{single-owner-sequence-diagram-init}
+    \includegraphics[width=0.8\textwidth]{single-owner-sequence-diagram-init}
     \caption{初始化會談於單一會談主持者情境}\label{fig:s-o-init}
 \end{figure}
 
@@ -256,7 +276,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{single-owner-sequence-diagram-sessioning}
+    \includegraphics[width=0.8\textwidth]{single-owner-sequence-diagram-sessioning}
     \caption{進行會談於單一會談主持者情境}\label{fig:s-o-sessioning}
 \end{figure}
 
@@ -299,7 +319,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{single-owner-sequence-diagram-unseal}
+    \includegraphics[width=0.6\textwidth]{single-owner-sequence-diagram-unseal}
     \caption{解封會談聲音記錄於單一會談主持者情境}\label{fig:s-o-unseal}
 \end{figure}
 
@@ -335,7 +355,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{multi-owner-sequence-diagram-init}
+    \includegraphics[width=0.8\textwidth]{multi-owner-sequence-diagram-init}
     \caption{初始化會談於多會談主持者情境}\label{fig:m-o-init}
 \end{figure}
 
@@ -350,7 +370,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{multi-owner-sequence-diagram-sessioning}
+    \includegraphics[width=0.8\textwidth]{multi-owner-sequence-diagram-sessioning}
     \caption{進行會談於多會談主持者情境}\label{fig:m-o-sessioning}
 \end{figure}
 
@@ -1162,7 +1182,7 @@
 如何推估聲音樣本的離散時間誤差值 \DEFshift，用於自適應噪音消除時對齊聲音樣本。
 
     在前章節中提到，本研究消於除噪音時為了提升噪音消除的成效，
-透過將輸入噪音聲音紀錄 \DEFrecN 的離散時間索引值 \DEFtimeLen 加上離散時間誤差值 \DEFshift，
+透過將輸入噪音聲音紀錄 \DEFrecN 的離散時間索引值 \DEFpause 加上離散時間誤差值 \DEFshift，
 來對齊修正噪音聲音紀錄 \DEFrecN 與欲消去噪音聲音紀錄 \DEFrecJ 的離散時間誤差。
 已知純噪音聲音紀錄 \DEFrecN 與欲消去噪音聲音紀錄 \DEFrecJ 的取樣率 \DEFsamplerate 相同，
 因此可以透過動態相對平移兩個離散時間序列來評估是否對齊，平移的量定義為 \DEFcandiSFT。
@@ -1173,7 +1193,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{sub}
+    \includegraphics[width=0.9\textwidth]{sub}
     \caption{受干擾的聲音(上)與純噪音(中)干涉抵銷結果(下)}\label{fig:estimate-sub}
 \end{figure}
 
@@ -1224,8 +1244,10 @@
 並且於每次找到新的最小累計能量差時，將樣本標準差賦值為$0$，平均數賦值為此最小累計能量差。
 如此在迭代的過程中，目前已知的最小累計能量差會不斷下降，平均數會在最小累計能量差與理論整體平均之間震盪，
 樣本標準差則會在$0$與母體標準差之間震盪。
-迭代的過程中會持續紀錄目前最小累計能量差，與計算出新的最小累計能量差時的動態相對平移量 \DEFcandiSFT。
+
+    最小累計能量差在執行過程不斷更新，但我們仍未知目前最小累計能量差是否為全域最小累計能量差。
+因此迭代的過程中會持續紀錄目前最小累計能量差，與計算出新的最小累計能量差時的動態相對平移量 \DEFcandiSFT。
 若很長的時間都未找到新的最小累計能量差時，此時平均數會逐漸趨近理論整體平均，樣本標準差也逐漸趨近母體標準差。
-此時則定義，若目前最小累計能量差與平均數相差超過 $7$ 樣本標準差，則演算法終止。
+此時則定義，若目前最小累計能量差與平均數相差超過 $7$ 倍樣本標準差，則演算法終止。
 並且認定目前最小累計能量差，為全域最小累計能量差。而計算出目前最小累計能量差時的動態相對平移量 \DEFcandiSFT，
 則為認定聲音樣本的離散時間誤差 \DEFshift，即完成此推估演算法。
