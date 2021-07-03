@@ -26,6 +26,16 @@
 另外，Hao Shen 等人也提出於多麥克風超音波干擾器的情境中，
 透過改變擺放位置與角度的變化優化超音波麥克風干擾器的效率\cite{shen2019jamsys}。
 
-\section{噪音消除技術}
+\section{主動式噪音消除技術}
+
+    主動式噪音消除(Active Noise Cancellation, ANC) 或又稱主動式噪音控制(Active Noise Control, ANC)，
+是一種用來消除噪音的方法。其原理為透過產生與噪音極性反轉的波(polarity inversion)，利用兩波的抵銷干涉來消除噪音。
+此概念最早於 1963 由 Paul Lueg 提出 \cite{elliott1993active}。
+現代實際應用中，由於傳統濾波器中的參數是固定的，因此無法有效處理非穩態(Non-Stationarity)噪音。
+透過自適應濾波器(Adaptive filter)，可以增加濾波器自我調節的能力來解決上述問題。
+自適應濾波器為一類線性濾波器，其組成為一遞移函數(Transfer function)包含多個可控參數，
+根據參考訊號的變化透過優化演算法(optimization algorithm)來更新函數中的可控參數。
+此設計得以使濾波器獲得自適應的能力，得以有效的處理未知的響應輸出系統\cite{widrow1983adaptive}。
+
 
 \section{存取控制}
