@@ -1118,11 +1118,7 @@
 \section{自適應噪音消除}\label{sec:anc}
 
     本章將說明於生命週期解封會談聲音記錄中，如何應用自適應噪音消除，以還原出有效的會談聲音記錄。
-
-
-\subsection{問題定義}\label{subsec:anc-prob-def}
-
-    本研究所設計之系統中，有兩個聲音數入分別為 \DEFrecJ 與 \DEFrecN。
+本研究所設計之系統中，有兩個聲音數入分別為 \DEFrecJ 與 \DEFrecN。
 其中 \DEFrecJ 是來自於開啟音波麥克風干擾器場域裡的會談聲音記錄，內容為超音波麥克風干擾器的干擾與會談聲音的疊加。
 會談聲音記錄因受到超音波麥克風干擾器的干擾，而成為非有效之聲音記錄。
 \DEFrecN 為純超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄，如圖 \ref{fig:anc}。
@@ -1164,8 +1160,6 @@
 兩個響應輸出系統 \DEFfuncMicUSN{\DEFpause} 與 \DEFfuncMicUSJ{\DEFpause} 之間存在差異。
 根據實驗環境不同，\DEFmicRecREV 與 \DEFmicConv 可能相去甚遠，
 導致此無法有效的還原產生消除噪音後的會談聲音記錄。
-
-\subsection{方法與應用}\label{subsec:anc-prob-meth}
 
     為解決前節所描述的問題，透過引入兩個機制來嘗試解決。
 （一）、聲音樣本的離散時間誤差對齊；
