@@ -702,7 +702,7 @@
 其運作細節如圖 \ref{fig:protocol-sessioning}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
-\begin{tabularx}{0.95\textwidth} {
+\begin{tabularx}{\textwidth} {
         |c
         >{\raggedright\arraybackslash}X
         >{\centering\arraybackslash}c
@@ -727,7 +727,8 @@
     \multicolumn{5}{|c|}{} \\
 
     &
-    $M_{1}$ $\leftarrow$ $\{$\DEFsessionID$\}$
+    \DEFsessionID.$_{mac}$ $\leftarrow$ \DEFfuncHMAC{\DEFsessionID} \newline
+    $M_{1}$ $\leftarrow$ $\{$\DEFsessionID, \DEFsessionID.$_{mac}$$\}$
     & & & \\
 
     & &
@@ -735,6 +736,9 @@
     & & \\
 
     & & &
+    {\bf if~}\DEFfuncHMAC{\DEFsessionID} ~!$=$~ \DEFsessionID.$_{mac}${\bf:} \newline
+    \pcind {\bf terminate session} \newline
+
     {\bf if~} \DEFowreg $=1${\bf:} \newline
     \pcind $pk$ $\leftarrow$ \DEFpublicKey \newline
     \pcind \DEFakEnc $\leftarrow$ \DEFfuncEncPK{\DEFunsealKey} \newline
@@ -769,9 +773,8 @@
     \multicolumn{5}{|c|}{} \\
 
     &
-    $m_{3}$ $\leftarrow$ \DEFrecJ \newline
-    $m_{3}._{mac}$ $\leftarrow$ \DEFfuncHMAC{$m_{3}$} \newline
-    $M_{3}$ $\leftarrow$ $\{$\DEFsessionID, $m_{3}$, $m_{3}._{mac}$$\}$ \newline
+    \DEFrecJ.$_{mac}$ $\leftarrow$ \DEFfuncHMAC{\DEFrecJ} \newline
+    $M_{3}$ $\leftarrow$ $\{$\DEFsessionID, \DEFrecJ, \DEFrecJ.$_{mac}$$\}$ \newline
     & & & \\
 
     & &
@@ -779,9 +782,8 @@
     & & \\
 
     & & &
-    {\bf if~}\DEFfuncHMAC{$m_{3}$} ~!$=$~ $m_{3}._{mac}${\bf:} \newline
+    {\bf if~}\DEFfuncHMAC{\DEFrecJ} ~!$=$~ \DEFrecJ.$_{mac}${\bf:} \newline
     \pcind {\bf terminate session} \newline
-    \DEFrecJ $\leftarrow$ $m_{3}$ \newline
     {\bf bind relations:} \newline
     \pcind \DEFrecJ ~ $\in$ ~ \DEFsessionID \newline
     $M_{4}$ $\leftarrow$ $\{\}$
@@ -804,12 +806,15 @@
         會談參與者透過與會談終端的物理控制介面，
     使會談終端 \DEFmeetingbox 獲得外部事件而觸發向解封伺服器 \DEFserver 發出此請求，
     目標為通知解封伺服器 \DEFserver，會談主持者註冊已完成。
-    訊息內容為此次會談唯一識別碼 \DEFsessionID。
+    首先使用 \DEFmboxKey 透過雜湊訊息鑑別碼產生函數 \DEFfuncHMAC{} 產生 \DEFsessionID 的雜湊訊息鑑別碼，
+    訊息內容為此次會談唯一識別碼 \DEFsessionID 與其雜湊訊息鑑別碼。
 
     \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
         解封伺服器收到會談終端的請求後，
-    透過限制會談唯一識別 \DEFsessionID 不再新增關聯綁定新的會談主持者，來終止會談主持者註冊。
+    首先使用 \DEFmboxKey 透過雜湊訊息鑑別碼產生函數 \DEFfuncHMAC{} 產生 \DEFmeetingbox 的雜湊訊息鑑別碼，
+    並且比對判斷訊息內與產生的雜湊訊息鑑別碼值是否相等。
+    若相等，透過限制會談唯一識別 \DEFsessionID 不再新增關聯綁定新的會談主持者，來終止會談主持者註冊。
     接著判斷會談主持者註冊人數 \DEFowreg 是否為一或多人。
 
         若為一人，則為單一會談主持者情境。此時將屬於此會談的解封金鑰 \DEFunsealKey，
