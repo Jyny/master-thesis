@@ -461,6 +461,7 @@
     \DEFowreg $\leftarrow$ $0$ \newline
     {\bf bind relations:} \newline
     \pcind \DEFunsealKey ~ $\in$ ~ \DEFsessionID \newline
+    \pcind \DEFmboxKey ~ $\in$ ~ \DEFsessionID \newline
     $M_{2}$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey, \DEFmboxKey$\}$
     & \\
 
@@ -480,6 +481,8 @@
     & & \\
 
     & & &
+    {\bf if~}\DEFfuncHMAC{$m_{3}$} ~!$=$~ $m_{3}._{mac}${\bf:} \newline
+    \pcind {\bf terminate session} \newline
     \DEFrecP $\leftarrow$ $m_{3}$ \newline
     {\bf bind relations:} \newline
     \pcind \DEFrecP ~ $\in$ ~ \DEFsessionID \newline
@@ -510,25 +513,36 @@
     \item $\{$\DEFsessionID, \DEFunsealKey$\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
         解封伺服器 \DEFserver 收到請求後，執行 \DEFfuncIDgen{} 與 \DEFfuncKgen{}，
-    分別產生此次會談的唯一識別碼 \DEFsessionID，與此次會談的解封金鑰 \DEFunsealKey。
-    首先將 \DEFunsealKey 關聯綁定屬於 \DEFsessionID。接著建立變數 \DEFowreg，
+    分別產生此次會談的唯一識別碼 \DEFsessionID、
+    此次會談的解封金鑰 \DEFunsealKey 與會談終端的認證金鑰 \DEFmboxKey。
+    接著將 \DEFunsealKey 與 \DEFmboxKey 關聯綁定屬於 \DEFsessionID。
+    接著建立變數 \DEFowreg，
     定義為此會談的會談主持者於解封伺服器 \DEFserver 的註冊人數，初始值為 $0$。
-    隨後回覆會談終端 \DEFmeetingbox，會談創建成功，訊息內容為 \DEFsessionID 與 \DEFunsealKey。
+    隨後回覆會談終端 \DEFmeetingbox，會談創建成功，
+    訊息內容為 \DEFsessionID 、 \DEFunsealKey 與 \DEFmboxKey。
 
         其中 \DEFfuncIDgen{} 為唯一識別碼產生函數，其產生須滿足唯一性、隨機性、不可預測性。
-    \DEFfuncKgen{} 為對稱式加密演算法的金鑰產生函數。\DEFunsealKey 為對稱式加密金鑰。
+    \DEFfuncKgen{} 為對稱式加密演算法的金鑰產生函數。
+    \DEFfuncHMAC{} 為雜湊訊息鑑別碼產生函數。
+    \DEFunsealKey 為對稱式加密金鑰。\DEFmboxKey 為會談終端的認證金鑰。
 
     \item $\{$\DEFsessionID, \DEFrecP$\}$ $,~$ \DEFmeetingbox $\rightarrow$ \DEFserver：
 
         會談終端 \DEFmeetingbox 收到來自 \DEFserver 的回覆後，
     使用 \DEFunsealKey 透過對稱式加密函數 \DEFfuncEncEK{}
-    加密預先配置好的純超音波麥克風干擾器之聲音記錄(噪音) \DEFrecN，定義為 \DEFrecP，
+    加密預先配置好的純超音波麥克風干擾器之聲音記錄(噪音) \DEFrecN，定義為 \DEFrecP。
+    接著使用 \DEFmboxKey 透過雜湊訊息鑑別碼產生函數 \DEFfuncHMAC{}
+    產生 \DEFrecP 的雜湊訊息鑑別碼。
     接著向解封伺服器發出上傳請求，
-    訊息內容為此次會談的唯一識別碼 \DEFsessionID 與受加密保護的聲音記錄 \DEFrecP。
+    訊息內容為此次會談的唯一識別碼 \DEFsessionID 、
+    受加密保護的聲音記錄 \DEFrecP 與其雜湊訊息鑑別碼。
 
     \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
-        解封伺服器 \DEFserver 收到訊息後，將 \DEFrecP 關聯綁定屬於 \DEFsessionID。
+        解封伺服器 \DEFserver 收到訊息後，
+    首先使用 \DEFmboxKey 透過雜湊訊息鑑別碼產生函數 \DEFfuncHMAC{} 產生 \DEFrecP 的雜湊訊息鑑別碼，
+    並且比對判斷訊息內與產生的雜湊訊息鑑別碼值是否相等。
+    若相等，則將 \DEFrecP 關聯綁定屬於 \DEFsessionID。
     隨後回覆會談終端 \DEFmeetingbox 上傳成功。
     會談終端 \DEFmeetingbox 收到來自解封伺服器 \DEFserver 的上傳成功回覆後，
     銷毀於會談終端上的 \DEFrecN 與 \DEFunsealKey。
@@ -577,7 +591,7 @@
     \multicolumn{7}{|c|}{} \\
 
     & {\bf for each~} \DEFowner $\in$ \DEFownerAll \newline
-    \pcind {\bf where~} $i=1~...\mid$\DEFownerAll$\mid$ {\bf:}
+    \pcind {\bf where~} $i=1~...\mid$\DEFownerAll$\mid${\bf:}
     & & & & & \\
 
     \cdashline{2-6}
@@ -730,7 +744,7 @@
     \pcind $c$ $\leftarrow$ \DEFowreg \newline
     \pcind $t$ $\leftarrow$ \DEFowreg \newline
     \pcind $[s_{i}]$ $\leftarrow$ \DEFfuncSSS{\DEFunsealKey} \newline
-    \pcind {\bf for each~} $s_{i} \in [s_{i}]$~ {\bf where~} $i=1~...$\DEFowreg {\bf:} \newline
+    \pcind {\bf for each~} $s_{i} \in [s_{i}]$~ {\bf where~} $i=1~...$\DEFowreg{\bf:} \newline
     \pcind\pcind $pk$ $\leftarrow$ \DEFpublicKey \newline
     \pcind\pcind \DEFakEnc $\leftarrow$ \DEFfuncEncPK{$s_{i}$} \newline
     \pcind\pcind {\bf destroy~} $s_{i}$ \newline
@@ -876,7 +890,7 @@
     \multicolumn{5}{|c|}{} \\
 
     & {\bf for each~} \DEFowner $\in$ \DEFownerAll \newline
-    \pcind {\bf where~} $i=1~...\mid$\DEFownerAll$\mid$ {\bf:}
+    \pcind {\bf where~} $i=1~...\mid$\DEFownerAll$\mid${\bf:}
     & & & \\
 
     \cdashline{2-4}
