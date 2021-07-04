@@ -38,8 +38,9 @@
 \RequirePackage{indentfirst}
 \RequirePackage{fontspec}
 \RequirePackage[table]{xcolor}
-\RequirePackage{titlesec}
-\RequirePackage{titletoc, tocloft}
+\RequirePackage[compact]{titlesec}
+\RequirePackage[titles]{tocloft}
+\RequirePackage{titletoc}
 \RequirePackage{fancyhdr}
 \RequirePackage{setspace}
 \RequirePackage{graphicx}
@@ -137,11 +138,10 @@
 
 % [目錄格式]
 %
-\addtocontents{toc}                                         % 修改目錄樣式
-{~\hfill\textbf{Page}\par}
-{}
-{}
-{}
+\addtocontents{toc}{\vskip -3em}
+\addtocontents{lof}{\vskip -3em}
+\addtocontents{lot}{\vskip -3em}
+
 
 % \titlecontents{標題名稱}[左間距]{標題格式}{標題內容}{無序號標題}{指引線與頁碼}[下間距]
 \titlecontents{chapter}[0em]                                % 修改目錄樣式
