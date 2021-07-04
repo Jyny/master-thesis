@@ -41,12 +41,13 @@
     \DEFowner         & 第 $i$ 位會談主持者\\
     \DEFowreg         & 會談主持者註冊人數 \\
     \DEFownerID       & 會談主持者 $i$ 的唯一識別碼 \\
-    \DEFpublicKey     & 會談主持者 $i$ 的公開金鑰 \\
-    \DEFprivateKey    & 會談主持者 $i$ 的私密金鑰 \\
-    \DEFagentKey      & 會談主持者 $i$ 的授權金鑰 \\
-    \DEFakEnc         & 加密保護的授權金鑰 \DEFagentKey \\
+    \DEFpublicKey、\DEFprivateKey &
+        會談主持者 $i$ 的公開私密金鑰對 \\
+    \DEFagentKey、\DEFakEnc &
+        會談主持者 $i$ 的授權金鑰與受加密保護的授權金鑰 \\
     \DEFsessionID     & 當次會談唯一識別碼 \\
     \DEFunsealKey     & 當次會談的解封金鑰 (Unsealing Key) \\
+    \DEFmboxKey       & 會談終端的認證金鑰 \\
     \DEFfuncKgen{}    & 對稱式金鑰之產生函數 \\
     \DEFfuncPKgen{}   & 非對稱式金鑰之產生函數 \\
     \DEFfuncIDgen{}   & 唯一識別碼之產生函數 \\
@@ -58,6 +59,7 @@
     \DEFfuncDecSK{·}  & 使用私密金鑰 $sk$ 的非對稱式加密演算法之解密函數 \\
     \DEFfuncSSS{·}    & 金鑰分割函數，$c$ 為分割數，$t$ 為還原閾值 \\
     \DEFfuncSSC{·}    & 金鑰分割演算法合併函數 \\
+    \DEFfuncHMAC{·}   & 雜湊訊息鑑別碼產生函數 \\
     \DEFsharesAll     & 金鑰分割函數 \DEFfuncSSS{} 所產生的 $c$ 份分割秘密 \\
     \DEFshares        & 分割秘密中，第 $i$ 個分割秘密 \\
     \DEFrecJ          & 於開啟超音波麥克風干擾器場域裡的會談聲音記錄 \\
