@@ -693,8 +693,8 @@
 使會談終端獲得外部事件而發執行此階段。
 
     在此階段中，會談已完成會談生命週期第一階段\nameref{subsec:initialize}。
-此時會談終端應已獲得此次會談唯一識別碼 \DEFsessionID。
-解封伺服器 \DEFserver 中也應存在資料包含會談主持者註冊人數 \DEFowreg、
+此時會談終端應已獲得此次會談唯一識別碼 \DEFsessionID 與會談終端的認證金鑰 \DEFmboxKey。
+解封伺服器 \DEFserver 中也應存在資料包含會談終端的認證金鑰 \DEFmboxKey、會談主持者註冊人數 \DEFowreg、
 屬於此次會談唯一識別碼的所有會談主持者唯一識別碼 \DEFownerID 與其 \DEFpublicKey。
 
     此階段為 \ref{subsec:sessioning} \nameref{subsec:sessioning}中的步驟 4\textasciitilde5，
@@ -715,9 +715,10 @@
     & \multicolumn{1}{c}{\small{\DEFmeetingbox}} &
     & \multicolumn{1}{c}{\small{\DEFserver}} & \\
     %
-    & \multicolumn{1}{c}{$\{$\DEFsessionID, \DEFrecJ$\}$} &
+    & \multicolumn{1}{c}{$\{$\DEFsessionID, \DEFmboxKey, \DEFrecJ$\}$} &
     & \multicolumn{1}{c}{$\{$
         \DEFsessionID,
+        \DEFmboxKey,
         \DEFowreg,
         $\{[($ \DEFownerID, \DEFpublicKey $)] \mid i=1~...$\DEFowreg $\}\}$}
     & \\
