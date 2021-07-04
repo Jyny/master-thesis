@@ -41,12 +41,13 @@
     \DEFowner         & 第 $i$ 位會談主持者\\
     \DEFowreg         & 會談主持者註冊人數 \\
     \DEFownerID       & 會談主持者 $i$ 的唯一識別碼 \\
-    \DEFpublicKey     & 會談主持者 $i$ 的公開金鑰 \\
-    \DEFprivateKey    & 會談主持者 $i$ 的私密金鑰 \\
-    \DEFagentKey      & 會談主持者 $i$ 的授權金鑰 \\
-    \DEFakEnc         & 加密保護的授權金鑰 \DEFagentKey \\
+    \DEFpublicKey、\DEFprivateKey &
+        會談主持者 $i$ 的公開私密金鑰對 \\
+    \DEFagentKey、\DEFakEnc &
+        會談主持者 $i$ 的授權金鑰與受加密保護的授權金鑰 \\
     \DEFsessionID     & 當次會談唯一識別碼 \\
     \DEFunsealKey     & 當次會談的解封金鑰 (Unsealing Key) \\
+    \DEFmboxKey       & 會談終端的認證金鑰 \\
     \DEFfuncKgen{}    & 對稱式金鑰之產生函數 \\
     \DEFfuncPKgen{}   & 非對稱式金鑰之產生函數 \\
     \DEFfuncIDgen{}   & 唯一識別碼之產生函數 \\
@@ -58,6 +59,7 @@
     \DEFfuncDecSK{·}  & 使用私密金鑰 $sk$ 的非對稱式加密演算法之解密函數 \\
     \DEFfuncSSS{·}    & 金鑰分割函數，$c$ 為分割數，$t$ 為還原閾值 \\
     \DEFfuncSSC{·}    & 金鑰分割演算法合併函數 \\
+    \DEFfuncHMAC{·}   & 雜湊訊息鑑別碼產生函數 \\
     \DEFsharesAll     & 金鑰分割函數 \DEFfuncSSS{} 所產生的 $c$ 份分割秘密 \\
     \DEFshares        & 分割秘密中，第 $i$ 個分割秘密 \\
     \DEFrecJ          & 於開啟超音波麥克風干擾器場域裡的會談聲音記錄 \\
@@ -213,7 +215,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{system-stage}
+    \includegraphics[width=0.9\textwidth]{system-stage}
     \caption{會談生命週期}\label{fig:system-stage}
 \end{figure}
 
@@ -236,7 +238,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{single-owner-sequence-diagram-init}
+    \includegraphics[width=0.85\textwidth]{single-owner-sequence-diagram-init}
     \caption{初始化會談於單一會談主持者情境}\label{fig:s-o-init}
 \end{figure}
 
@@ -276,7 +278,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{single-owner-sequence-diagram-sessioning}
+    \includegraphics[width=0.85\textwidth]{single-owner-sequence-diagram-sessioning}
     \caption{進行會談於單一會談主持者情境}\label{fig:s-o-sessioning}
 \end{figure}
 
@@ -355,7 +357,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{multi-owner-sequence-diagram-init}
+    \includegraphics[width=0.85\textwidth]{multi-owner-sequence-diagram-init}
     \caption{初始化會談於多會談主持者情境}\label{fig:m-o-init}
 \end{figure}
 
@@ -370,7 +372,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{multi-owner-sequence-diagram-sessioning}
+    \includegraphics[width=0.85\textwidth]{multi-owner-sequence-diagram-sessioning}
     \caption{進行會談於多會談主持者情境}\label{fig:m-o-sessioning}
 \end{figure}
 
@@ -383,7 +385,7 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{multi-owner-sequence-diagram-unseal}
+    \includegraphics[width=0.65\textwidth]{multi-owner-sequence-diagram-unseal}
     \caption{解封會談聲音記錄於多會談主持者情境}\label{fig:m-o-unseal}
 \end{figure}
 
@@ -455,10 +457,12 @@
     & & &
     \DEFsessionID $\leftarrow$ \DEFfuncIDgen{} \newline
     \DEFunsealKey $\leftarrow$ \DEFfuncKgen{} \newline
+    \DEFmboxKey $\leftarrow$ \DEFfuncKgen{} \newline
     \DEFowreg $\leftarrow$ $0$ \newline
     {\bf bind relations:} \newline
     \pcind \DEFunsealKey ~ $\in$ ~ \DEFsessionID \newline
-    $M_{2}$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey$\}$
+    \pcind \DEFmboxKey ~ $\in$ ~ \DEFsessionID \newline
+    $M_{2}$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey, \DEFmboxKey$\}$
     & \\
 
     & &
@@ -468,7 +472,8 @@
     &
     $k$ $\leftarrow$ \DEFunsealKey \newline
     $m_{3}$ $\leftarrow$ \DEFfuncEncEK{\DEFrecN} \newline
-    $M_{3}$ $\leftarrow$ $\{$\DEFsessionID, $m_{3}$$\}$ \newline
+    $m_{3}._{mac}$ $\leftarrow$ \DEFfuncHMAC{$m_{3}$} \newline
+    $M_{3}$ $\leftarrow$ $\{$\DEFsessionID, $m_{3}$, $m_{3}._{mac}$$\}$ \newline
     & & & \\
 
     & &
@@ -476,6 +481,8 @@
     & & \\
 
     & & &
+    {\bf if~}\DEFfuncHMAC{$m_{3}$} ~!$=$~ $m_{3}._{mac}${\bf:} \newline
+    \pcind {\bf terminate session} \newline
     \DEFrecP $\leftarrow$ $m_{3}$ \newline
     {\bf bind relations:} \newline
     \pcind \DEFrecP ~ $\in$ ~ \DEFsessionID \newline
@@ -506,25 +513,36 @@
     \item $\{$\DEFsessionID, \DEFunsealKey$\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
         解封伺服器 \DEFserver 收到請求後，執行 \DEFfuncIDgen{} 與 \DEFfuncKgen{}，
-    分別產生此次會談的唯一識別碼 \DEFsessionID，與此次會談的解封金鑰 \DEFunsealKey。
-    首先將 \DEFunsealKey 關聯綁定屬於 \DEFsessionID。接著建立變數 \DEFowreg，
+    分別產生此次會談的唯一識別碼 \DEFsessionID、
+    此次會談的解封金鑰 \DEFunsealKey 與會談終端的認證金鑰 \DEFmboxKey。
+    接著將 \DEFunsealKey 與 \DEFmboxKey 關聯綁定屬於 \DEFsessionID。
+    接著建立變數 \DEFowreg，
     定義為此會談的會談主持者於解封伺服器 \DEFserver 的註冊人數，初始值為 $0$。
-    隨後回覆會談終端 \DEFmeetingbox，會談創建成功，訊息內容為 \DEFsessionID 與 \DEFunsealKey。
+    隨後回覆會談終端 \DEFmeetingbox，會談創建成功，
+    訊息內容為 \DEFsessionID 、 \DEFunsealKey 與 \DEFmboxKey。
 
         其中 \DEFfuncIDgen{} 為唯一識別碼產生函數，其產生須滿足唯一性、隨機性、不可預測性。
-    \DEFfuncKgen{} 為對稱式加密演算法的金鑰產生函數。\DEFunsealKey 為對稱式加密金鑰。
+    \DEFfuncKgen{} 為對稱式加密演算法的金鑰產生函數。
+    \DEFfuncHMAC{} 為雜湊訊息鑑別碼產生函數。
+    \DEFunsealKey 為對稱式加密金鑰。\DEFmboxKey 為會談終端的認證金鑰。
 
     \item $\{$\DEFsessionID, \DEFrecP$\}$ $,~$ \DEFmeetingbox $\rightarrow$ \DEFserver：
 
         會談終端 \DEFmeetingbox 收到來自 \DEFserver 的回覆後，
     使用 \DEFunsealKey 透過對稱式加密函數 \DEFfuncEncEK{}
-    加密預先配置好的純超音波麥克風干擾器之聲音記錄(噪音) \DEFrecN，定義為 \DEFrecP，
+    加密預先配置好的純超音波麥克風干擾器之聲音記錄(噪音) \DEFrecN，定義為 \DEFrecP。
+    接著使用 \DEFmboxKey 透過雜湊訊息鑑別碼產生函數 \DEFfuncHMAC{}
+    產生 \DEFrecP 的雜湊訊息鑑別碼。
     接著向解封伺服器發出上傳請求，
-    訊息內容為此次會談的唯一識別碼 \DEFsessionID 與受加密保護的聲音記錄 \DEFrecP。
+    訊息內容為此次會談的唯一識別碼 \DEFsessionID 、
+    受加密保護的聲音記錄 \DEFrecP 與其雜湊訊息鑑別碼。
 
     \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
-        解封伺服器 \DEFserver 收到訊息後，將 \DEFrecP 關聯綁定屬於 \DEFsessionID。
+        解封伺服器 \DEFserver 收到訊息後，
+    首先使用 \DEFmboxKey 透過雜湊訊息鑑別碼產生函數 \DEFfuncHMAC{} 產生 \DEFrecP 的雜湊訊息鑑別碼，
+    並且比對判斷訊息內與產生的雜湊訊息鑑別碼值是否相等。
+    若相等，則將 \DEFrecP 關聯綁定屬於 \DEFsessionID。
     隨後回覆會談終端 \DEFmeetingbox 上傳成功。
     會談終端 \DEFmeetingbox 收到來自解封伺服器 \DEFserver 的上傳成功回覆後，
     銷毀於會談終端上的 \DEFrecN 與 \DEFunsealKey。
@@ -573,7 +591,7 @@
     \multicolumn{7}{|c|}{} \\
 
     & {\bf for each~} \DEFowner $\in$ \DEFownerAll \newline
-    \pcind {\bf where~} $i=1~...\mid$\DEFownerAll$\mid$ {\bf:}
+    \pcind {\bf where~} $i=1~...\mid$\DEFownerAll$\mid${\bf:}
     & & & & & \\
 
     \cdashline{2-6}
@@ -675,8 +693,8 @@
 使會談終端獲得外部事件而發執行此階段。
 
     在此階段中，會談已完成會談生命週期第一階段\nameref{subsec:initialize}。
-此時會談終端應已獲得此次會談唯一識別碼 \DEFsessionID。
-解封伺服器 \DEFserver 中也應存在資料包含會談主持者註冊人數 \DEFowreg、
+此時會談終端應已獲得此次會談唯一識別碼 \DEFsessionID 與會談終端的認證金鑰 \DEFmboxKey。
+解封伺服器 \DEFserver 中也應存在資料包含會談終端的認證金鑰 \DEFmboxKey、會談主持者註冊人數 \DEFowreg、
 屬於此次會談唯一識別碼的所有會談主持者唯一識別碼 \DEFownerID 與其 \DEFpublicKey。
 
     此階段為 \ref{subsec:sessioning} \nameref{subsec:sessioning}中的步驟 4\textasciitilde5，
@@ -684,7 +702,7 @@
 其運作細節如圖 \ref{fig:protocol-sessioning}與說明：
 
 \begin{center}\scriptsize\setstretch{1}
-\begin{tabularx}{0.95\textwidth} {
+\begin{tabularx}{\textwidth} {
         |c
         >{\raggedright\arraybackslash}X
         >{\centering\arraybackslash}c
@@ -697,9 +715,10 @@
     & \multicolumn{1}{c}{\small{\DEFmeetingbox}} &
     & \multicolumn{1}{c}{\small{\DEFserver}} & \\
     %
-    & \multicolumn{1}{c}{$\{$\DEFsessionID, \DEFrecJ$\}$} &
+    & \multicolumn{1}{c}{$\{$\DEFsessionID, \DEFmboxKey, \DEFrecJ$\}$} &
     & \multicolumn{1}{c}{$\{$
         \DEFsessionID,
+        \DEFmboxKey,
         \DEFowreg,
         $\{[($ \DEFownerID, \DEFpublicKey $)] \mid i=1~...$\DEFowreg $\}\}$}
     & \\
@@ -708,7 +727,8 @@
     \multicolumn{5}{|c|}{} \\
 
     &
-    $M_{1}$ $\leftarrow$ $\{$\DEFsessionID$\}$
+    \DEFsessionID.$_{mac}$ $\leftarrow$ \DEFfuncHMAC{\DEFsessionID} \newline
+    $M_{1}$ $\leftarrow$ $\{$\DEFsessionID, \DEFsessionID.$_{mac}$$\}$
     & & & \\
 
     & &
@@ -716,6 +736,9 @@
     & & \\
 
     & & &
+    {\bf if~}\DEFfuncHMAC{\DEFsessionID} ~!$=$~ \DEFsessionID.$_{mac}${\bf:} \newline
+    \pcind {\bf terminate session} \newline
+
     {\bf if~} \DEFowreg $=1${\bf:} \newline
     \pcind $pk$ $\leftarrow$ \DEFpublicKey \newline
     \pcind \DEFakEnc $\leftarrow$ \DEFfuncEncPK{\DEFunsealKey} \newline
@@ -726,7 +749,7 @@
     \pcind $c$ $\leftarrow$ \DEFowreg \newline
     \pcind $t$ $\leftarrow$ \DEFowreg \newline
     \pcind $[s_{i}]$ $\leftarrow$ \DEFfuncSSS{\DEFunsealKey} \newline
-    \pcind {\bf for each~} $s_{i} \in [s_{i}]$~ {\bf where~} $i=1~...$\DEFowreg {\bf:} \newline
+    \pcind {\bf for each~} $s_{i} \in [s_{i}]$~ {\bf where~} $i=1~...$\DEFowreg{\bf:} \newline
     \pcind\pcind $pk$ $\leftarrow$ \DEFpublicKey \newline
     \pcind\pcind \DEFakEnc $\leftarrow$ \DEFfuncEncPK{$s_{i}$} \newline
     \pcind\pcind {\bf destroy~} $s_{i}$ \newline
@@ -750,7 +773,8 @@
     \multicolumn{5}{|c|}{} \\
 
     &
-    $M_{3}$ $\leftarrow$ $\{$\DEFsessionID, \DEFrecJ$\}$
+    \DEFrecJ.$_{mac}$ $\leftarrow$ \DEFfuncHMAC{\DEFrecJ} \newline
+    $M_{3}$ $\leftarrow$ $\{$\DEFsessionID, \DEFrecJ, \DEFrecJ.$_{mac}$$\}$ \newline
     & & & \\
 
     & &
@@ -758,6 +782,8 @@
     & & \\
 
     & & &
+    {\bf if~}\DEFfuncHMAC{\DEFrecJ} ~!$=$~ \DEFrecJ.$_{mac}${\bf:} \newline
+    \pcind {\bf terminate session} \newline
     {\bf bind relations:} \newline
     \pcind \DEFrecJ ~ $\in$ ~ \DEFsessionID \newline
     $M_{4}$ $\leftarrow$ $\{\}$
@@ -780,12 +806,15 @@
         會談參與者透過與會談終端的物理控制介面，
     使會談終端 \DEFmeetingbox 獲得外部事件而觸發向解封伺服器 \DEFserver 發出此請求，
     目標為通知解封伺服器 \DEFserver，會談主持者註冊已完成。
-    訊息內容為此次會談唯一識別碼 \DEFsessionID。
+    首先使用 \DEFmboxKey 透過雜湊訊息鑑別碼產生函數 \DEFfuncHMAC{} 產生 \DEFsessionID 的雜湊訊息鑑別碼，
+    訊息內容為此次會談唯一識別碼 \DEFsessionID 與其雜湊訊息鑑別碼。
 
     \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
         解封伺服器收到會談終端的請求後，
-    透過限制會談唯一識別 \DEFsessionID 不再新增關聯綁定新的會談主持者，來終止會談主持者註冊。
+    首先使用 \DEFmboxKey 透過雜湊訊息鑑別碼產生函數 \DEFfuncHMAC{} 產生 \DEFmeetingbox 的雜湊訊息鑑別碼，
+    並且比對判斷訊息內與產生的雜湊訊息鑑別碼值是否相等。
+    若相等，透過限制會談唯一識別 \DEFsessionID 不再新增關聯綁定新的會談主持者，來終止會談主持者註冊。
     接著判斷會談主持者註冊人數 \DEFowreg 是否為一或多人。
 
         若為一人，則為單一會談主持者情境。此時將屬於此會談的解封金鑰 \DEFunsealKey，
@@ -813,13 +842,17 @@
         當會談參與者再次透過與會談終端的物理控制介面，
     使會談終端 \DEFmeetingbox 獲得外部事件，此時觸發會談聲音記錄終止，關閉麥克風與超音波麥克風干擾器，
     受干擾的會談聲音紀錄 \DEFrecJ 錄製完成。並於人機互動介面提示系統已結束錄音。
+    接著使用 \DEFmboxKey 透過雜湊訊息鑑別碼產生函數 \DEFfuncHMAC{}，
+    產生 \DEFrecJ 的雜湊訊息鑑別碼。
     接著會談終端 \DEFmeetingbox 向解封伺服器 \DEFserver 發出上傳請求，
-    內容為此次會談唯一識別碼 \DEFsessionID 與受干擾的會談聲音紀錄 \DEFrecJ。
+    內容為此次會談唯一識別碼 \DEFsessionID 與受干擾的會談聲音紀錄 \DEFrecJ 與其雜湊訊息鑑別碼。
 
     \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
         解封伺服器收到會談終端的請求後，
-    將受干擾的會談聲音紀錄 \DEFrecJ 關聯綁定屬於 \DEFsessionID 且儲存，隨後回覆上傳成功。
+    首先使用 \DEFmboxKey 透過雜湊訊息鑑別碼產生函數 \DEFfuncHMAC{} 產生 \DEFrecJ 的雜湊訊息鑑別碼，
+    並且比對判斷訊息內與產生的雜湊訊息鑑別碼值是否相等。
+    若相等，則將受干擾的會談聲音紀錄 \DEFrecJ 關聯綁定屬於 \DEFsessionID 且儲存，隨後回覆上傳成功。
     此時會談參與者即可離開會談場域，不再需要與會談終端 \DEFmeetingbox 實體接觸。
 
         隨後會談終端開始為未來新的會談生命週期重新配置產生新 \DEFrecN，
@@ -872,7 +905,7 @@
     \multicolumn{5}{|c|}{} \\
 
     & {\bf for each~} \DEFowner $\in$ \DEFownerAll \newline
-    \pcind {\bf where~} $i=1~...\mid$\DEFownerAll$\mid$ {\bf:}
+    \pcind {\bf where~} $i=1~...\mid$\DEFownerAll$\mid${\bf:}
     & & & \\
 
     \cdashline{2-4}
@@ -896,8 +929,8 @@
     & \multicolumn{1}{:l}{\shortstack[l]{
     \pcind\pcind $sk$ $\leftarrow$ \DEFprivateKey \\
     \pcind\pcind $m_{3}$ $\leftarrow$ \DEFfuncDecSK{\DEFakEnc} \\
-    \pcind\pcind $m_{3}.sig$ $\leftarrow$ \DEFfuncSignSK{$m_{3}$} \\
-    \pcind\pcind $M_{3}^{i}$ $\leftarrow$ $\{$\DEFownerID$, m_{3}, ~m_{3}.sig\}$
+    \pcind\pcind $m_{3}._{sig}$ $\leftarrow$ \DEFfuncSignSK{$m_{3}$} \\
+    \pcind\pcind $M_{3}^{i}$ $\leftarrow$ $\{$\DEFownerID$, m_{3}, ~m_{3}._{sig}\}$
     }} & & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} &
@@ -906,7 +939,7 @@
 
     & \multicolumn{1}{:l}{} & & \multicolumn{1}{l:}{\shortstack[l]{
     $pk$ $\leftarrow$ \DEFpublicKey \\
-    $valid$ $\leftarrow$ \DEFfuncVerfPK{$m_{3},~m_{3}.sig$} \\
+    $valid$ $\leftarrow$ \DEFfuncVerfPK{$m_{3},~m_{3}._{sig}$} \\
     {\bf if} !$valid$ {\bf :} \\
     \pcind {\bf terminate session} \\
     {\bf else} {\bf :} \\
@@ -943,17 +976,17 @@
     查找關聯屬於會談主持者的受加密保護的授權金鑰 \DEFakEnc。隨後回覆請會談主持者簽署授權，
     訊息內容為會談主持者的唯一識別碼 \DEFownerID 與受加密保護的授權金鑰 \DEFakEnc。
 
-    \item $\{$\DEFownerID$, m_{3}, ~m_{3}.sig\}$ $,~$  \DEFowner $\rightarrow$ \DEFserver：
+    \item $\{$\DEFownerID$, m_{3}, ~m_{3}._{sig}\}$ $,~$  \DEFowner $\rightarrow$ \DEFserver：
 
         會談主持者 \DEFowner 收到解封伺服器 \DEFserver 的回覆後。
     接著使用會談主持者的私密金鑰 \DEFprivateKey，透過非對稱式加密演算法之解密函數 \DEFfuncDecSK{}，
     將受加密保護的授權金鑰 \DEFakEnc 解密，定義為 $m_{3}$。
 
         接著使用同一會談主持者的私密金鑰 \DEFprivateKey，透過數位簽章演算法簽之簽名函數 \DEFfuncSignSK{}，
-    將解密後的授權金鑰 $m_{3}$ 簽名，定義為 $m_{3}.sig$。
+    將解密後的授權金鑰 $m_{3}$ 簽名，定義為 $m_{3}._{sig}$。
 
         接著再向解封伺服器 \DEFserver 發出請求，
-    訊息內容為會談主持者的唯一識別碼 \DEFownerID、解密後的授權金鑰 $m_{3}$，與其簽名 $m_{3}.sig$。
+    訊息內容為會談主持者的唯一識別碼 \DEFownerID、解密後的授權金鑰 $m_{3}$，與其簽名 $m_{3}._{sig}$。
 
 
     \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFowner：
@@ -962,7 +995,7 @@
     查找關聯屬於會談主持者的公開金鑰 \DEFpublicKey。
 
         接著使用會談主持者的公開金鑰 \DEFpublicKey，透過數位簽章演算法簽之驗證函數 \DEFfuncVerfPK{}，
-    驗證解密後的授權金鑰 $m_{3}$，與其簽名 $m_{3}.sig$。
+    驗證解密後的授權金鑰 $m_{3}$，與其簽名 $m_{3}._{sig}$。
 
         為非真，則授權失敗，會話終止。若為真，根據數位簽章的其不可否認性，
     解封伺服器得以信任 $m_{3}$ 來自會談主持者 \DEFowner。
