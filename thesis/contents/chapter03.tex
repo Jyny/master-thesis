@@ -457,10 +457,11 @@
     & & &
     \DEFsessionID $\leftarrow$ \DEFfuncIDgen{} \newline
     \DEFunsealKey $\leftarrow$ \DEFfuncKgen{} \newline
+    \DEFmboxKey $\leftarrow$ \DEFfuncKgen{} \newline
     \DEFowreg $\leftarrow$ $0$ \newline
     {\bf bind relations:} \newline
     \pcind \DEFunsealKey ~ $\in$ ~ \DEFsessionID \newline
-    $M_{2}$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey$\}$
+    $M_{2}$ $\leftarrow$ $\{$\DEFsessionID, \DEFunsealKey, \DEFmboxKey$\}$
     & \\
 
     & &
@@ -470,7 +471,8 @@
     &
     $k$ $\leftarrow$ \DEFunsealKey \newline
     $m_{3}$ $\leftarrow$ \DEFfuncEncEK{\DEFrecN} \newline
-    $M_{3}$ $\leftarrow$ $\{$\DEFsessionID, $m_{3}$$\}$ \newline
+    $m_{3}._{mac}$ $\leftarrow$ \DEFfuncHMAC{$m_{3}$} \newline
+    $M_{3}$ $\leftarrow$ $\{$\DEFsessionID, $m_{3}$, $m_{3}._{mac}$$\}$ \newline
     & & & \\
 
     & &
@@ -898,8 +900,8 @@
     & \multicolumn{1}{:l}{\shortstack[l]{
     \pcind\pcind $sk$ $\leftarrow$ \DEFprivateKey \\
     \pcind\pcind $m_{3}$ $\leftarrow$ \DEFfuncDecSK{\DEFakEnc} \\
-    \pcind\pcind $m_{3}.sig$ $\leftarrow$ \DEFfuncSignSK{$m_{3}$} \\
-    \pcind\pcind $M_{3}^{i}$ $\leftarrow$ $\{$\DEFownerID$, m_{3}, ~m_{3}.sig\}$
+    \pcind\pcind $m_{3}._{sig}$ $\leftarrow$ \DEFfuncSignSK{$m_{3}$} \\
+    \pcind\pcind $M_{3}^{i}$ $\leftarrow$ $\{$\DEFownerID$, m_{3}, ~m_{3}._{sig}\}$
     }} & & \multicolumn{1}{l:}{} & \\
 
     & \multicolumn{1}{:l}{} &
@@ -908,7 +910,7 @@
 
     & \multicolumn{1}{:l}{} & & \multicolumn{1}{l:}{\shortstack[l]{
     $pk$ $\leftarrow$ \DEFpublicKey \\
-    $valid$ $\leftarrow$ \DEFfuncVerfPK{$m_{3},~m_{3}.sig$} \\
+    $valid$ $\leftarrow$ \DEFfuncVerfPK{$m_{3},~m_{3}._{sig}$} \\
     {\bf if} !$valid$ {\bf :} \\
     \pcind {\bf terminate session} \\
     {\bf else} {\bf :} \\
@@ -945,17 +947,17 @@
     查找關聯屬於會談主持者的受加密保護的授權金鑰 \DEFakEnc。隨後回覆請會談主持者簽署授權，
     訊息內容為會談主持者的唯一識別碼 \DEFownerID 與受加密保護的授權金鑰 \DEFakEnc。
 
-    \item $\{$\DEFownerID$, m_{3}, ~m_{3}.sig\}$ $,~$  \DEFowner $\rightarrow$ \DEFserver：
+    \item $\{$\DEFownerID$, m_{3}, ~m_{3}._{sig}\}$ $,~$  \DEFowner $\rightarrow$ \DEFserver：
 
         會談主持者 \DEFowner 收到解封伺服器 \DEFserver 的回覆後。
     接著使用會談主持者的私密金鑰 \DEFprivateKey，透過非對稱式加密演算法之解密函數 \DEFfuncDecSK{}，
     將受加密保護的授權金鑰 \DEFakEnc 解密，定義為 $m_{3}$。
 
         接著使用同一會談主持者的私密金鑰 \DEFprivateKey，透過數位簽章演算法簽之簽名函數 \DEFfuncSignSK{}，
-    將解密後的授權金鑰 $m_{3}$ 簽名，定義為 $m_{3}.sig$。
+    將解密後的授權金鑰 $m_{3}$ 簽名，定義為 $m_{3}._{sig}$。
 
         接著再向解封伺服器 \DEFserver 發出請求，
-    訊息內容為會談主持者的唯一識別碼 \DEFownerID、解密後的授權金鑰 $m_{3}$，與其簽名 $m_{3}.sig$。
+    訊息內容為會談主持者的唯一識別碼 \DEFownerID、解密後的授權金鑰 $m_{3}$，與其簽名 $m_{3}._{sig}$。
 
 
     \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFowner：
@@ -964,7 +966,7 @@
     查找關聯屬於會談主持者的公開金鑰 \DEFpublicKey。
 
         接著使用會談主持者的公開金鑰 \DEFpublicKey，透過數位簽章演算法簽之驗證函數 \DEFfuncVerfPK{}，
-    驗證解密後的授權金鑰 $m_{3}$，與其簽名 $m_{3}.sig$。
+    驗證解密後的授權金鑰 $m_{3}$，與其簽名 $m_{3}._{sig}$。
 
         為非真，則授權失敗，會話終止。若為真，根據數位簽章的其不可否認性，
     解封伺服器得以信任 $m_{3}$ 來自會談主持者 \DEFowner。
