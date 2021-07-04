@@ -769,7 +769,9 @@
     \multicolumn{5}{|c|}{} \\
 
     &
-    $M_{3}$ $\leftarrow$ $\{$\DEFsessionID, \DEFrecJ$\}$
+    $m_{3}$ $\leftarrow$ \DEFrecJ \newline
+    $m_{3}._{mac}$ $\leftarrow$ \DEFfuncHMAC{$m_{3}$} \newline
+    $M_{3}$ $\leftarrow$ $\{$\DEFsessionID, $m_{3}$, $m_{3}._{mac}$$\}$ \newline
     & & & \\
 
     & &
@@ -777,6 +779,9 @@
     & & \\
 
     & & &
+    {\bf if~}\DEFfuncHMAC{$m_{3}$} ~!$=$~ $m_{3}._{mac}${\bf:} \newline
+    \pcind {\bf terminate session} \newline
+    \DEFrecJ $\leftarrow$ $m_{3}$ \newline
     {\bf bind relations:} \newline
     \pcind \DEFrecJ ~ $\in$ ~ \DEFsessionID \newline
     $M_{4}$ $\leftarrow$ $\{\}$
@@ -832,13 +837,17 @@
         當會談參與者再次透過與會談終端的物理控制介面，
     使會談終端 \DEFmeetingbox 獲得外部事件，此時觸發會談聲音記錄終止，關閉麥克風與超音波麥克風干擾器，
     受干擾的會談聲音紀錄 \DEFrecJ 錄製完成。並於人機互動介面提示系統已結束錄音。
+    接著使用 \DEFmboxKey 透過雜湊訊息鑑別碼產生函數 \DEFfuncHMAC{}，
+    產生 \DEFrecJ 的雜湊訊息鑑別碼。
     接著會談終端 \DEFmeetingbox 向解封伺服器 \DEFserver 發出上傳請求，
-    內容為此次會談唯一識別碼 \DEFsessionID 與受干擾的會談聲音紀錄 \DEFrecJ。
+    內容為此次會談唯一識別碼 \DEFsessionID 與受干擾的會談聲音紀錄 \DEFrecJ 與其雜湊訊息鑑別碼。
 
     \item $\{\}$ $,~$ \DEFserver $\rightarrow$ \DEFmeetingbox：
 
         解封伺服器收到會談終端的請求後，
-    將受干擾的會談聲音紀錄 \DEFrecJ 關聯綁定屬於 \DEFsessionID 且儲存，隨後回覆上傳成功。
+    首先使用 \DEFmboxKey 透過雜湊訊息鑑別碼產生函數 \DEFfuncHMAC{} 產生 \DEFrecJ 的雜湊訊息鑑別碼，
+    並且比對判斷訊息內與產生的雜湊訊息鑑別碼值是否相等。
+    若相等，則將受干擾的會談聲音紀錄 \DEFrecJ 關聯綁定屬於 \DEFsessionID 且儲存，隨後回覆上傳成功。
     此時會談參與者即可離開會談場域，不再需要與會談終端 \DEFmeetingbox 實體接觸。
 
         隨後會談終端開始為未來新的會談生命週期重新配置產生新 \DEFrecN，
