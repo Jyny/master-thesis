@@ -11,6 +11,8 @@
 \newcommand{\var@listoftables}{表目錄}
 \newcommand{\var@listoffigures}{圖目錄}
 \newcommand{\var@bibliography}{參考文獻}
+\newcommand{\var@abstract@zh}{摘要}
+\newcommand{\var@abstract@en}{Abstract}
 
 % --------------------------------------------------
 % 03 編譯檢查（Compile Checking）
@@ -280,6 +282,25 @@
 }
 
 \definecolor{whitesmoke}{rgb}{0.9, 0.9, 0.9}
+
+% [摘要環境]
+% Abstract Environment
+%
+\renewenvironment{abstract}{
+  \fontsize{12}{18}\selectfont
+  \chapter*{\centering \var@abstract@zh}
+  \addcontentsline{toc}{chapter}{\var@abstract@zh}
+}{
+  \bigbreak
+}
+
+\newenvironment{abstract*}{
+  \fontsize{12}{24}\selectfont
+  \chapter*{\centering \var@abstract@en}
+  \addcontentsline{toc}{chapter}{\var@abstract@en}
+}{
+  \bigbreak
+}
 
 % --------------------------------------------------
 % 10 文檔處理（Document Processing）
