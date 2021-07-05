@@ -296,6 +296,7 @@
 
 \newenvironment{abstract*}{
   \fontsize{12}{24}\selectfont
+  \setstretch{1.1}
   \chapter*{\centering \var@abstract@en}
   \addcontentsline{toc}{chapter}{\var@abstract@en}
 }{
