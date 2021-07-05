@@ -209,7 +209,6 @@
 \renewcommand{\contentsname}{\centerline{\var@tableofcontents}}
 \newcommand{\maketableofcontents}{
     \cleardoublepage
-    \pagenumbering{roman}
     \phantomsection
     \addcontentsline{toc}{chapter}{\var@tableofcontents}
     \tableofcontents
