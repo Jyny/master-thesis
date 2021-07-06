@@ -13,6 +13,7 @@
 \newcommand{\var@bibliography}{參考文獻}
 \newcommand{\var@abstract@zh}{摘要}
 \newcommand{\var@abstract@en}{Abstract}
+\newcommand{\var@acknowledgement}{致謝}
 
 % --------------------------------------------------
 % 03 編譯檢查（Compile Checking）
@@ -143,7 +144,6 @@
 \addtocontents{lof}{\vskip -3em}
 \addtocontents{lot}{\vskip -3em}
 
-
 % \titlecontents{標題名稱}[左間距]{標題格式}{標題內容}{無序號標題}{指引線與頁碼}[下間距]
 \titlecontents{chapter}[0em]                                % 修改目錄樣式
 {\addvspace{0.5em}\normalsize\bfseries\protect}
@@ -251,6 +251,7 @@
   \renewcommand{\bibname}{\var@bibliography}
   \addcontentsline{toc}{chapter}{\var@bibliography}
 }
+
 
 % --------------------------------------------------
 % 09 自訂環境（Custom Environments）
@@ -409,6 +410,16 @@
   \noindent \textbf{Keywords:~}
   \var@clist@use{\var@keywords@en}{,~}
 }
+
+% [誌謝環境]
+% Acknowledgement Environment
+%
+\newenvironment{acknowledgement}{
+  \chapter*{\centering \var@acknowledgement}
+  \addcontentsline{toc}{chapter}{\var@acknowledgement}
+  \fontsize{12}{18}\selectfont
+}
+
 
 % --------------------------------------------------
 % 10 文檔處理（Document Processing）
