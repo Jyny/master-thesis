@@ -29,11 +29,10 @@
 \ProcessOptions*\relax
 \LoadClass[a4paper, 12pt]{report}
 
-
-
 % --------------------------------------------------
 % 06 載入套件 (Include Packages)
 % --------------------------------------------------
+\RequirePackage{kvdefinekeys, kvsetkeys, kvoptions}
 \RequirePackage{etex}
 \RequirePackage{xparse}
 \RequirePackage{xeCJK}
@@ -257,6 +256,111 @@
 % 09 自訂環境（Custom Environments）
 % --------------------------------------------------
 
+\SetupKeyvalOptions{
+  family=var,
+  prefix=var@,
+  setkeys=\kvsetkeys
+}
+
+\newcommand{\varsetup}{
+  \kvsetkeys{var}
+}
+
+\newcommand{\var@define@key}[1]{
+  \kvsetkeys{var@key}{#1}
+}
+
+\kv@set@family@handler{var@key}{%
+  \@namedef{var@#1@@name}{#1}%
+  \def\var@@default{}%
+  \def\var@@choices{}%
+  \kv@define@key{var@value}{name}{%
+    \@namedef{var@#1@@name}{##1}%
+  }%
+  \kv@define@key{var@value}{code}{%
+    \@namedef{var@#1@@code}{##1}%
+  }%
+  \@namedef{var@#1@@check}{}%
+  \@namedef{var@#1@@code}{}%
+  \@namedef{var@#1@@hook}{%
+    \expandafter\ifx\csname\@currname.\@currext-h@@k\endcsname\relax
+      \@nameuse{var@#1@@code}%
+    \else
+      \AtEndOfClass{%
+        \@nameuse{var@#1@@code}%
+      }%
+    \fi
+  }%
+  \kv@define@key{var@value}{choices}{%
+    \def\var@@choices{##1}%
+    \@namedef{var@#1@@reset}{}%
+    \@namedef{var@#1@@check}{%
+      \@ifundefined{%
+        ifvar@\@nameuse{var@#1@@name}@\@nameuse{var@\@nameuse{var@#1@@name}}%
+      }{%
+        \var@error{Invalid value "#1 = \@nameuse{var@\@nameuse{var@#1@@name}}"}%
+      }%
+      \@nameuse{var@#1@@reset}%
+      \@nameuse{var@\@nameuse{var@#1@@name}@\@nameuse{var@\@nameuse{var@#1@@name}}true}%
+    }%
+  }%
+  \kv@define@key{var@value}{default}{%
+    \def\var@@default{##1}%
+  }%
+  \kvsetkeys{var@value}{#2}%
+  \@namedef{var@\@nameuse{var@#1@@name}}{}%
+  \kv@set@family@handler{var@choice}{%
+    \ifx\var@@default\@empty
+      \def\var@@default{##1}%
+    \fi
+    \expandafter\newif\csname ifvar@\@nameuse{var@#1@@name}@##1\endcsname
+    \expandafter\g@addto@macro\csname var@#1@@reset\endcsname{%
+      \@nameuse{var@\@nameuse{var@#1@@name}@##1false}%
+    }%
+  }%
+  \kvsetkeys@expandafter{var@choice}{\var@@choices}%
+  \expandafter\let\csname var@\@nameuse{var@#1@@name}\endcsname\var@@default
+  \expandafter\ifx\csname var@\@nameuse{var@#1@@name}\endcsname\@empty\else
+    \@nameuse{var@#1@@check}%
+    \@nameuse{var@#1@@hook}%
+  \fi
+  \kv@define@key{var}{#1}{%
+    \@namedef{var@\@nameuse{var@#1@@name}}{##1}%
+    \@nameuse{var@#1@@check}%
+    \@nameuse{var@#1@@hook}%
+  }%
+}
+
+\newcommand\var@option@hook[2]{
+  \expandafter\g@addto@macro\csname var@#1@@code\endcsname{#2}
+}
+
+% 命令: 鍵值陣列使用
+% Command: Retrieve the array value with key-value pair.
+%
+\newcommand\var@clist@use[2]{%
+  \def\var@@tmp{}%
+  \kv@set@family@handler{var@clist}{%
+    \ifx\var@@tmp\@empty
+      \def\var@@tmp{#2}%
+    \else
+      #2%
+    \fi
+    ##1%
+  }%
+  \kvsetkeys@expandafter{var@clist}{#1}%
+}
+
+\var@define@key{
+    keywords = {
+        default = {關鍵字},
+    },
+    keywords* = {
+        default = {Keywords},
+        name    = keywords@en,
+    },
+}
+
 \newlist{steps}{enumerate}{1}
 \setlist[steps, 1]{
     label = {步驟 \arabic*:},
@@ -290,7 +394,9 @@
   \chapter*{\centering \var@abstract@zh}
   \addcontentsline{toc}{chapter}{\var@abstract@zh}
 }{
-  \bigbreak
+  \bigbreak \bigbreak
+  \noindent \textbf{關鍵字：}
+  \var@clist@use{\var@keywords}{、}
 }
 
 \newenvironment{abstract*}{
@@ -299,7 +405,9 @@
   \chapter*{\centering \var@abstract@en}
   \addcontentsline{toc}{chapter}{\var@abstract@en}
 }{
-  \bigbreak
+  \bigbreak \bigbreak
+  \noindent \textbf{Keywords:~}
+  \var@clist@use{\var@keywords@en}{,~}
 }
 
 % --------------------------------------------------
