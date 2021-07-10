@@ -1,10 +1,10 @@
 % !TeX root = ../main.tex
-\chapter{背景知識與文獻探討}
+\chapter{背景知識與文獻探討}\label{chapter:background}
 
     此章將介紹本研究相關的文獻與背景知識，包含超音波麥克風干擾器、噪音消除技術與存取控制。
 
 
-\section{超音波麥克風干擾器}
+\section{超音波麥克風干擾器}\label{section:background-jammer}
 
     超音波麥克風干擾器的發明旨在解決竊聽的問題，例如：在未經允許的前提下，以隱密的方式紀錄不對外公開的私人對話。
 錄音是一種常見的竊聽方式，在智慧型設備普及的現代，由於有能力錄音設備體積很小，例如：錄音筆、智慧手機與智慧手錶等。
@@ -18,7 +18,7 @@
 透過播放特別設計構造的超音波，可以對麥克風執行拒絕服務 (DoS) 攻擊\cite{roy2017backdoor}。
 其中若對於麥克風的非線性響應輸出產生的噪音的幅度若大於人聲的幅度，
 錄音設備就只能記錄噪音，人與人的對談聲幾乎無法識別\cite{shen2019jamsys}。
-以此我們就可以保持會談內容隱私必免遭到錄音竊聽，而解決非法取得有效之聲音記錄的問題。
+以此即可保持會談內容隱私必免遭到錄音竊聽，而解決非法取得有效之聲音記錄的問題。
 
     為優化超音波麥克風干擾器的效率，Yuxin Chen 等人提出，
 透過將超音波麥克風干擾器製造成環形穿戴裝置，可以有效的解決干擾死角的問題\cite{chen2020demonstrating}。
@@ -28,7 +28,7 @@
 透過改變擺放位置與角度的變化優化超音波麥克風干擾器的效率\cite{shen2019jamsys}。
 
 
-\section{主動式噪音消除技術}
+\section{主動式噪音消除技術}\label{section:background-anc}
 
     主動式噪音消除(Active Noise Cancellation, ANC) 或又稱主動式噪音控制(Active Noise Control, ANC)，
 是一種用來消除噪音的方法。其原理為透過產生與噪音極性反轉的波(polarity inversion)，利用兩波的抵銷干涉來消除噪音。
@@ -58,7 +58,7 @@
 其他改良方向例如：可變步進值LMS(Variable Step-Size, VSS-LMS) \cite{kwong1992variable}。
 
 
-\section{存取控制}
+\section{存取控制}\label{section:background-access-control}
 
     存取控制(Access Control)是對一個資源的存取的選擇性限制\cite{rfc4949}，而存取控制描述了這個過程。
 其的目的為保護系統資源免受未經授權的存取，存取的行為可能代表著消費、進入或使用。

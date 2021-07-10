@@ -11,6 +11,9 @@
 \newcommand{\var@listoftables}{表目錄}
 \newcommand{\var@listoffigures}{圖目錄}
 \newcommand{\var@bibliography}{參考文獻}
+\newcommand{\var@abstract@zh}{摘要}
+\newcommand{\var@abstract@en}{Abstract}
+\newcommand{\var@acknowledgement}{致謝}
 
 % --------------------------------------------------
 % 03 編譯檢查（Compile Checking）
@@ -27,19 +30,19 @@
 \ProcessOptions*\relax
 \LoadClass[a4paper, 12pt]{report}
 
-
-
 % --------------------------------------------------
 % 06 載入套件 (Include Packages)
 % --------------------------------------------------
+\RequirePackage{kvdefinekeys, kvsetkeys, kvoptions}
 \RequirePackage{etex}
 \RequirePackage{xparse}
 \RequirePackage{xeCJK}
 \RequirePackage{indentfirst}
 \RequirePackage{fontspec}
 \RequirePackage[table]{xcolor}
-\RequirePackage{titlesec}
-\RequirePackage{titletoc, tocloft}
+\RequirePackage[compact]{titlesec}
+\RequirePackage[titles]{tocloft}
+\RequirePackage{titletoc}
 \RequirePackage{fancyhdr}
 \RequirePackage{setspace}
 \RequirePackage{graphicx}
@@ -137,11 +140,9 @@
 
 % [目錄格式]
 %
-\addtocontents{toc}                                         % 修改目錄樣式
-{~\hfill\textbf{Page}\par}
-{}
-{}
-{}
+\addtocontents{toc}{\vskip -3em}
+\addtocontents{lof}{\vskip -3em}
+\addtocontents{lot}{\vskip -3em}
 
 % \titlecontents{標題名稱}[左間距]{標題格式}{標題內容}{無序號標題}{指引線與頁碼}[下間距]
 \titlecontents{chapter}[0em]                                % 修改目錄樣式
@@ -174,7 +175,7 @@
 % - before: 標題內容前增加文字
 % - after: 標題內容後增加文字
 %
-\titlespacing{\chapter}{0pt}{0pt}{0pt}
+\titlespacing{\chapter}{0pt}{-3em}{2.4\parskip}
 \titleformat{\chapter}                      % 設置 Chapter 格式
 {\centering\Huge\bfseries}                  % 定義 format
 {第\CJKnumber{\thechapter}章}          	     % 定義 label
@@ -207,7 +208,6 @@
 \renewcommand{\contentsname}{\centerline{\var@tableofcontents}}
 \newcommand{\maketableofcontents}{
     \cleardoublepage
-    \pagenumbering{roman}
     \phantomsection
     \addcontentsline{toc}{chapter}{\var@tableofcontents}
     \tableofcontents
@@ -252,9 +252,115 @@
   \addcontentsline{toc}{chapter}{\var@bibliography}
 }
 
+
 % --------------------------------------------------
 % 09 自訂環境（Custom Environments）
 % --------------------------------------------------
+
+\SetupKeyvalOptions{
+  family=var,
+  prefix=var@,
+  setkeys=\kvsetkeys
+}
+
+\newcommand{\varsetup}{
+  \kvsetkeys{var}
+}
+
+\newcommand{\var@define@key}[1]{
+  \kvsetkeys{var@key}{#1}
+}
+
+\kv@set@family@handler{var@key}{%
+  \@namedef{var@#1@@name}{#1}%
+  \def\var@@default{}%
+  \def\var@@choices{}%
+  \kv@define@key{var@value}{name}{%
+    \@namedef{var@#1@@name}{##1}%
+  }%
+  \kv@define@key{var@value}{code}{%
+    \@namedef{var@#1@@code}{##1}%
+  }%
+  \@namedef{var@#1@@check}{}%
+  \@namedef{var@#1@@code}{}%
+  \@namedef{var@#1@@hook}{%
+    \expandafter\ifx\csname\@currname.\@currext-h@@k\endcsname\relax
+      \@nameuse{var@#1@@code}%
+    \else
+      \AtEndOfClass{%
+        \@nameuse{var@#1@@code}%
+      }%
+    \fi
+  }%
+  \kv@define@key{var@value}{choices}{%
+    \def\var@@choices{##1}%
+    \@namedef{var@#1@@reset}{}%
+    \@namedef{var@#1@@check}{%
+      \@ifundefined{%
+        ifvar@\@nameuse{var@#1@@name}@\@nameuse{var@\@nameuse{var@#1@@name}}%
+      }{%
+        \var@error{Invalid value "#1 = \@nameuse{var@\@nameuse{var@#1@@name}}"}%
+      }%
+      \@nameuse{var@#1@@reset}%
+      \@nameuse{var@\@nameuse{var@#1@@name}@\@nameuse{var@\@nameuse{var@#1@@name}}true}%
+    }%
+  }%
+  \kv@define@key{var@value}{default}{%
+    \def\var@@default{##1}%
+  }%
+  \kvsetkeys{var@value}{#2}%
+  \@namedef{var@\@nameuse{var@#1@@name}}{}%
+  \kv@set@family@handler{var@choice}{%
+    \ifx\var@@default\@empty
+      \def\var@@default{##1}%
+    \fi
+    \expandafter\newif\csname ifvar@\@nameuse{var@#1@@name}@##1\endcsname
+    \expandafter\g@addto@macro\csname var@#1@@reset\endcsname{%
+      \@nameuse{var@\@nameuse{var@#1@@name}@##1false}%
+    }%
+  }%
+  \kvsetkeys@expandafter{var@choice}{\var@@choices}%
+  \expandafter\let\csname var@\@nameuse{var@#1@@name}\endcsname\var@@default
+  \expandafter\ifx\csname var@\@nameuse{var@#1@@name}\endcsname\@empty\else
+    \@nameuse{var@#1@@check}%
+    \@nameuse{var@#1@@hook}%
+  \fi
+  \kv@define@key{var}{#1}{%
+    \@namedef{var@\@nameuse{var@#1@@name}}{##1}%
+    \@nameuse{var@#1@@check}%
+    \@nameuse{var@#1@@hook}%
+  }%
+}
+
+\newcommand\var@option@hook[2]{
+  \expandafter\g@addto@macro\csname var@#1@@code\endcsname{#2}
+}
+
+% 命令: 鍵值陣列使用
+% Command: Retrieve the array value with key-value pair.
+%
+\newcommand\var@clist@use[2]{%
+  \def\var@@tmp{}%
+  \kv@set@family@handler{var@clist}{%
+    \ifx\var@@tmp\@empty
+      \def\var@@tmp{#2}%
+    \else
+      #2%
+    \fi
+    ##1%
+  }%
+  \kvsetkeys@expandafter{var@clist}{#1}%
+}
+
+\var@define@key{
+    keywords = {
+        default = {關鍵字},
+    },
+    keywords* = {
+        default = {Keywords},
+        name    = keywords@en,
+    },
+}
 
 \newlist{steps}{enumerate}{1}
 \setlist[steps, 1]{
@@ -280,6 +386,40 @@
 }
 
 \definecolor{whitesmoke}{rgb}{0.9, 0.9, 0.9}
+
+% [摘要環境]
+% Abstract Environment
+%
+\renewenvironment{abstract}{
+  \fontsize{12}{18}\selectfont
+  \chapter*{\centering \var@abstract@zh}
+  \addcontentsline{toc}{chapter}{\var@abstract@zh}
+}{
+  \bigbreak \bigbreak
+  \noindent \textbf{關鍵字：}
+  \var@clist@use{\var@keywords}{、}
+}
+
+\newenvironment{abstract*}{
+  \fontsize{12}{24}\selectfont
+  \setstretch{1.1}
+  \chapter*{\centering \var@abstract@en}
+  \addcontentsline{toc}{chapter}{\var@abstract@en}
+}{
+  \bigbreak \bigbreak
+  \noindent \textbf{Keywords:~}
+  \var@clist@use{\var@keywords@en}{,~}
+}
+
+% [誌謝環境]
+% Acknowledgement Environment
+%
+\newenvironment{acknowledgement}{
+  \chapter*{\centering \var@acknowledgement}
+  \addcontentsline{toc}{chapter}{\var@acknowledgement}
+  \fontsize{12}{18}\selectfont
+}
+
 
 % --------------------------------------------------
 % 10 文檔處理（Document Processing）
