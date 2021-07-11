@@ -668,3 +668,41 @@ $Min($\DEFmicRecREV $~-~$ \DEFmicConv $)~=~Min($ \DEFmicUSJ $~-~$ \DEFmicUSD $)$
 因次若將會談主持者妥善保管其私密金鑰 \DEFprivateKey，
 基於 RSA \cite{rfc8017} 所保證的安全性，
 冒名頂替攻擊(Impersonation attack) 無法形成威脅。
+
+
+\section{相關系統比較}\label{sec:comparison}
+
+\begin{longtable}{|c|c|c|c|c|c|}
+    \caption{相關系統比較表}\label{table:comparison} \\
+    \hline
+    & 金鑰類型 & 金鑰大小 & 複雜度 & 實驗方式 & 干擾範圍 \\
+    \hline
+    \endfirsthead
+
+    & 金鑰類型 & 金鑰大小 & 複雜度 & 實驗方式 & 干擾範圍 \\
+    \hline
+    \endhead
+
+    \hline
+    \endfoot
+
+    \hline
+    \endlastfoot
+
+    本研究 &
+    純噪音 &
+    大 &
+    簡單 &
+    工程原型 &
+    環形陣列 \\
+
+    \hline
+
+    Patronus\cite{li2020patronus} &
+    頻率模式序列 &
+    小 &
+    複雜 &
+    概念驗證 &
+    弧面反射 \\
+
+\end{longtable}
