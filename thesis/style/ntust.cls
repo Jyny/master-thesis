@@ -154,7 +154,7 @@
 \setlength{\cftbeforesecskip}{8pt}                          % 修改目錄間距
 \setlength{\cftbeforesubsecskip}{8pt}
 
-\setcounter{tocdepth}{3}                                    % 設定目錄深度
+\setcounter{tocdepth}{2}                                    % 設定目錄深度
 \setcounter{secnumdepth}{3}                                 % 設定編號深度
 
 % \cftsetindents{entry}{indent}{numwidth}
