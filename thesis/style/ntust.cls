@@ -68,6 +68,7 @@
 \RequirePackage{float}
 \RequirePackage{enumitem}
 \RequirePackage[numbers]{natbib}
+\RequirePackage[normalem]{ulem}
 \RequirePackage{amsmath, amsthm, amssymb}
 \RequirePackage{ulem, CJKulem}
 \RequirePackage{lipsum}
