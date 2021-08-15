@@ -39,24 +39,44 @@
 根據參考訊號的變化透過優化演算法(optimization algorithm)來更新函數中的可控參數。
 此設計得以使濾波器獲得自適應的能力，得以有效的處理未知的響應輸出系統\cite{widrow1983adaptive}。
 
-    將自適應濾波器應用於主動式噪音消除，又稱為自適應噪音消除(Active Noise Cancellation, ANC)，
-為一種消除訊號中的破壞性干擾的一種方法。
-透過被干擾訊號作為主要輸入和包含與主要輸入中的噪音高度相關的參考輸入。
-將參考輸入透過自適應濾波器轉換後並從主要輸入中減去以獲得還原噪音消除的訊號。
-最小均方濾波器(Least Mean Square Filter, LMS Filter) 為一類自適應濾波器，
-其原理為將LMS演算法應用至自適應濾波器中的優化演算法，最小化產生訊號與目標訊號之間的差\cite{widrow1975adaptive}。
-
     自適應濾波器允許處理確定性或隨機性、平穩性或時間變量的輸入。
 此解決方案表明，當參考輸入與欲消除的破壞性干擾噪音高度相關時，可以消除主要輸入中的噪音而不會產生訊號失真。
 若處理週期性干擾時，自適應噪音消除器可以作為帶通濾波器(Band-pass filter)，且具有跟踪干擾準確頻率的能力。
 在這種情況下，消除器表現為線性、時不變系統，自適應濾波器收斂於動態結果而非靜態結果。
 實驗結果說明了自適應噪音消除技術在各種實際應用中的有用性\cite{singh2001adaptive}。
 
+    將自適應濾波器應用於主動式噪音消除，又稱為自適應噪音消除(Active Noise Cancellation, ANC)，
+為一種消除訊號中的破壞性干擾的一種方法。
+透過被干擾訊號作為主要輸入和包含與主要輸入中的噪音高度相關的參考輸入。
+將參考輸入透過自適應濾波器轉換後並從主要輸入中減去以獲得還原噪音消除的訊號。
+最小均方濾波器(Least Mean Square Filter, LMS Filter) 為一類自適應濾波器，
+其原理為將LMS演算法應用至自適應濾波器中的優化演算法，最小化產生訊號與目標訊號之間的差\cite{widrow1975adaptive}。
+其中作為修正的誤差訊號為理想參考訊號與實際輸出訊號的差，如圖 \ref{fig:af}。
+此濾波器所用之最小均方法只以當前之訊號誤差值為準進行修正，為一類隨機梯度下降法。
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.45\textwidth]{af}
     \caption{自適應濾波器}\label{fig:af}
 \end{figure}
+
+    定義輸入訊號 \DEFmicRecJ $~=~$ \DEFmicConv $~+~$ \DEFmicUSJ，
+其中 \DEFmicConv 為訊號轉換後的接收器輸入，\DEFmicUSJ 為噪音輸入。
+當我們有與噪音 \DEFmicUSJ 高度相關的參考輸入 \DEFmicUSN 時，
+因此建立一遞移函數 \DEFfuncAf{\DEFpause}，將純噪音聲音響應輸出 \DEFmicUSN 轉換為 \DEFmicUSD。
+並且重新定義產生消除噪音後的樣本 \DEFmicRecREV 為 \DEFmicRecJ 減去 \DEFmicUSD。
+綜上所述可以推導出，當轉換後的純噪音聲音響應輸出 \DEFmicUSD 與 \DEFmicUSJ 的差異越小時，
+\DEFmicRecREV 與 \DEFmicConv 的差異也越小，即噪音消除的效果越好。
+
+\begin{center}
+\begin{tabularx}{0.55\textwidth} {>{\raggedright\arraybackslash}X}
+    \DEFmicRecJ $~=~$ \DEFmicConv $~+~$ \DEFmicUSJ \\
+    \DEFmicRecREV $~=~$ \DEFmicRecJ $~-~$ \DEFmicUSD $~=~$
+    \DEFmicConv $~+~$ \DEFmicUSJ $~-~$ \DEFmicUSD \\
+    \DEFmicRecREV $~-~$ \DEFmicConv $~=~$ \DEFmicUSJ $~-~$ \DEFmicUSD \\
+    $Min($\DEFmicRecREV $~-~$ \DEFmicConv $)~=~Min($ \DEFmicUSJ $~-~$ \DEFmicUSD $)$ \\
+\end{tabularx}
+\end{center}
 
     基本的 LMS 存在著許多缺點，例如其對於主要輸入的幅度過於敏感。
 歸一化最小均方濾波器(Normalized least mean squares filter, NLMS)的提出旨在解決上述問題。
