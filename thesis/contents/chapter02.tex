@@ -52,6 +52,12 @@
 在這種情況下，消除器表現為線性、時不變系統，自適應濾波器收斂於動態結果而非靜態結果。
 實驗結果說明了自適應噪音消除技術在各種實際應用中的有用性\cite{singh2001adaptive}。
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{af}
+    \caption{自適應濾波器}\label{fig:af}
+\end{figure}
+
     基本的 LMS 存在著許多缺點，例如其對於主要輸入的幅度過於敏感。
 歸一化最小均方濾波器(Normalized least mean squares filter, NLMS)的提出旨在解決上述問題。
 其原理為透過輸入訊號的功率歸一化，來降低對於主要輸入的波形震幅敏感度\cite{book198585}。
