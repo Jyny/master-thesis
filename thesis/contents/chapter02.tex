@@ -54,12 +54,6 @@
 其中作為修正的誤差訊號為理想參考訊號與實際輸出訊號的差，如圖 \ref{fig:af}。
 此濾波器所用之最小均方法只以當前之訊號誤差值為準進行修正，為一類隨機梯度下降法。
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{af}
-    \caption{自適應濾波器}\label{fig:af}
-\end{figure}
-
     定義輸入訊號 \DEFmicRecJ $~=~$ \DEFmicConv $~+~$ \DEFmicUSJ，
 其中 \DEFmicConv 為訊號轉換後的接收器輸入，\DEFmicUSJ 為噪音輸入。
 當我們有與噪音 \DEFmicUSJ 高度相關的參考輸入 \DEFmicUSN 時，
