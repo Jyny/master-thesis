@@ -1233,7 +1233,7 @@
 首先使聲音樣本的離散時間序列索引值 \DEFpause 從零開始，逐步迭代。
 在每次迭代中，將受干擾的會談聲音紀錄 \DEFrecJ 中第 \DEFpause  個樣本，
 與純噪音聲音紀錄 \DEFrecN 中第 \DEFpause $+$ \DEFcandiSFT 個樣本相減，
-得到第 \DEFpause 個樣本下能量差。\DEFpause 於每一次迭代逐步遞增，並累計能量差的絕對值，
+得到第 \DEFpause 個樣本時的能量差。\DEFpause 於每一次迭代逐步遞增，並累計能量差的絕對值，
 至純噪音聲音紀錄 \DEFrecN 或受干擾的會談聲音紀錄 \DEFrecJ 的長度 \DEFtimeLen 停止。
 最終得到特定動態相對平移量 \DEFcandiSFT 之下的累計能量差。
 
