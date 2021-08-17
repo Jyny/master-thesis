@@ -1100,7 +1100,7 @@
         若為一人，則屬於此次會談的解封金鑰 \DEFunsealKey 則為唯一會談主持者的授權金鑰 \DEFagentKey。
     若為多人，則關聯查詢所有屬於此次會談 \DEFownerAll 的所有授權金鑰 \DEFagentKey，
     組合成所有的分割秘密 \DEFsharesAll。
-    接著將其透過金鑰分割演算法合併函數 \DEFfuncSSC{}，合併還原為則屬於此次會談的解封金鑰 \DEFunsealKey。
+    接著將其透過金鑰分割演算法合併函數 \DEFfuncSSC{}，合併還原為此次會談的解封金鑰 \DEFunsealKey。
 
         得到解封金鑰 \DEFunsealKey 後，透過對稱式加密演算法之解密函數 \DEFfuncDecEK{}，
     將屬於此次會談的受加密保護的聲音記錄 \DEFrecP 解密，
