@@ -123,7 +123,7 @@
         近期的研究表明，目前的技術發展現狀已經能透過低成本、可穿戴式的裝置，
     產生有效的超音波麥克風干擾 \cite{chen2020demonstrating}。
     本研究實作嘗試復現 Yuxin Chen, Huiying Li 等人的實作 \cite{chen2020wearable}，
-    並透過復現實作的超音波麥克風干擾器作為參考，近一步分析評估於不同信噪比時的干擾效果。
+    並透過復現實作的超音波麥克風干擾器作為參考，進一步分析評估於不同信噪比時的干擾效果。
     如系統實驗 \ref{subsec:exp-jammer} \nameref{subsec:exp-jammer}。
 
     \item 系統各角色之間通訊為加密通道：
@@ -655,7 +655,7 @@
     \item $\{\}$ $,~$ \DEFowner $\rightarrow$ \DEFmeetingbox：
 
         當會談主持者 \DEFowner 觀察到於會談終端 \DEFmeetingbox 上的人機互動介面提示，
-    向發會談終端送請求獲得會談的元資料。
+    向會談終端發送請求獲得會談的元資料。
 
     \item $\{$\DEFsessionID$\}$ $,~$ \DEFmeetingbox $\rightarrow$ \DEFowner：
 
@@ -1020,7 +1020,7 @@
     此階段目標為，透過談主持者 \DEFowner 於解封伺服器 \DEFserver 的授權金鑰 \DEFagentKey，
 還原出屬於此次會談的解封金鑰 \DEFunsealKey。
 並透過接續章節所描述其他系統機制如 \ref{sec:anc} \nameref{sec:anc}，
-最終取得有效的有效的談聲音記錄 \DEFrecREV。
+最終取得有效的會談聲音記錄 \DEFrecREV。
 
     此階段為 \ref{subsec:unseal} \nameref{subsec:unseal}中的步驟 2，
 其運作細節如圖 \ref{fig:protocol-unseal-access}與說明：
@@ -1100,7 +1100,7 @@
         若為一人，則屬於此次會談的解封金鑰 \DEFunsealKey 則為唯一會談主持者的授權金鑰 \DEFagentKey。
     若為多人，則關聯查詢所有屬於此次會談 \DEFownerAll 的所有授權金鑰 \DEFagentKey，
     組合成所有的分割秘密 \DEFsharesAll。
-    接著將其透過金鑰分割演算法合併函數 \DEFfuncSSC{}，合併還原為則屬於此次會談的解封金鑰 \DEFunsealKey。
+    接著將其透過金鑰分割演算法合併函數 \DEFfuncSSC{}，合併還原為此次會談的解封金鑰 \DEFunsealKey。
 
         得到解封金鑰 \DEFunsealKey 後，透過對稱式加密演算法之解密函數 \DEFfuncDecEK{}，
     將屬於此次會談的受加密保護的聲音記錄 \DEFrecP 解密，
@@ -1119,7 +1119,7 @@
 \section{自適應噪音消除}\label{sec:anc}
 
     本章將說明於生命週期解封會談聲音記錄中，如何應用自適應噪音消除，以還原出有效的會談聲音記錄。
-本研究所設計之系統中，有兩個聲音數入分別為 \DEFrecJ 與 \DEFrecN。
+本研究所設計之系統中，有兩個聲音輸入分別為 \DEFrecJ 與 \DEFrecN。
 其中 \DEFrecJ 是來自於開啟音波麥克風干擾器場域裡的會談聲音記錄，內容為超音波麥克風干擾器的干擾與會談聲音的疊加。
 會談聲音記錄因受到超音波麥克風干擾器的干擾，而成為非有效之聲音記錄。
 \DEFrecN 為純超音波麥克風干擾器於麥克風的響應輸出(純噪音)之聲音記錄，如圖 \ref{fig:anc}。
@@ -1209,7 +1209,7 @@
     本章節將說明聲音樣本的離散時間誤差值推估函 \DEFfuncEstm{}
 如何推估聲音樣本的離散時間誤差值 \DEFshift，用於自適應噪音消除時對齊聲音樣本。
 
-    在前章節中提到，本研究消於除噪音時為了提升噪音消除的成效，
+    在前章節中提到，本研究於消除噪音時為了提升噪音消除的成效，
 透過將輸入噪音聲音紀錄 \DEFrecN 的離散時間索引值 \DEFpause 加上離散時間誤差值 \DEFshift，
 來對齊修正噪音聲音紀錄 \DEFrecN 與欲消去噪音聲音紀錄 \DEFrecJ 的離散時間誤差。
 已知純噪音聲音紀錄 \DEFrecN 與欲消去噪音聲音紀錄 \DEFrecJ 的取樣率 \DEFsamplerate 相同，
@@ -1233,7 +1233,7 @@
 首先使聲音樣本的離散時間序列索引值 \DEFpause 從零開始，逐步迭代。
 在每次迭代中，將受干擾的會談聲音紀錄 \DEFrecJ 中第 \DEFpause  個樣本，
 與純噪音聲音紀錄 \DEFrecN 中第 \DEFpause $+$ \DEFcandiSFT 個樣本相減，
-得到第 \DEFpause 個樣本下能量差。\DEFpause 於每一次迭代逐步遞增，並累計能量差的絕對值，
+得到第 \DEFpause 個樣本時的能量差。\DEFpause 於每一次迭代逐步遞增，並累計能量差的絕對值，
 至純噪音聲音紀錄 \DEFrecN 或受干擾的會談聲音紀錄 \DEFrecJ 的長度 \DEFtimeLen 停止。
 最終得到特定動態相對平移量 \DEFcandiSFT 之下的累計能量差。
 
