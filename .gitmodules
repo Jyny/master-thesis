@@ -1,3 +1,6 @@
 [submodule "research&study/research-1"]
 	path = research&study/research-1
 	url = git@github.com:jynychen/master-thesis-research-1.git
+[submodule "research&study/research-2"]
+	path = research&study/research-2
+	url = git@github.com:jynychen/master-thesis-research-2.git
