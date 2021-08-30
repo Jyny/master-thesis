@@ -22,6 +22,8 @@ To solve this problem, we propose a jamming/de-jamming method based on microphon
 ## Folder Structure
 ```
 .
-├── implement       # thesis implementation and codes.
-└── thesis          # thesis writing stuff.
+├── experiment          # experiments for the paper.
+├── implement           # thesis implementation and codes.
+├── research&study      # research and study materials from the beginning.
+└── thesis              # paper writing stuff.
 ```
