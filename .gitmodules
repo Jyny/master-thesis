@@ -7,3 +7,6 @@
 [submodule "experiment/performance-test"]
 	path = experiment/performance-test
 	url = git@github.com:jynychen/master-thesis-exp-perf.git
+[submodule "experiment/MOS-LQO"]
+	path = experiment/MOS-LQO
+	url = git@github.com:jynychen/master-thesis-exp-MOS-LQO
